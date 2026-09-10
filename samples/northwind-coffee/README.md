@@ -33,6 +33,8 @@ makes it live; no code changes and nothing is redeployed.
 | A query versus an authored list, and when each is right | `src/presentations/guide-index.tsx` |
 | Embedding an ebitex Form — the suite over its own public surface | `src/presentations/form-embed.tsx` |
 | Site chrome as content, addressed by external id | `src/lib/siteChrome.ts`, `src/components/NavLinks.tsx` |
+| A sitemap built at deploy time, and why the SDK ships no route | `scripts/sitemap.mjs` |
+| Browser-safe versus server-side keys, and what `VITE_` decides | `scripts/sitemap.mjs`, README step 4 |
 
 More arrives with each tutorial step; this table grows with it.
 
@@ -59,7 +61,8 @@ step tag, import the highest-numbered bundle at or *below* your step:
 |---|---|
 | `seed/step-03.zip` | `step-01` … `step-06` |
 | `seed/step-07.zip` | `step-07` … `step-08` |
-| `seed/step-09.zip` | `step-09` … |
+| `seed/step-09.zip` | `step-09` … `step-12` |
+| `seed/step-13.zip` | `step-13` … (the whole foundation arc) |
 
 Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
 every reference between them — so the content becomes genuinely yours rather than a copy carrying
@@ -94,6 +97,33 @@ npm run dev
 
 If you see "No delivery key configured", `.env` is missing or empty — that page is telling you so on
 purpose rather than showing a 404.
+
+## 4. Deploy
+
+```bash
+npm run build
+```
+
+That produces `dist/`, which any static host will serve. The sample deliberately does not name one:
+they all work, and picking a favourite would read as an advertisement rather than as help.
+
+Two things your host does need to be told.
+
+**An SPA rewrite: `/*` → `/index.html`.** Every path on this site is served by the same
+`index.html`, because the CMS decides what lives where. Without the rewrite, `/coffees` is a 404
+from the host before the app ever runs — the single most common way a static deployment of a
+CMS-driven site goes wrong.
+
+**Two different keys.** The one in `VITE_CONTENT_DELIVERY_KEY` ships inside the JavaScript bundle,
+where anyone can read it. That is unavoidable for a static site and is why ebitex has **browser-safe
+keys**: a key restricted to your own origins is safe to publish, and an unrestricted one is not.
+Create one in Content → Settings → API Keys with your site's origins filled in.
+
+The sitemap is generated at build time by `scripts/sitemap.mjs` and needs the *other* kind — a
+server-side key, in `CONTENT_DELIVERY_KEY` with no `VITE_` prefix. That prefix is precisely what
+decides whether a value reaches the browser. A browser-safe key cannot be used from a build step at
+all: it is restricted by `Origin`, Node sends no `Origin` header, and the request is refused with
+`origin_denied`. That refusal is the mechanism working, not a misconfiguration.
 
 ## Which parts fit Starter
 
