@@ -50,7 +50,8 @@ step tag, import the highest-numbered bundle at or *below* your step:
 
 | Bundle | Import it if you are on |
 |---|---|
-| `seed/step-03.zip` | `step-01` … `step-03` |
+| `seed/step-03.zip` | `step-01` … `step-06` |
+| `seed/step-07.zip` | `step-07` … |
 
 Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
 every reference between them — so the content becomes genuinely yours rather than a copy carrying
@@ -88,13 +89,35 @@ purpose rather than showing a 404.
 
 ## Which parts fit Starter
 
-No Content *capability* is restricted by tier. Localization, personalization, workflow, streams and
-Adapters are all available on every plan. What a plan buys is **scale and environments**.
+No Content *capability* is restricted by tier. Localization, personalization, contextual values,
+workflow, Adapters and streams are available on every plan — there is no feature flag and no quota
+key for any of them. What a plan buys is **scale and environments**:
 
-The relevant limit here is **Experience nodes: 10 on Starter, 200 on Pro**. The finished site has
-more than 10 pages, so a Starter organization can follow the tutorial up to the point where the
-catalogue fills out and then stops. The exact step is recorded here once the count is verified
-against a real organization rather than estimated.
+| | Starter | Pro |
+|---|---|---|
+| Experience nodes | **10** | 200 |
+| Components | 50 | 200 |
+| Sites | 1 | 3 |
+| Authoring / delivery environments | **1 / 1** | 3 / 5 |
+| Categories | 100 | 5,000 |
+| Blob storage | 1.5 GB | 15 GB |
+| Delivery requests / day | 6,000 | 60,000 |
+
+**A Starter organization stops at step 07.** This site is 17 Experience nodes and Starter allows
+10. Steps 01–06 build seven of them and fit comfortably; step 07 fills out the catalogue and
+crosses the limit three pages in, with a plain refusal naming the quota:
+
+```
+403 quota_exceeded — content.max_experience_nodes
+This organization has reached its plan's Experience node limit (10). Upgrade to create more.
+```
+
+That is not a problem the sample designs around — it is the demonstration. You meet the ceiling
+while building something entirely reasonable, which says more than a pricing table does.
+
+The tutorial assumes the **14-day Pro trial** a new organization gets, which is the window it is
+written for and comfortably enough for the whole series. Step 19 is the one step that genuinely
+needs Pro afterwards, because it uses a second authoring environment and Starter has exactly one.
 
 ## Following the tutorial
 

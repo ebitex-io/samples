@@ -292,10 +292,20 @@ export const TEMPLATES = [
 // this script cheap even though it "uploads" every image every time.
 
 export const BLOBS = [
-  { externalId: 'coffee-guji', file: 'coffee-guji.svg', contentType: 'image/svg+xml' },
-  { externalId: 'origin-ethiopia', file: 'origin-ethiopia.svg', contentType: 'image/svg+xml' },
-  { externalId: 'origin-colombia', file: 'origin-colombia.svg', contentType: 'image/svg+xml' },
-]
+  'coffee-guji',
+  'coffee-huila',
+  'coffee-yirgacheffe',
+  'coffee-antigua',
+  'coffee-kirinyaga',
+  'coffee-gayo',
+  'coffee-narino',
+  'coffee-hambela',
+  'origin-ethiopia',
+  'origin-colombia',
+  'origin-guatemala',
+  'origin-kenya',
+  'origin-sumatra',
+].map((externalId) => ({ externalId, file: `${externalId}.svg`, contentType: 'image/svg+xml' }))
 
 // ---- folders ---------------------------------------------------------------------------------
 //
@@ -438,6 +448,54 @@ export const COMPONENTS = [
       }),
     }),
   },
+  {
+    externalId: 'origin-guatemala',
+    name: 'Guatemala',
+    contract: 'origin',
+    folder: 'Origins',
+    document: ({ contracts, blobs }) => ({
+      name: L('Guatemala'),
+      country: L('Guatemala'),
+      altitude: '1,400-1,800 m',
+      summary: L(md('Volcanic soil and a long dry season. We buy from Antigua, where the shade cover slows ripening and the cup comes out dense and cocoa-heavy rather than bright.')),
+      image: inline(contracts.image, {
+        file: blobs['origin-guatemala'],
+        alt: L('An abstract landscape of layered hills.'),
+      }),
+    }),
+  },
+  {
+    externalId: 'origin-kenya',
+    name: 'Kenya',
+    contract: 'origin',
+    folder: 'Origins',
+    document: ({ contracts, blobs }) => ({
+      name: L('Kenya'),
+      country: L('Kenya'),
+      altitude: '1,600-2,000 m',
+      summary: L(md('Sold through an auction system that rewards quality, and it shows. Kenyan lots are the most structured coffee we buy: blackcurrant, tomato leaf, and an acidity that can be startling if you are not expecting it.')),
+      image: inline(contracts.image, {
+        file: blobs['origin-kenya'],
+        alt: L('An abstract landscape of layered hills.'),
+      }),
+    }),
+  },
+  {
+    externalId: 'origin-sumatra',
+    name: 'Sumatra',
+    contract: 'origin',
+    folder: 'Origins',
+    document: ({ contracts, blobs }) => ({
+      name: L('Sumatra'),
+      country: L('Indonesia'),
+      altitude: '1,200-1,600 m',
+      summary: L(md('Wet-hulled, a processing method almost unique to Sumatra and responsible for everything people love and hate about it: low acidity, enormous body, and a savoury edge nothing else has.')),
+      image: inline(contracts.image, {
+        file: blobs['origin-sumatra'],
+        alt: L('An abstract landscape of layered hills.'),
+      }),
+    }),
+  },
   // ---- coffees ----
 
   {
@@ -476,7 +534,155 @@ export const COMPONENTS = [
       roast: categoryValue(categories, 'roast', 'light'),
       process: categoryValue(categories, 'process', 'natural'),
     }),
-  },]
+  },
+  {
+    externalId: 'coffee-huila',
+    name: 'Colombia Huila, La Esperanza',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Colombia Huila, La Esperanza'),
+      producer: 'Finca La Esperanza',
+      description: P(L(md('Red apple and caramel, with the almond sweetness Huila does better than anywhere. Washed, dried on parabolic beds, and the one coffee we have bought every single year since we opened.'))),
+      'tasting-notes': L(['Red apple', 'Caramel', 'Almond']),
+      price: 12.5,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-huila'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
+      }),
+      origin: reference(components['origin-colombia']),
+      roast: categoryValue(categories, 'roast', 'medium'),
+      process: categoryValue(categories, 'process', 'washed'),
+    }),
+  },
+  {
+    externalId: 'coffee-yirgacheffe',
+    name: 'Ethiopia Yirgacheffe, Kochere',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Ethiopia Yirgacheffe, Kochere'),
+      producer: 'Kochere Washing Station',
+      description: P(L(md('Jasmine and lemon, and a body like black tea. Washed Yirgacheffe is the coffee that convinced most of us to take this seriously in the first place, and it still tastes like nothing else.'))),
+      'tasting-notes': L(['Jasmine', 'Lemon', 'Black tea']),
+      price: 15,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-yirgacheffe'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a light roast.'),
+      }),
+      origin: reference(components['origin-ethiopia']),
+      roast: categoryValue(categories, 'roast', 'light'),
+      process: categoryValue(categories, 'process', 'washed'),
+    }),
+  },
+  {
+    externalId: 'coffee-antigua',
+    name: 'Guatemala Antigua, El Pilar',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Guatemala Antigua, El Pilar'),
+      producer: 'Finca El Pilar',
+      description: P(L(md('Cocoa and orange peel over a walnut base. Grown under shade at the foot of Agua, which slows everything down and gives the cup a density that survives milk without disappearing into it.'))),
+      'tasting-notes': L(['Cocoa', 'Orange peel', 'Walnut']),
+      price: 13,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-antigua'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
+      }),
+      origin: reference(components['origin-guatemala']),
+      roast: categoryValue(categories, 'roast', 'medium'),
+      process: categoryValue(categories, 'process', 'washed'),
+    }),
+  },
+  {
+    externalId: 'coffee-kirinyaga',
+    name: 'Kenya Kirinyaga, Kianjuki',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Kenya Kirinyaga, Kianjuki'),
+      producer: 'Kianjuki Factory',
+      description: P(L(md('Blackcurrant and grapefruit, with the structure Kenyan coffee is bought for. The most assertive thing on our list, and we make no apology for it: brew it a little weaker than you think you should.'))),
+      'tasting-notes': L(['Blackcurrant', 'Grapefruit', 'Cane sugar']),
+      price: 16.5,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-kirinyaga'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a light roast.'),
+      }),
+      origin: reference(components['origin-kenya']),
+      roast: categoryValue(categories, 'roast', 'light'),
+      process: categoryValue(categories, 'process', 'washed'),
+    }),
+  },
+  {
+    externalId: 'coffee-gayo',
+    name: 'Sumatra Gayo, Bener Meriah',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Sumatra Gayo, Bener Meriah'),
+      producer: 'Gayo Highlands cooperative',
+      description: P(L(md('Cedar, dark chocolate and tobacco. Wet-hulled, low in acidity, enormous in body, and the coffee that divides our own staff more than any other. Try it in a moka pot before you decide.'))),
+      'tasting-notes': L(['Cedar', 'Dark chocolate', 'Tobacco']),
+      price: 12,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-gayo'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a dark roast.'),
+      }),
+      origin: reference(components['origin-sumatra']),
+      roast: categoryValue(categories, 'roast', 'dark'),
+      process: categoryValue(categories, 'process', 'wet-hulled'),
+    }),
+  },
+  {
+    externalId: 'coffee-narino',
+    name: 'Colombia Narino, Buesaco',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Colombia Narino, Buesaco'),
+      producer: 'Los Rosales',
+      description: P(L(md('Honey-processed, which leaves some of the fruit on the bean while it dries and gives the cup a syrupy sweetness washed lots never quite reach. Peach and lime over honey.'))),
+      'tasting-notes': L(['Peach', 'Honey', 'Lime']),
+      price: 14,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-narino'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
+      }),
+      origin: reference(components['origin-colombia']),
+      roast: categoryValue(categories, 'roast', 'medium'),
+      process: categoryValue(categories, 'process', 'honey'),
+    }),
+  },
+  {
+    externalId: 'coffee-hambela',
+    name: 'Ethiopia Hambela, Guji',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Ethiopia Hambela, Guji'),
+      producer: 'Hambela Estate',
+      description: P(L(md('A natural taken a shade darker than we usually go, which trades some of the floral top notes for strawberry and cacao. The coffee we recommend to people moving across from a supermarket blend.'))),
+      'tasting-notes': L(['Strawberry', 'Cacao nib', 'Rose']),
+      price: 15.5,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-hambela'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a medium-dark roast.'),
+      }),
+      origin: reference(components['origin-ethiopia']),
+      roast: categoryValue(categories, 'roast', 'medium-dark'),
+      process: categoryValue(categories, 'process', 'natural'),
+    }),
+  },
+]
 
 // ---- site and experience nodes ---------------------------------------------------------------
 //
@@ -503,5 +709,14 @@ export const NODES = [
     component: 'coffee-guji',
   },
   { path: 'origins/ethiopia', name: 'Ethiopia', template: 'origin', component: 'origin-ethiopia' },
-  { path: 'origins/colombia', name: 'Colombia', template: 'origin', component: 'origin-colombia' },
+  { path: 'origins/colombia', name: 'Colombia', template: 'origin', component: 'origin-colombia' },  { path: 'coffees/colombia-huila', name: 'Colombia Huila, La Esperanza', template: 'coffee', component: 'coffee-huila' },
+  { path: 'coffees/ethiopia-yirgacheffe', name: 'Ethiopia Yirgacheffe, Kochere', template: 'coffee', component: 'coffee-yirgacheffe' },
+  { path: 'coffees/guatemala-antigua', name: 'Guatemala Antigua, El Pilar', template: 'coffee', component: 'coffee-antigua' },
+  { path: 'coffees/kenya-kirinyaga', name: 'Kenya Kirinyaga, Kianjuki', template: 'coffee', component: 'coffee-kirinyaga' },
+  { path: 'coffees/sumatra-gayo', name: 'Sumatra Gayo, Bener Meriah', template: 'coffee', component: 'coffee-gayo' },
+  { path: 'coffees/colombia-narino', name: 'Colombia Narino, Buesaco', template: 'coffee', component: 'coffee-narino' },
+  { path: 'coffees/ethiopia-hambela', name: 'Ethiopia Hambela, Guji', template: 'coffee', component: 'coffee-hambela' },
+  { path: 'origins/guatemala', name: 'Guatemala', template: 'origin', component: 'origin-guatemala' },
+  { path: 'origins/kenya', name: 'Kenya', template: 'origin', component: 'origin-kenya' },
+  { path: 'origins/sumatra', name: 'Sumatra', template: 'origin', component: 'origin-sumatra' },
 ]
