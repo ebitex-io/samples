@@ -106,6 +106,8 @@ const IMAGES = [
   ['coffee-gayo.svg', bagImage, 'dark', 6],
   ['coffee-narino.svg', bagImage, 'medium', 7],
   ['coffee-hambela.svg', bagImage, 'dark', 8],
+  // Step 19's staged Christmas lot.
+  ['coffee-christmas.svg', bagImage, 'medium', 9],
   // Brew guides.
   ['guide-pour-over.svg', brewImage, 'medium', 21],
   ['guide-aeropress.svg', brewImage, 'light', 22],

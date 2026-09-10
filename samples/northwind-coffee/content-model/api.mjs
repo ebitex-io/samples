@@ -104,6 +104,16 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     replaceDeliveryTargets: (authoringId, deliveryIds) =>
       put(`/content/v1/environments/${authoringId}/delivery-targets`, { deliveryEnvironmentIds: deliveryIds, reassign: false }),
     deleteEnvironment: (id) => del(`/content/v1/environments/${id}`),
+    replacePromotionTargets: (authoringId, targetIds) =>
+      put(`/content/v1/environments/${authoringId}/promotion-targets`, { targetEnvironmentIds: targetIds }),
+
+    // ---- promotion ----
+    // Plan first, then execute the plan you were given. The plan is what tells you which items are
+    // new, which update something already there, and which have *diverged* -- edited on both sides
+    // since they last matched. A diverged item needs `confirmOverwrite`, because promoting it
+    // throws away work somebody did in the target.
+    planPromotion: (targetEnvironmentId, kind, id) => post('/content/v1/promotions/plan', { targetEnvironmentId, kind, id }),
+    executePromotion: (targetEnvironmentId, items) => post('/content/v1/promotions/execute', { targetEnvironmentId, items }),
 
     // ---- contracts ----
     listContracts: async () => (await get('/content/v1/contracts?pageSize=200')).items,

@@ -20,6 +20,7 @@
 import {
   AUDIENCES,
   BLOBS,
+  ENVIRONMENTS,
   CATEGORY_GROUPS,
   CONTRACTS,
   TEMPLATES,
@@ -383,7 +384,7 @@ function titleCase(slug) {
  * Ancestors are taken care of: publishing `/coffees/ethiopia-guji` creates the address rows its
  * parents need, so a structural node like `/coffees` never has to be published by hand.
  */
-export async function publishSite(api, applied, { log = console.log } = {}) {
+export async function publishSite(api, applied, { log = console.log, includeStaged = false } = {}) {
   // Standalone Components -- the header and footer -- belong to no page, so nothing else's
   // closure reaches them. They are published as their own roots.
   for (const def of COMPONENTS) {
@@ -394,6 +395,10 @@ export async function publishSite(api, applied, { log = console.log } = {}) {
 
   for (const def of NODES) {
     if (!def.template) continue
+    // Staged content exists in this environment as an ordinary page -- it is simply never
+    // published here. Publishing is per node, so keeping something back is not a special mode:
+    // it is not calling publish on it. It goes live in Staging, and here on the day it should.
+    if (def.staged && !includeStaged) continue
     const node = def.path === '' ? applied.site : applied.nodes[def.path]
     await publishRoot(api, 'node', node.id, { log: () => {} })
     log(`published /${def.path}`)
@@ -414,4 +419,115 @@ export async function publishRoot(api, kind, id, { log = console.log } = {}) {
   )
   log(`published ${result.items.length} items`)
   return result
+}
+
+/**
+ * Creates the extra environments the model declares, and wires the promotion edge between them.
+ *
+ * Separate from `applyModel` because it is not content and does not belong to one environment: it
+ * describes the *shape* of the organization, and it has to run before there is a Staging
+ * environment to apply anything to. Safe to re-run -- everything here is matched by name.
+ *
+ * The promotion target is resolved by **kind**, not by name. A fresh organization names its first
+ * pair "Authoring" and "Delivery" for you, and an older one may have been renamed since; either
+ * way, the environment this promotes into is "the default authoring one", which is a fact the API
+ * reports rather than a string this file gets to assume.
+ */
+export async function applyEnvironments(api, { log = console.log } = {}) {
+  const payload = await api.environments()
+  const byName = new Map(payload.environments.map((e) => [e.name, e]))
+  const defaultAuthoring = payload.environments.find((e) => e.kind === 'authoring' && e.isDefault)
+  const created = {}
+
+  for (const def of ENVIRONMENTS) {
+    let authoring = byName.get(def.name)
+    if (!authoring) {
+      authoring = await api.createEnvironment('authoring', def.name)
+      log(`environment ${def.name} (authoring) created`)
+    }
+    created[def.name] = authoring
+
+
+    if (def.delivery) {
+      let delivery = byName.get(def.delivery)
+      if (!delivery) {
+        delivery = await api.createEnvironment('delivery', def.delivery)
+        log(`environment ${def.delivery} (delivery) created`)
+      }
+      created[def.delivery] = delivery
+      // What this authoring environment publishes to. One authoring environment may map to several
+      // delivery targets, but a delivery target belongs to exactly one authoring environment --
+      // otherwise "publish this" would have no single answer.
+      await api.replaceDeliveryTargets(authoring.id, [delivery.id])
+      log(`environment ${def.name} publishes to ${def.delivery}`)
+    }
+
+    if (def.promotedIntoFromDefaultAuthoring && defaultAuthoring) {
+      // The edge is declared on the **source**: the default authoring environment is what promotes,
+      // and this is one of the places it may promote into.
+      await api.replacePromotionTargets(defaultAuthoring.id, [authoring.id])
+      log(`environment ${defaultAuthoring.name} promotes into ${def.name}`)
+    }
+  }
+
+  return { environments: created, defaultAuthoring }
+}
+
+/**
+ * Promotes every staged Experience node into another authoring environment -- the Christmas range
+ * arriving in one movement.
+ *
+ * Two calls, and the shape of the pair is the interesting part.
+ *
+ * **Plan** returns the whole dependency closure: the Component the node binds, the Contracts and
+ * Templates that Component needs, the taxonomy its category fields point at. You listed none of
+ * that, and forgetting one of them by hand is exactly how a half-populated environment happens. It
+ * also does more than it shows -- promoting into an empty environment creates the site root and the
+ * ancestor nodes the path needs, without those appearing in the plan at all.
+ *
+ * Each item comes back marked `new`, `update` or `diverged`. **Diverged** means it was edited on
+ * both sides since they last matched, so promoting it discards work someone did in the target --
+ * which is why it needs `confirmOverwrite` rather than being overwritten quietly. This script
+ * confirms, because it owns both sides; a person is shown the list and decides.
+ *
+ * ---- The root goes first ----
+ *
+ * `execute` takes its **root** from the first item in the list, and re-plans the closure from it
+ * server-side. The plan's own items are ordered schema-first, so echoing them back verbatim -- the
+ * obvious thing to do -- makes a Contract the root, promotes that one Contract, and returns 200
+ * with nothing to suggest anything is wrong.
+ *
+ * So: the root first, then the explicit items. Implicit ones ride along regardless of whether they
+ * are listed, which is why they are filtered out here rather than sent. See
+ * ebitex-io/monorepo#580.
+ */
+export async function promoteStaged(api, applied, targetEnvironmentId, { log = console.log } = {}) {
+  const results = []
+  for (const def of NODES) {
+    if (!def.staged) continue
+    const node = applied.nodes[def.path]
+    if (!node) continue
+
+    const plan = await api.planPromotion(targetEnvironmentId, 'node', node.id)
+    if (plan.blockers.length > 0) {
+      throw new Error(`promotion of /${def.path} blocked: ${plan.blockers.join('; ')}`)
+    }
+
+    log(`/${def.path}: ${plan.items.length} items (${plan.items.map((i) => `${i.kind} ${i.state}`).join(', ')})`)
+    const items = [
+      { kind: 'node', id: node.id, confirmOverwrite: true },
+      ...plan.items
+        .filter((i) => !i.implicit && !(i.kind === 'node' && i.id === node.id))
+        .map((i) => ({ kind: i.kind, id: i.id, confirmOverwrite: i.state === 'diverged' })),
+    ]
+    const result = await api.executePromotion(targetEnvironmentId, items)
+    const failed = result.items.filter((i) => !i.promoted)
+    if (failed.length > 0) {
+      throw new Error(`promotion of /${def.path} failed: ${failed.map((i) => `${i.kind}: ${i.error}`).join('; ')}`)
+    }
+    results.push({ path: def.path, items: result.items.length })
+    log(`/${def.path}: promoted ${result.items.length} items`)
+  }
+
+  return results
 }

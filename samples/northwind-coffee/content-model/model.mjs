@@ -164,6 +164,62 @@ export const AUDIENCES = [
   },
 ]
 
+// ---- environments ------------------------------------------------------------------------------
+//
+// The Christmas range is decided in October, priced in November and goes on sale in December. None
+// of it should be visible on the site in the meantime, and all of it should arrive at once.
+//
+// An unpublished draft in the live environment nearly does that job -- and "nearly" is the problem.
+// It sits in the same library everyone is working in, one wrong click from being published, and
+// there is no way to look at the range as a *set* or move it as one. A second **authoring
+// environment** is a place where the whole thing can exist, be reviewed together, and then be
+// promoted in one movement.
+//
+// Two kinds, and they are not the same thing:
+//
+//   - An **authoring** environment is a workspace: its own library, its own drafts, its own
+//     workflow assignments. `Staging` below is one.
+//   - A **delivery** environment is a published surface a delivery key reads from. Giving Staging
+//     one of its own is what lets the range be *looked at* on a real site before it is public.
+//
+// The Christmas range is written in the ordinary authoring environment, along with everything else
+// -- it is simply not published. That much is free. What it does not give you is a way to *look at
+// it*: an unpublished draft can be previewed one page at a time, but nobody can walk the whole site
+// with the range on it, on a real URL, and decide whether it hangs together.
+//
+// So Northwind keeps a second authoring environment, `Staging`, with a delivery environment of its
+// own. The range is **promoted** into Staging and published there, against a key that is not the
+// public one. The team reads the real site. When the range is ready, it is published from the
+// ordinary environment to the public delivery target like anything else.
+//
+// ---- Which way promotion runs ----
+//
+// Content flows **downstream, away from where it is authored**. Authoring promotes into Staging,
+// not the other way round. That direction is not a convention you can flip: promotion copies a
+// closure keeping each item's identity, and the target's copies come *from* the source. Two
+// environments that each grew their own `coffee` Contract have two different ids for it, and
+// nothing can reconcile them afterwards.
+//
+// So: author in one place, promote outwards. The first promotion into an empty environment brings
+// the Contracts, the Templates, the taxonomy, the Components and the Experience nodes the page
+// needs -- including the site root -- without any of them being asked for by name.
+//
+// **This is the first step that genuinely requires Pro.** Starter allows exactly one authoring and
+// one delivery environment; everything else in this sample runs on either tier. Nothing here is a
+// feature you unlock -- it is a second and third *environment*, which is a question of scale.
+export const ENVIRONMENTS = [
+  {
+    name: 'Staging',
+    kind: 'authoring',
+    // Its own published surface, read by its own delivery key. This is what makes the range
+    // *lookable-at* rather than merely stored.
+    delivery: 'Staging delivery',
+    // The default authoring environment promotes into this one -- resolved by kind rather than by
+    // name, because a fresh organization names its first pair for you and we do not get to choose.
+    promotedIntoFromDefaultAuthoring: true,
+  },
+]
+
 // ---- workflow ----------------------------------------------------------------------------------
 //
 // The seasonal note on the front page changes every month and is written in a hurry, which is
@@ -615,6 +671,7 @@ export const BLOBS = [
   'coffee-gayo',
   'coffee-narino',
   'coffee-hambela',
+  'coffee-christmas',
   'guide-pour-over',
   'guide-aeropress',
   'guide-cafetiere',
@@ -1120,6 +1177,45 @@ export const COMPONENTS = [
       process: categoryValue(categories, 'process', 'natural'),
     }),
   },
+  {
+    // Staged. `staged: true` is not a field on the Component and means nothing to the API -- it
+    // tells applyModel.mjs to write this one only when it is applying to the Staging environment.
+    //
+    // The Christmas range is decided in October, priced in November and goes on sale in December,
+    // and none of that should be visible on the site in the meantime. An unpublished draft in the
+    // live environment would nearly do -- but "nearly" is the problem: it sits in the same library
+    // everyone is working in, one wrong click from being published, and it cannot be reviewed as a
+    // set. A second environment is a place where the whole range can exist, be looked at together,
+    // and arrive in one movement.
+    externalId: 'coffee-christmas',
+    name: 'Christmas Blend',
+    contract: 'coffee',
+    folder: 'Coffees',
+    staged: true,
+    document: ({ contracts, blobs, components, categories }) => ({
+      name: L('Christmas Blend'),
+      producer: 'Blended in the roastery',
+      description: P(
+        L(
+          md(
+            'Huila for the body and a little Hambela for the fruit, roasted a shade darker than either goes on its own. It is meant for a cafetière at eleven in the morning with too many people in the kitchen.',
+          ),
+        ),
+      ),
+      'tasting-notes': L(['Baked plum', 'Cocoa', 'Orange peel']),
+      price: 13.5,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-christmas'],
+        alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
+      }),
+      // No `origin` reference: a blend has more than one, and pretending otherwise to fill a field
+      // is how a content model starts lying. The field is optional, so the page simply has no
+      // origin card -- which is the honest answer.
+      roast: categoryValue(categories, 'roast', 'medium'),
+      process: categoryValue(categories, 'process', 'washed'),
+    }),
+  },
 
   // ---- brew guides ----
   {
@@ -1498,6 +1594,8 @@ export const NODES = [
   { path: 'coffees/sumatra-gayo', name: 'Sumatra Gayo, Bener Meriah', template: 'coffee', component: 'coffee-gayo' },
   { path: 'coffees/colombia-narino', name: 'Colombia Narino, Buesaco', template: 'coffee', component: 'coffee-narino' },
   { path: 'coffees/ethiopia-hambela', name: 'Ethiopia Hambela, Guji', template: 'coffee', component: 'coffee-hambela' },
+  // Staged. Exists only in the Staging environment until somebody promotes it -- see ENVIRONMENTS.
+  { path: 'coffees/christmas-blend', name: 'Christmas Blend', template: 'coffee', component: 'coffee-christmas', staged: true },
   { path: 'origins/guatemala', name: 'Guatemala', template: 'origin', component: 'origin-guatemala' },
   { path: 'origins/kenya', name: 'Kenya', template: 'origin', component: 'origin-kenya' },
   { path: 'origins/sumatra', name: 'Sumatra', template: 'origin', component: 'origin-sumatra' },

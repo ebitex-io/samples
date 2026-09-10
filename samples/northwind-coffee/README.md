@@ -31,6 +31,8 @@ makes it live; no code changes and nothing is redeployed.
 | Personalization: one page, different words for trade and retail | `content-model/model.mjs`'s `AUDIENCES`, `src/lib/visitor.ts` |
 | The context bag: your app reports facts, the CMS owns what they mean | `src/lib/visitor.ts` |
 | Editorial workflow, and why governance needs a *thing* to govern | `content-model/model.mjs`'s `WORKFLOWS` |
+| A second environment, and promotion between them | `content-model/model.mjs`'s `ENVIRONMENTS` |
+| Which way promotion runs, and why that direction is not a convention | `content-model/applyModel.mjs`'s `promoteStaged` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
@@ -258,6 +260,33 @@ machine, which is what stops one team's workflow being unreadable to the next.
 
 Open **On the roaster this month** in Content and look at its Settings tab to see the state and the
 transitions.
+
+### Staging the Christmas range
+
+The Christmas range is decided in October and goes on sale in December. It is written in the ordinary
+authoring environment along with everything else and simply not published -- that much is free. What
+that does not give you is a way to *look at it*: an unpublished draft can be previewed a page at a
+time, but nobody can walk the whole site with the range on it and decide whether it hangs together.
+
+So there is a second authoring environment, `Staging`, with a delivery environment of its own. The
+range is **promoted** into it and published there, against a key that is not the public one. When it
+is ready it is published from the ordinary environment like anything else.
+
+**This is the one step that genuinely requires Pro.** Starter allows exactly one authoring and one
+delivery environment. Everything else in this sample runs on either tier -- no capability here is
+tier-gated, and what Pro buys is scale and environments.
+
+Two things this step teaches that are easy to get wrong:
+
+- **Content flows downstream, away from where it is authored.** Promotion copies a closure keeping
+  each item's identity, and the target's copies come *from* the source. Two environments that each
+  grew their own `coffee` Contract have two different ids for it and nothing can reconcile them
+  afterwards. So: author in one place, promote outwards. Do not apply a content model twice.
+- **Plan, then execute -- and the root goes first.** The plan returns the whole dependency closure
+  you did not ask for, and does more than it shows: promoting into an empty environment creates the
+  site root and the ancestor nodes without those appearing in the plan at all. `execute` takes its
+  root from the *first* item in the list, so echoing the plan back verbatim -- the obvious thing --
+  makes a Contract the root and promotes one item, successfully and silently.
 
 ### Types are generated, not hand-written
 
