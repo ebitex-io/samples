@@ -35,6 +35,22 @@ export function reference(component, contextualValues) {
   return value
 }
 
+/**
+ * A reference bound *through an Adapter* -- the same pointer, plus the name of a mapping to run on
+ * the way out.
+ *
+ * The stored value still points at the original Component and nothing is copied. What changes is
+ * what a renderer is handed: the Adapter's **output** Contract, with the binding's `contract`
+ * descriptor rewritten to match, so a slot expecting a card can be filled by a coffee.
+ *
+ * `{ id }` names a saved Adapter. A mapping can also be written inline on one binding, which is the
+ * right call for a one-off and the wrong one for something three cards share -- this Adapter is
+ * named because it is reused, and because a named one can be corrected in a single place.
+ */
+export function adapted(component, adapter) {
+  return { mode: 'reference', provider: 'core', key: component.id, adapter: { id: adapter.id } }
+}
+
 export function templateVersion(template) {
   return template.latestVersionNumber ?? template.latestVersion?.versionNumber
 }

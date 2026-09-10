@@ -28,6 +28,24 @@ export type HeaderContent = {
   links?: Array<ComponentValue<NavLink>>
 }
 
+/** guide (ab59b61d-6d13-4648-8907-4955517a5359@1) */
+export type Guide = {
+  heading: string
+  summary?: string
+  equipment?: Array<string>
+  "total-time"?: string
+  steps?: Array<ComponentValue<GuideStep>>
+}
+
+/** statement (622ad278-e1d2-4abe-87dd-ae4143e6bc6d@1) */
+export type Statement = {
+  heading: string
+  standfirst?: string
+  body?: RichTextValue
+  cta?: LinkValue
+  "cta-label"?: string
+}
+
 /** origin (734e1bed-64a1-4beb-a536-74d092b18ed7@1) */
 export type Origin = {
   name: string
@@ -38,13 +56,12 @@ export type Origin = {
   note?: string
 }
 
-/** guide (ab59b61d-6d13-4648-8907-4955517a5359@1) */
-export type Guide = {
-  heading: string
-  summary?: string
-  equipment?: Array<string>
-  "total-time"?: string
-  steps?: Array<ComponentValue<GuideStep>>
+/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
+export type Page = {
+  title: string
+  description?: string
+  body?: RichTextValue
+  sections?: Array<PresentationEnvelope<CardRail | Statement | FormEmbed>>
 }
 
 /** store-list (9c00ccc6-1689-4c97-acd2-9a3c8a94b597@1) */
@@ -54,12 +71,10 @@ export type StoreList = {
   stores?: Array<ComponentValue<Store>>
 }
 
-/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
-export type Page = {
-  title: string
-  description?: string
-  body?: RichTextValue
-  sections?: Array<PresentationEnvelope<Statement | FormEmbed>>
+/** card-rail (357f3187-67af-4a88-94ef-a53c40b336b2@2) */
+export type CardRail = {
+  heading: string
+  cards?: Array<PresentationEnvelope<Card>>
 }
 
 /** footer-content (73c724c1-3f3a-4664-8c0e-33628cf1671d@1) */
@@ -93,6 +108,12 @@ export type GuideStep = {
   body?: RichTextValue
 }
 
+/** form-embed (6f8070d2-f83f-4810-aea3-32c50179bbff@1) */
+export type FormEmbed = {
+  form: string
+  title?: string
+}
+
 /** store (88384302-c8cd-44c7-a61e-e223619cb94f@1) */
 export type Store = {
   name: string
@@ -102,19 +123,11 @@ export type Store = {
   map?: LinkValue
 }
 
-/** statement (622ad278-e1d2-4abe-87dd-ae4143e6bc6d@1) */
-export type Statement = {
+/** card (535e1bcd-0e37-4923-a5fe-93c720a348af@2) */
+export type Card = {
   heading: string
   standfirst?: string
-  body?: RichTextValue
-  cta?: LinkValue
-  "cta-label"?: string
-}
-
-/** form-embed (6f8070d2-f83f-4810-aea3-32c50179bbff@1) */
-export type FormEmbed = {
-  form: string
-  title?: string
+  image?: ComponentValue<Image>
 }
 
 /** experience (00000000-0000-0000-0000-000000000283@0) */

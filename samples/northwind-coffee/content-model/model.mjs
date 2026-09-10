@@ -13,7 +13,7 @@
 // See api.mjs for why you should not run this against your own organization.
 // ---------------------------------------------------------------------------------------------
 
-import { categoryValue, experienceLink, inline, presentation, reference } from './values.mjs'
+import { adapted, categoryValue, experienceLink, inline, presentation, reference } from './values.mjs'
 
 // ---- value helpers ---------------------------------------------------------------------------
 
@@ -164,6 +164,44 @@ export const AUDIENCES = [
   },
 ]
 
+// ---- adapters ----------------------------------------------------------------------------------
+//
+// The front page wants a row of "try these next" cards. A card is a heading, a line of small print
+// and a picture -- which is *not* what a coffee is, and the temptation is to solve that by making
+// coffees carry card fields, or by writing a second, card-shaped copy of every coffee.
+//
+// Both are the same mistake in different clothes: they let a **presentation** dictate the shape of
+// the content. The card fields would be meaningless on the coffee's own page, and a duplicate goes
+// stale the first time somebody corrects a price.
+//
+// An **Adapter** is the third answer. It is a named, reusable mapping from one Contract to another,
+// applied by the server: bind a `coffee` into a slot that expects a `card`, name this Adapter on the
+// binding, and delivery hands the renderer a `card`. The coffee is untouched, nothing is copied, and
+// `card.tsx` never learns that coffees exist.
+//
+// The mapping is **frozen at publish**, like the content it maps -- so editing this Adapter does not
+// change already-published output until the pages that use it are republished. That is the same
+// freeze discipline the content itself gets, and for the same reason: what a page delivered
+// yesterday should not change because somebody edited a mapping today.
+//
+// The rules are deliberately dull. `direct` copies a field, and the two fields have to be
+// **compatible** -- which is why `card.standfirst` is not localizable: it is fed by `coffee.producer`,
+// and a producer's name is a proper noun that stays as it is in every language. The modifiers have to
+// line up, and noticing that is part of designing the mapping rather than an obstacle to it.
+export const ADAPTERS = [
+  {
+    externalId: 'coffee-as-card',
+    name: 'Coffee as card',
+    input: 'coffee',
+    output: 'card',
+    rules: [
+      { kind: 'direct', target: 'heading', source: 'name' },
+      { kind: 'direct', target: 'standfirst', source: 'producer' },
+      { kind: 'direct', target: 'image', source: 'image' },
+    ],
+  },
+]
+
 // ---- environments ------------------------------------------------------------------------------
 //
 // The Christmas range is decided in October, priced in November and goes on sale in December. None
@@ -295,6 +333,13 @@ export const CATEGORY_GROUPS = [
 //
 // A Contract is a content *type*: a named set of fields, with no opinion at all about how any of
 // it looks. `page` is the first one, and for now it is as small as a page type can be.
+//
+// **Order matters here, the same way it does in COMPONENTS.** `applyModel` walks this list once,
+// building up a map of what it has created so far, and `ids(contracts, [...])` reads that map -- so
+// a Contract constraining a field to another Contract must come *after* it. Get it wrong and
+// nothing fails: `ids` drops what it cannot find, the constraint is written empty, and the field
+// silently accepts anything. That is exactly what happened to `card.image` until step 20's own
+// follow-up noticed the generated type had no inner shape to offer.
 
 export const CONTRACTS = [
   {
@@ -318,7 +363,7 @@ export const CONTRACTS = [
       // picks from the Templates that belong on a page, not from every Template in the system.
       presentationField('Sections', 'sections', {
         enumerable: true,
-        settings: { allowedTemplateIds: ids(templates, ['hero', 'prose', 'form-embed']) },
+        settings: { allowedTemplateIds: ids(templates, ['hero', 'prose', 'form-embed', 'card-rail']) },
       }),
     ],
   },
@@ -342,11 +387,46 @@ export const CONTRACTS = [
     // An image and the text that belongs with it. Alt text is mandatory and localizable, which is
     // the whole reason this is a Contract rather than a bare Blob field on everything that needs a
     // picture: a Blob is bytes, and bytes cannot be described.
+    //
+    // It sits here, above everything that points at it, for the reason in this list's own preamble.
     externalId: 'image',
     name: 'Image',
     fields: () => [
       blob('File', 'file', { mandatory: true }),
       text('Alt text', 'alt', { mandatory: true, localizable: true }),
+    ],
+  },
+  {
+    // What a card *is*: a heading, a line of small print, a picture. Nothing here mentions coffee,
+    // and that is the point -- an Adapter feeds it from a `coffee`, and a second Adapter could feed
+    // it from a brew guide tomorrow without either of them knowing about the other.
+    //
+    // `standfirst` is deliberately **not** localizable: it is fed from `coffee.producer`, which is a
+    // proper noun that stays as it is in every language, and a `direct` rule needs the two fields to
+    // be compatible. Designing a mapping is partly deciding things like that.
+    externalId: 'card',
+    name: 'Card',
+    titleFieldPath: 'heading',
+    fields: ({ contracts }) => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      text('Standfirst', 'standfirst', {}),
+      componentField('Image', 'image', {
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['image']) },
+      }),
+    ],
+  },
+  {
+    // A row of cards. Its `cards` field accepts one Template -- `card` -- and each entry binds
+    // whatever content an Adapter can turn into one.
+    externalId: 'card-rail',
+    name: 'Card rail',
+    namesTemplates: true,
+    fields: ({ templates }) => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      presentationField('Cards', 'cards', {
+        enumerable: true,
+        settings: { allowedTemplateIds: ids(templates, ['card']) },
+      }),
     ],
   },
   {
@@ -623,6 +703,18 @@ export const TEMPLATES = [
     supports: ['coffee-index'],
     settings: [],
   },
+  {
+    externalId: 'card',
+    name: 'Card',
+    supports: ['card'],
+    settings: [],
+  },
+  {
+    externalId: 'card-rail',
+    name: 'Card rail',
+    supports: ['card-rail'],
+    settings: [],
+  },
 ]
 
 // ---- streams ---------------------------------------------------------------------------------
@@ -743,84 +835,6 @@ export const COMPONENTS = [
           ),
         ),
       ),
-    }),
-  },
-  {
-    // The front page. It has no body of its own -- it is assembled entirely out of `sections`,
-    // which is what "composition" means here. Each section is a Template plus the content to run
-    // through it, and the content is *inline*: this hero belongs to the front page and to nothing
-    // else, so giving it a life of its own in the library would be clutter rather than reuse.
-    externalId: 'home-page',
-    name: 'Home',
-    contract: 'page',
-    folder: 'Pages',
-    document: ({ audiences, components, contracts, templates, nodes }) => ({
-      title: L('Northwind Coffee'),
-      description: L(
-        'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
-        {
-          fr: "Du café en petits lots, venu de quatre fermes que nous connaissons par leur nom, torréfié sur la côte nord et expédié dans la semaine.",
-        },
-      ),
-      sections: [
-        presentation(
-          templates.hero,
-          inline(contracts.statement, {
-            heading: L('Coffee worth the wait', { fr: 'Un café qui vaut l’attente' }),
-            standfirst: L('Four farms. Two roast days a week. Nothing older than a month.', {
-              fr: 'Quatre fermes. Deux jours de torréfaction par semaine. Rien de plus vieux qu’un mois.',
-            }),
-            // The first personalized value on the site. Everyone gets the default; a trade buyer
-            // gets the variant. Note that the variant carries its own locale envelope -- the two
-            // modifiers compose, so a French trade buyer gets French trade copy without either
-            // axis knowing the other exists.
-            body: P(
-              L(
-                md(
-                  'We are a small roastery on the north coast, and we would rather sell you one coffee you love than six you are unsure about.',
-                ),
-                {
-                  fr: md(
-                    'Nous sommes une petite torréfaction sur la côte nord, et nous préférons vous vendre un café que vous aimez plutôt que six dont vous n’êtes pas sûr.',
-                  ),
-                },
-              ),
-              [
-                forAudience(
-                  audiences,
-                  'trade',
-                  L(
-                    md(
-                      'We supply around forty cafés and roast to order. Sacks are 5 kg and 12 kg, wholesale pricing starts at six sacks a month, and we can hold a green lot for you if you tell us early enough.',
-                    ),
-                    {
-                      fr: md(
-                        'Nous fournissons une quarantaine de cafés et torréfions à la commande. Les sacs font 5 kg et 12 kg, le tarif professionnel démarre à six sacs par mois, et nous pouvons réserver un lot vert si vous nous prévenez assez tôt.',
-                      ),
-                    },
-                  ),
-                ),
-              ],
-            ),
-            // A link to another page in this site, by node identity rather than by URL. The
-            // Delivery API resolves the current path for it on every request, so moving the
-            // target page never leaves this link stale.
-            cta: experienceLink(nodes['about']),
-            'cta-label': L('How we work', { fr: 'Notre façon de travailler' }),
-          }),
-        ),
-        // This section used to be written inline, here, like the hero above it. Step 18 moved it
-        // into the library as `seasonal-note` -- and the reason is the whole lesson of that step:
-        //
-        //   **You cannot review something that has no independent existence.**
-        //
-        // A workflow governs a Component or an Experience node. Content written inline has neither
-        // a version of its own nor a place in the library, so there is nothing for a review to be
-        // *about*. Wanting this paragraph reviewed is therefore a reason to make it a Component --
-        // which is the same inline-versus-reference question step 05 asked, arriving from a
-        // completely different direction.
-        presentation(templates.prose, reference(components['seasonal-note'])),
-      ],
     }),
   },
   {
@@ -1510,6 +1524,108 @@ export const COMPONENTS = [
   },
 
   // ---- site chrome ----
+  {
+    // Three coffees, shown as cards, without a card-shaped copy of any of them existing anywhere.
+    //
+    // Each entry is an ordinary Presentation -- a Template plus the content to run through it --
+    // except that the content is a `coffee` and the Template renders a `card`. `adapted()` is what
+    // reconciles those: the binding names the Coffee-as-card Adapter, and delivery applies it before
+    // the renderer sees anything. Change a coffee's name and these cards change with it, because
+    // there is only one copy of that name in the system.
+    externalId: 'try-these-next',
+    name: 'Try these next',
+    contract: 'card-rail',
+    folder: 'Pages',
+    document: ({ adapters, templates, components }) => ({
+      heading: L('Try these next', { fr: 'À essayer ensuite' }),
+      cards: [
+        presentation(templates.card, adapted(components['coffee-guji'], adapters['coffee-as-card'])),
+        presentation(templates.card, adapted(components['coffee-huila'], adapters['coffee-as-card'])),
+        presentation(templates.card, adapted(components['coffee-gayo'], adapters['coffee-as-card'])),
+      ],
+    }),
+  },
+  {
+    // The front page. It has no body of its own -- it is assembled entirely out of `sections`,
+    // which is what "composition" means here. Each section is a Template plus the content to run
+    // through it, and the content is *inline*: this hero belongs to the front page and to nothing
+    // else, so giving it a life of its own in the library would be clutter rather than reuse.
+    externalId: 'home-page',
+    name: 'Home',
+    contract: 'page',
+    folder: 'Pages',
+    document: ({ audiences, components, contracts, templates, nodes }) => ({
+      title: L('Northwind Coffee'),
+      description: L(
+        'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
+        {
+          fr: "Du café en petits lots, venu de quatre fermes que nous connaissons par leur nom, torréfié sur la côte nord et expédié dans la semaine.",
+        },
+      ),
+      sections: [
+        presentation(
+          templates.hero,
+          inline(contracts.statement, {
+            heading: L('Coffee worth the wait', { fr: 'Un café qui vaut l’attente' }),
+            standfirst: L('Four farms. Two roast days a week. Nothing older than a month.', {
+              fr: 'Quatre fermes. Deux jours de torréfaction par semaine. Rien de plus vieux qu’un mois.',
+            }),
+            // The first personalized value on the site. Everyone gets the default; a trade buyer
+            // gets the variant. Note that the variant carries its own locale envelope -- the two
+            // modifiers compose, so a French trade buyer gets French trade copy without either
+            // axis knowing the other exists.
+            body: P(
+              L(
+                md(
+                  'We are a small roastery on the north coast, and we would rather sell you one coffee you love than six you are unsure about.',
+                ),
+                {
+                  fr: md(
+                    'Nous sommes une petite torréfaction sur la côte nord, et nous préférons vous vendre un café que vous aimez plutôt que six dont vous n’êtes pas sûr.',
+                  ),
+                },
+              ),
+              [
+                forAudience(
+                  audiences,
+                  'trade',
+                  L(
+                    md(
+                      'We supply around forty cafés and roast to order. Sacks are 5 kg and 12 kg, wholesale pricing starts at six sacks a month, and we can hold a green lot for you if you tell us early enough.',
+                    ),
+                    {
+                      fr: md(
+                        'Nous fournissons une quarantaine de cafés et torréfions à la commande. Les sacs font 5 kg et 12 kg, le tarif professionnel démarre à six sacs par mois, et nous pouvons réserver un lot vert si vous nous prévenez assez tôt.',
+                      ),
+                    },
+                  ),
+                ),
+              ],
+            ),
+            // A link to another page in this site, by node identity rather than by URL. The
+            // Delivery API resolves the current path for it on every request, so moving the
+            // target page never leaves this link stale.
+            cta: experienceLink(nodes['about']),
+            'cta-label': L('How we work', { fr: 'Notre façon de travailler' }),
+          }),
+        ),
+        // This section used to be written inline, here, like the hero above it. Step 18 moved it
+        // into the library as `seasonal-note` -- and the reason is the whole lesson of that step:
+        //
+        //   **You cannot review something that has no independent existence.**
+        //
+        // A workflow governs a Component or an Experience node. Content written inline has neither
+        // a version of its own nor a place in the library, so there is nothing for a review to be
+        // *about*. Wanting this paragraph reviewed is therefore a reason to make it a Component --
+        // which is the same inline-versus-reference question step 05 asked, arriving from a
+        // completely different direction.
+        presentation(templates.prose, reference(components['seasonal-note'])),
+        // Three coffees, rendered as cards. The rail is its own Component so the front page
+        // stays a list of sections rather than a place where content accumulates.
+        presentation(templates['card-rail'], reference(components['try-these-next'])),
+      ],
+    }),
+  },
   {
     // The site header, as content. Addressed by *external id* rather than by Guid, so the front
     // end can ask for `site-header` by name and there is nothing to configure per environment.

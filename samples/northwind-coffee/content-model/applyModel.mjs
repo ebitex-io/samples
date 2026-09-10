@@ -18,6 +18,7 @@
 // ---------------------------------------------------------------------------------------------
 
 import {
+  ADAPTERS,
   AUDIENCES,
   BLOBS,
   ENVIRONMENTS,
@@ -40,6 +41,7 @@ import { compact, presentation, reference, templateVersion } from './values.mjs'
  *   from inside a browser, and only one of those has a filesystem.
  */
 export async function applyModel(api, { log = console.log, readAsset } = {}) {
+  const adapters = {}
   const audiences = {}
   const contracts = {}
   const templates = {}
@@ -48,7 +50,7 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
   const categoryGroups = {}
   const categories = {}
   const nodes = {}
-  const ctx = { audiences, contracts, templates, components, blobs, categoryGroups, categories, nodes }
+  const ctx = { adapters, audiences, contracts, templates, components, blobs, categoryGroups, categories, nodes }
 
   // ---- audiences ----
   // Before anything that references one. An Audience is configuration, not content: it is never
@@ -187,6 +189,27 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
     log(
       `contract ${def.externalId} -> v${contracts[def.externalId].latestVersion?.versionNumber} (template constraints applied)`,
     )
+  }
+
+  // ---- adapters ----
+  // After the Contracts they map between, and before the Components that bind through them.
+  // Configuration, like an Audience -- but unlike one, an Adapter's rules are **frozen into the
+  // snapshot at publish**, because a mapping determines the delivered *shape* rather than a value
+  // read at request time. Editing one does not change already-published pages until they are
+  // republished.
+  const existingAdapters = new Map((await api.listAdapters()).map((a) => [a.externalId, a]))
+  for (const def of ADAPTERS) {
+    const input = {
+      name: def.name,
+      inputContractId: contracts[def.input].id,
+      outputContractId: contracts[def.output].id,
+      rules: def.rules,
+    }
+    const current = existingAdapters.get(def.externalId)
+    adapters[def.externalId] = current
+      ? await api.updateAdapter(current.id, { ...input, rowVersion: (await api.getAdapter(current.id)).rowVersion })
+      : await api.createAdapter({ externalId: def.externalId, ...input })
+    log(`adapter ${def.externalId} (${current ? 'updated' : 'created'})`)
   }
 
   // ---- blobs ----

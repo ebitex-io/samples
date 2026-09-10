@@ -4,7 +4,7 @@ import { Resolve } from '@ebitex/content-sdk/react'
 
 import type { Coffee, Origin } from '@/types/content'
 import { useLocale } from '@/lib/locale'
-import { loadOriginPaths } from '@/lib/originPaths'
+import { loadPublishedPaths } from '@/lib/publishedPaths'
 
 /**
  * The origin summary on a coffee page.
@@ -32,7 +32,7 @@ export function OriginCard({ origin }: { origin: Coffee['origin'] }) {
   const [paths, setPaths] = useState<Map<string, string>>()
   useEffect(() => {
     let live = true
-    loadOriginPaths(locale).then((map) => live && setPaths(map))
+    loadPublishedPaths('origin', locale).then((map) => live && setPaths(map))
     return () => {
       live = false
     }

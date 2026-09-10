@@ -1,17 +1,22 @@
 import { content } from '@/lib/content'
 
 /**
- * Where each origin's page lives.
+ * Where the page for a piece of content lives.
  *
  * Step 05 deliberately left the coffee page unable to link to its origin, because nothing there
  * knew the origin's URL and building one from its name would have been a guess. This is the
- * answer: ask the Delivery API which published node each origin is bound to.
+ * answer: ask the Delivery API which published node each Component is bound to.
  *
  * `paths: true` is the whole trick -- a listing can return, per item, the published path of every
  * node whose payload binds that Component by reference. The path is a fact the CMS owns, so moving
  * an origin's page updates every link to it with nothing rebuilt.
  *
- * Fetched once per browser session and shared, because it is the same answer for every coffee.
+ * Step 20 generalized it from origins to any Contract, because a card in the cross-sell rail needs
+ * exactly the same answer about a coffee. The card is fed through an Adapter and never learns that
+ * coffees exist -- but the binding still points at the coffee, so its `key` is the coffee's own id
+ * and this map turns that into a URL.
+ *
+ * Fetched once per contract and locale and shared, because it is the same answer for every card.
  */
 /**
  * Keyed by locale. Every slug on this site is the same in both languages, so both keys hold the
@@ -21,12 +26,13 @@ import { content } from '@/lib/content'
  */
 const inFlight = new Map<string, Promise<Map<string, string>>>()
 
-export function loadOriginPaths(locale: string): Promise<Map<string, string>> {
+export function loadPublishedPaths(contract: string, locale: string): Promise<Map<string, string>> {
   if (!content) return Promise.resolve(new Map())
-  let pending = inFlight.get(locale)
+  const cacheKey = `${contract}:${locale}`
+  let pending = inFlight.get(cacheKey)
   if (!pending) {
     pending = content.delivery
-      .listComponents({ contract: 'origin', paths: true, limit: 100, locale })
+      .listComponents({ contract, paths: true, limit: 100, locale })
       .then((page) => {
         const map = new Map<string, string>()
         for (const item of page.items) {
@@ -36,7 +42,7 @@ export function loadOriginPaths(locale: string): Promise<Map<string, string>> {
         return map
       })
       .catch(() => new Map<string, string>())
-    inFlight.set(locale, pending)
+    inFlight.set(cacheKey, pending)
   }
   return pending
 }

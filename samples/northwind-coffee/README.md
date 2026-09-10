@@ -33,6 +33,7 @@ makes it live; no code changes and nothing is redeployed.
 | Editorial workflow, and why governance needs a *thing* to govern | `content-model/model.mjs`'s `WORKFLOWS` |
 | A second environment, and promotion between them | `content-model/model.mjs`'s `ENVIRONMENTS` |
 | Which way promotion runs, and why that direction is not a convention | `content-model/applyModel.mjs`'s `promoteStaged` |
+| Adapters: one Component, a second shape, no copy and no bespoke Contract | `content-model/model.mjs`'s `ADAPTERS`, `src/presentations/card.tsx` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
@@ -287,6 +288,30 @@ Two things this step teaches that are easy to get wrong:
   site root and the ancestor nodes without those appearing in the plan at all. `execute` takes its
   root from the *first* item in the list, so echoing the plan back verbatim -- the obvious thing --
   makes a Contract the root and promotes one item, successfully and silently.
+
+### A coffee, shown as a card
+
+The front page ends with a row of "try these next" cards. A card is a heading, a line of small print
+and a picture -- which is not what a coffee is.
+
+The two obvious answers are both the same mistake. Adding card fields to `coffee` lets a
+*presentation* dictate the shape of the content, and those fields mean nothing on the coffee's own
+page. Writing a card-shaped copy of each coffee goes stale the first time somebody corrects a name.
+
+An **Adapter** is the third answer: a named, reusable mapping from one Contract to another, applied
+by the server. The binding still points at the coffee -- nothing is copied -- and delivery hands the
+renderer a `card`. Open `src/presentations/card.tsx` and notice what is not in it: the word coffee.
+
+Two details worth having:
+
+- **The mapping is frozen at publish**, like the content it maps. Editing the Adapter does not change
+  already-published pages until they are republished — a page delivered yesterday should not change
+  because somebody edited a mapping today.
+- **The link is not mapped, deliberately.** A coffee has no URL field, because a URL is a fact the
+  CMS owns rather than content someone types. An Adapter changes the *shape* delivered, never the
+  identity, so the card's binding still carries the coffee's own id — and `lib/publishedPaths.ts`
+  turns that into the page it is published at. A card whose subject has no published page is simply
+  not a link.
 
 ### Types are generated, not hand-written
 
