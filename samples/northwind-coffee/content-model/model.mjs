@@ -283,6 +283,36 @@ export const CONTRACTS = [
     ],
   },
   {
+    // One entry in a navigation list: a label and somewhere to go.
+    externalId: 'nav-link',
+    name: 'Navigation link',
+    fields: () => [
+      text('Label', 'label', { mandatory: true, localizable: true }),
+      link('Link', 'link', { mandatory: true }),
+    ],
+  },
+  {
+    externalId: 'header-content',
+    name: 'Header',
+    fields: ({ contracts }) => [
+      componentField('Links', 'links', {
+        enumerable: true,
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['nav-link']) },
+      }),
+    ],
+  },
+  {
+    externalId: 'footer-content',
+    name: 'Footer',
+    fields: ({ contracts }) => [
+      text('Tagline', 'tagline', { localizable: true }),
+      componentField('Links', 'links', {
+        enumerable: true,
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['nav-link']) },
+      }),
+    ],
+  },
+  {
     // A published ebitex Form, embedded on a page. One mandatory field: which form. Everything
     // else about the embed -- the organization, where Forms is served from -- is configuration
     // rather than content, because this site embeds only its own forms.
@@ -488,6 +518,11 @@ export const BLOBS = [
 // with URLs -- that is the Experience tree's job, further down.
 
 export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }, { name: 'Guides' }]
+
+/** One navigation entry, pointing at a page by node identity rather than by URL. */
+function navLink(contracts, nodes, path, label) {
+  return inline(contracts['nav-link'], { label: L(label), link: experienceLink(nodes[path]) })
+}
 
 // ---- components ------------------------------------------------------------------------------
 //
@@ -1161,6 +1196,47 @@ export const COMPONENTS = [
             title: L('Wholesale enquiry form'),
           }),
         ),
+      ],
+    }),
+  },
+
+  // ---- site chrome ----
+  {
+    // The site header, as content. Addressed by *external id* rather than by Guid, so the front
+    // end can ask for `site-header` by name and there is nothing to configure per environment.
+    //
+    // This has no Experience node and lives at no path. Not everything published is a page: this
+    // is a Component published on its own, which the front end fetches directly. It has to be
+    // published as its own root -- nothing else's closure reaches it.
+    externalId: 'site-header',
+    name: 'Site header',
+    contract: 'header-content',
+    folder: 'Pages',
+    standalone: true,
+    document: ({ contracts, nodes }) => ({
+      links: [
+        navLink(contracts, nodes, 'coffees', 'Coffees'),
+        navLink(contracts, nodes, 'guides', 'Brew guides'),
+        navLink(contracts, nodes, 'stores', 'Find us'),
+        navLink(contracts, nodes, 'about', 'About'),
+        navLink(contracts, nodes, 'contact', 'Wholesale'),
+      ],
+    }),
+  },
+  {
+    externalId: 'site-footer',
+    name: 'Site footer',
+    contract: 'footer-content',
+    folder: 'Pages',
+    standalone: true,
+    document: ({ contracts, nodes }) => ({
+      tagline: L('Roasted on the north coast. Posted out the same week.'),
+      links: [
+        navLink(contracts, nodes, 'coffees', 'Coffees'),
+        navLink(contracts, nodes, 'guides', 'Brew guides'),
+        navLink(contracts, nodes, 'stores', 'Find us'),
+        navLink(contracts, nodes, 'about', 'About'),
+        navLink(contracts, nodes, 'contact', 'Wholesale'),
       ],
     }),
   },

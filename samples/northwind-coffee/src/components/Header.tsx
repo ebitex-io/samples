@@ -1,16 +1,21 @@
 import { Link, NavLink } from 'react-router'
 
+import { NavLinks, type NavItem } from '@/components/NavLinks'
+import type { HeaderContent } from '@/lib/cmsTypes'
+
 /**
  * The site header.
  *
- * The navigation is a plain array, in code. That is a deliberate starting point rather than an
- * oversight: it is where almost every site actually begins, and it is honest about the cost --
- * every page the site gains from here needs a line added to this file, a commit, and a deploy,
- * for a change that has nothing to do with code.
+ * Its navigation came from a plain array in this file until step 12. Every page the site gained
+ * needed a line added here, a commit and a deploy, for a change that had nothing to do with code.
+ * Now it comes from a Component in the CMS, and adding a page is an authoring task.
  *
- * Step 12 moves this into the CMS, and the diff at that step is the argument for doing it.
+ * The array survives as a **fallback**, and that is deliberate rather than tidiness left undone.
+ * If the header Component has not been published, or its shape has drifted, the site keeps a
+ * working navigation. Chrome is the one thing that must never disappear: without it there is no
+ * way to reach the page that would explain what went wrong.
  */
-const NAV_LINKS = [
+const FALLBACK_LINKS: NavItem[] = [
   { to: '/coffees', label: 'Coffees' },
   { to: '/guides', label: 'Brew guides' },
   { to: '/stores', label: 'Find us' },
@@ -18,7 +23,7 @@ const NAV_LINKS = [
   { to: '/contact', label: 'Wholesale' },
 ]
 
-export function Header() {
+export function Header({ content }: { content?: HeaderContent | null }) {
   return (
     <header className="border-b border-line">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
@@ -26,9 +31,9 @@ export function Header() {
           Northwind Coffee
         </Link>
         <nav aria-label="Main">
-          <ul className="flex items-center gap-6 text-sm">
-            {NAV_LINKS.map((item) => (
-              <li key={item.to}>
+          <ul className="flex flex-wrap items-center gap-6 text-sm">
+            <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
+              {(item) => (
                 <NavLink
                   to={item.to}
                   className={({ isActive }) =>
@@ -37,8 +42,8 @@ export function Header() {
                 >
                   {item.label}
                 </NavLink>
-              </li>
-            ))}
+              )}
+            </NavLinks>
           </ul>
         </nav>
       </div>

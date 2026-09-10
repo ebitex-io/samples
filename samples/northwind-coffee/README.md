@@ -31,6 +31,8 @@ makes it live; no code changes and nothing is redeployed.
 | Published paths from a listing, instead of guessed URLs | `src/lib/originPaths.ts` |
 | RichText with an embedded figure | `content-model/model.mjs`, `src/presentations/figure.tsx` |
 | A query versus an authored list, and when each is right | `src/presentations/guide-index.tsx` |
+| Embedding an ebitex Form — the suite over its own public surface | `src/presentations/form-embed.tsx` |
+| Site chrome as content, addressed by external id | `src/lib/siteChrome.ts`, `src/components/NavLinks.tsx` |
 
 More arrives with each tutorial step; this table grows with it.
 

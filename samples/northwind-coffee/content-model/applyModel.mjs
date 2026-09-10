@@ -304,6 +304,14 @@ function titleCase(slug) {
  * parents need, so a structural node like `/coffees` never has to be published by hand.
  */
 export async function publishSite(api, applied, { log = console.log } = {}) {
+  // Standalone Components -- the header and footer -- belong to no page, so nothing else's
+  // closure reaches them. They are published as their own roots.
+  for (const def of COMPONENTS) {
+    if (!def.standalone) continue
+    await publishRoot(api, 'component', applied.components[def.externalId].id, { log: () => {} })
+    log(`published component ${def.externalId}`)
+  }
+
   for (const def of NODES) {
     if (!def.template) continue
     const node = def.path === '' ? applied.site : applied.nodes[def.path]

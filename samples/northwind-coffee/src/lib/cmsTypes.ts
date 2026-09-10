@@ -103,3 +103,17 @@ export interface FormEmbedContent {
   form: string
   title?: string
 }
+
+export interface NavLinkContent {
+  label: string
+  link?: LinkValue
+}
+
+export interface HeaderContent {
+  links?: ComponentValue<NavLinkContent>[]
+}
+
+export interface FooterContent {
+  tagline?: string
+  links?: ComponentValue<NavLinkContent>[]
+}
