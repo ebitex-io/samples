@@ -1,7 +1,12 @@
 import { Link } from 'react-router'
 
 /** The site footer. Hard-coded for the same reason as the header, and migrated in the same step. */
-const FOOTER_LINKS = [{ to: '/about', label: 'About' }]
+const FOOTER_LINKS = [
+  { to: '/coffees', label: 'Coffees' },
+  { to: '/guides', label: 'Brew guides' },
+  { to: '/stores', label: 'Find us' },
+  { to: '/about', label: 'About' },
+]
 
 export function Footer() {
   return (

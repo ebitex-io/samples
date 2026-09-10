@@ -38,6 +38,12 @@ export const L = (value) => ({ default: value, locales: {} })
  */
 export const P = (value) => ({ default: value, variants: [] })
 
+/**
+ * A link to somewhere outside this site. It must be an absolute URL -- the API rejects a bare
+ * path, which is what pushes an internal link onto `experienceLink` where it belongs.
+ */
+export const external = (url) => ({ kind: 'external', url })
+
 /** A RichText value: one markdown block (CommonMark plus GFM tables and strikethrough). */
 export const md = (markdown) => ({ markdown })
 
@@ -249,6 +255,34 @@ export const CONTRACTS = [
     ],
   },
   {
+    // A shop. Inline everywhere it appears, because nothing else points at a store and no store
+    // has a page of its own -- the same reasoning as `guide-step`, reached independently.
+    externalId: 'store',
+    name: 'Store',
+    fields: () => [
+      text('Name', 'name', { mandatory: true, localizable: true }),
+      text('Address', 'address', { enumerable: true, localizable: true }),
+      text('Opening hours', 'hours', { enumerable: true, localizable: true }),
+      text('Telephone', 'phone', {}),
+      // The first genuinely *external* link in this model. Internal links use the experience arm
+      // and store a node's identity; this one really does point somewhere we do not control, and
+      // the API requires it to be an absolute URL.
+      link('Map', 'map', { settings: { allowedKinds: ['external'] } }),
+    ],
+  },
+  {
+    externalId: 'store-list',
+    name: 'Store list',
+    fields: ({ contracts }) => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      rich('Introduction', 'intro', { localizable: true }),
+      componentField('Stores', 'stores', {
+        enumerable: true,
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['store']) },
+      }),
+    ],
+  },
+  {
     // The catalogue page. Its content is a heading and an introduction; the grid itself is a
     // *query*, not authored -- see STREAMS below.
     externalId: 'coffee-index',
@@ -359,6 +393,12 @@ export const TEMPLATES = [
     externalId: 'guide-index',
     name: 'Guide index',
     supports: ['guide-index'],
+    settings: [],
+  },
+  {
+    externalId: 'store-list',
+    name: 'Store list',
+    supports: ['store-list'],
     settings: [],
   },
   {
@@ -1025,6 +1065,51 @@ export const COMPONENTS = [
       ],
     }),
   },
+
+  // ---- stores ----
+  {
+    externalId: 'store-list-page',
+    name: 'Where to find us',
+    contract: 'store-list',
+    folder: 'Pages',
+    document: ({ contracts }) => ({
+      heading: L('Where to find us'),
+      intro: L(
+        md(
+          'Four places, all within an hour of the roastery. The Tynemouth stall is weekends only and sells out of whatever we brought by about two.',
+        ),
+      ),
+      stores: [
+        inline(contracts.store, {
+          name: L('The Boatshed'),
+          address: L(['12 Harbour Road', 'Alnmouth', 'NE66 2RA']),
+          hours: L(['Mon-Fri 7.30-16.00', 'Sat 8.00-16.00', 'Sun closed']),
+          phone: '01665 000 100',
+          map: external('https://www.openstreetmap.org/search?query=Alnmouth'),
+        }),
+        inline(contracts.store, {
+          name: L('Grainger Arcade'),
+          address: L(['Stall 42, Grainger Market', 'Newcastle upon Tyne', 'NE1 5QQ']),
+          hours: L(['Mon-Sat 8.00-17.00', 'Sun closed']),
+          phone: '0191 000 0200',
+          map: external('https://www.openstreetmap.org/search?query=Grainger%20Market%20Newcastle'),
+        }),
+        inline(contracts.store, {
+          name: L('Roastery counter'),
+          address: L(['Unit 4, Willowburn Trading Estate', 'Alnwick', 'NE66 2PF']),
+          hours: L(['Tue & Thu 9.00-15.00', 'Other days by arrangement']),
+          phone: '01665 000 300',
+          map: external('https://www.openstreetmap.org/search?query=Alnwick'),
+        }),
+        inline(contracts.store, {
+          name: L('Tynemouth market stall'),
+          address: L(['Tynemouth Station Market', 'Tynemouth', 'NE30 4RE']),
+          hours: L(['Sat-Sun 9.00-16.00']),
+          map: external('https://www.openstreetmap.org/search?query=Tynemouth%20Station'),
+        }),
+      ],
+    }),
+  },
 ]
 
 // ---- site and experience nodes ---------------------------------------------------------------
@@ -1045,6 +1130,7 @@ export const NODES = [
   // `/coffees` stops being a bare structural node and becomes a page. Its children are unaffected:
   // a node's payload and its place in the tree are independent.
   { path: 'coffees', name: 'Coffees', template: 'coffee-index', component: 'coffee-index-page' },
+  { path: 'stores', name: 'Where to find us', template: 'store-list', component: 'store-list-page' },
   { path: 'guides', name: 'Brew guides', template: 'guide-index', component: 'guide-index-page' },
   { path: 'guides/pour-over', name: 'Pour-over, the way we make it', template: 'guide', component: 'guide-pour-over' },
   { path: 'guides/aeropress', name: 'AeroPress for one', template: 'guide', component: 'guide-aeropress' },

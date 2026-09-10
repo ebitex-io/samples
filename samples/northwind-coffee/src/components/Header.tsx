@@ -10,7 +10,12 @@ import { Link, NavLink } from 'react-router'
  *
  * Step 12 moves this into the CMS, and the diff at that step is the argument for doing it.
  */
-const NAV_LINKS = [{ to: '/about', label: 'About' }]
+const NAV_LINKS = [
+  { to: '/coffees', label: 'Coffees' },
+  { to: '/guides', label: 'Brew guides' },
+  { to: '/stores', label: 'Find us' },
+  { to: '/about', label: 'About' },
+]
 
 export function Header() {
   return (

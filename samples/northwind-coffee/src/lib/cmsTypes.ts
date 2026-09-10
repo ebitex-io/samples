@@ -84,3 +84,17 @@ export interface GuideIndexContent {
   intro?: RichTextValue
   guides?: ComponentValue<GuideContent>[]
 }
+
+export interface StoreContent {
+  name: string
+  address?: string[]
+  hours?: string[]
+  phone?: string
+  map?: LinkValue
+}
+
+export interface StoreListContent {
+  heading: string
+  intro?: RichTextValue
+  stores?: ComponentValue<StoreContent>[]
+}
