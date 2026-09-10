@@ -60,3 +60,8 @@ export interface OriginContent {
   summary?: RichTextValue
   image?: ComponentValue<ImageContent>
 }
+
+export interface CoffeeIndexContent {
+  heading: string
+  intro?: RichTextValue
+}

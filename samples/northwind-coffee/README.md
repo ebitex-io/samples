@@ -26,6 +26,9 @@ makes it live; no code changes and nothing is redeployed.
 | Blobs, and why alt text belongs on a Contract | `src/components/CmsImage.tsx` |
 | Inline versus referenced content | `content-model/values.mjs` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
+| Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
+| Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
+| Published paths from a listing, instead of guessed URLs | `src/lib/originPaths.ts` |
 
 More arrives with each tutorial step; this table grows with it.
 

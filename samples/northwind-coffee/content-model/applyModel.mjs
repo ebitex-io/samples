@@ -26,6 +26,7 @@ import {
   COMPONENTS,
   SITE,
   NODES,
+  STREAMS,
   L,
 } from './model.mjs'
 import { compact, presentation, reference, templateVersion } from './values.mjs'
@@ -80,6 +81,7 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
       externalId: def.externalId,
       parentContractId: def.parent ? contracts[def.parent].id : null,
       isAbstract: def.isAbstract ?? false,
+      titleFieldPath: def.titleFieldPath ?? null,
       fields: def.fields(ctx),
     }
     const existing = existingContracts.get(def.externalId)
@@ -148,6 +150,7 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
       externalId: def.externalId,
       parentContractId: current.parentContractId,
       isAbstract: current.isAbstract,
+      titleFieldPath: def.titleFieldPath ?? null,
       fields: wanted,
       rowVersion: current.rowVersion,
     })
@@ -258,7 +261,31 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
     log(`node /${def.path} payload set`)
   }
 
-  return { contracts, templates, components, folders, site, nodes }
+  // ---- streams ----
+  // Last, because a stream names the Contracts it draws from. It is configuration rather than
+  // content: read live at delivery, never published, and so nothing below publishes it.
+  const streams = {}
+  const existingStreams = new Map((await api.listStreams()).map((s) => [s.externalId, s]))
+  for (const def of STREAMS) {
+    const input = {
+      externalId: def.externalId,
+      name: def.name,
+      sourceContractIds: def.sources.map((id) => contracts[id].id),
+      adapterId: null,
+      orderByFieldPath: def.orderByFieldPath ?? null,
+      orderDescending: def.orderDescending ?? false,
+      resolveDepth: def.resolveDepth ?? 1,
+      excludedComponentIds: [],
+      declaredFilters: def.declaredFilters,
+    }
+    const existing = existingStreams.get(def.externalId)
+    streams[def.externalId] = existing
+      ? await api.updateStream(existing.id, { ...input, externalId: undefined })
+      : await api.createStream(input)
+    log(`stream ${def.externalId} (${existing ? 'updated' : 'created'})`)
+  }
+
+  return { contracts, templates, components, folders, site, nodes, streams }
 }
 
 function titleCase(slug) {

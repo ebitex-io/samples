@@ -195,6 +195,7 @@ export const CONTRACTS = [
     // has an independent life -- not by counting rows.
     externalId: 'origin',
     name: 'Origin',
+    titleFieldPath: 'name',
     fields: ({ contracts }) => [
       text('Name', 'name', { mandatory: true, localizable: true }),
       text('Country', 'country', { localizable: true }),
@@ -206,8 +207,22 @@ export const CONTRACTS = [
     ],
   },
   {
+    // The catalogue page. Its content is a heading and an introduction; the grid itself is a
+    // *query*, not authored -- see STREAMS below.
+    externalId: 'coffee-index',
+    name: 'Coffee index',
+    fields: () => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      rich('Introduction', 'intro', { localizable: true }),
+    ],
+  },
+  {
     externalId: 'coffee',
     name: 'Coffee',
+    // Which field is this type's human-readable title. The Delivery API freezes it at publish and
+    // hands it back on every listing, so a navigation menu or a search result can show a real name
+    // without resolving the whole document to find one.
+    titleFieldPath: 'name',
     fields: ({ contracts, categoryGroups: categoryGroups_ }) => [
       text('Name', 'name', { mandatory: true, localizable: true }),
       // Not localizable: a producer's name is a proper noun and stays as it is in every language.
@@ -282,6 +297,43 @@ export const TEMPLATES = [
     name: 'Origin page',
     supports: ['origin'],
     settings: [],
+  },
+  {
+    externalId: 'coffee-index',
+    name: 'Coffee index',
+    supports: ['coffee-index'],
+    settings: [],
+  },
+]
+
+// ---- streams ---------------------------------------------------------------------------------
+//
+// A stream is a saved, server-side query over published content, addressed by external id. The
+// catalogue page runs one instead of fetching every coffee and filtering in the browser, which is
+// the difference between a page that works at eight coffees and one that still works at eight
+// hundred.
+//
+// `declaredFilters` is the stream's whole public surface. A caller may filter by these keys and
+// nothing else -- there is no way to smuggle an arbitrary predicate in from the query string, and
+// no way to read a field the stream does not expose. Each declared filter is also *facetable*:
+// asking for a facet returns the distinct values and their counts, computed against every other
+// active filter, which is what makes chips that show real numbers rather than guesses.
+//
+// A stream is configuration, never content: it is read live at delivery and is not published.
+
+export const STREAMS = [
+  {
+    externalId: 'coffees',
+    name: 'Coffees',
+    sources: ['coffee'],
+    orderByFieldPath: 'price',
+    orderDescending: false,
+    resolveDepth: 1,
+    declaredFilters: [
+      { key: 'q', type: 'fullText' },
+      { key: 'roast', type: 'category' },
+      { key: 'origin', type: 'reference', fieldPath: 'origin', labelFieldPath: 'name' },
+    ],
   },
 ]
 
@@ -496,6 +548,21 @@ export const COMPONENTS = [
       }),
     }),
   },
+  {
+    externalId: 'coffee-index-page',
+    name: 'Coffees',
+    contract: 'coffee-index',
+    folder: 'Pages',
+    document: () => ({
+      heading: L('What we are roasting'),
+      intro: L(
+        md(
+          'Eight coffees, five origins and two roast days a week. Everything here was on a farm we have visited, and nothing sits on our shelf for more than a month.',
+        ),
+      ),
+    }),
+  },
+
   // ---- coffees ----
 
   {
@@ -699,6 +766,9 @@ export const NODES = [
   // give the root a payload and `/` is served.
   { path: '', name: 'Home', template: 'page', component: 'home-page' },
   { path: 'about', name: 'About', template: 'page', component: 'about-page' },
+  // `/coffees` stops being a bare structural node and becomes a page. Its children are unaffected:
+  // a node's payload and its place in the tree are independent.
+  { path: 'coffees', name: 'Coffees', template: 'coffee-index', component: 'coffee-index-page' },
   // `/coffees` is not listed and gets created anyway, as an ancestor of the page below it. A node
   // with no payload is real tree structure with no page of its own: `/coffees` itself 404s until
   // step 08 gives it an index. That is a legitimate state, not a gap to paper over.
