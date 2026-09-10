@@ -13,6 +13,8 @@
 // See api.mjs for why you should not run this against your own organization.
 // ---------------------------------------------------------------------------------------------
 
+import { experienceLink, inline, presentation } from './values.mjs'
+
 // ---- value helpers ---------------------------------------------------------------------------
 
 /**
@@ -24,6 +26,17 @@
  * no Contract, no Template and no renderer. That is the whole point.
  */
 export const L = (value) => ({ default: value, locales: {} })
+
+/**
+ * A personalizable field's stored envelope: one default value plus audience-conditioned variants.
+ *
+ * Same idea as `L`, one axis over. Declared now, with no audiences in the organization and every
+ * `variants` list empty, so that step 17 can add a variant without touching the model.
+ *
+ * The two compose as `P(L(value))` -- personalization on the outside, locales within each arm --
+ * which is the order the compiled schema expects.
+ */
+export const P = (value) => ({ default: value, variants: [] })
 
 /** A RichText value: one markdown block (CommonMark plus GFM tables and strikethrough). */
 export const md = (markdown) => ({ markdown })
@@ -76,7 +89,11 @@ export const CONTRACTS = [
   {
     externalId: 'page',
     name: 'Page',
-    fields: () => [
+    // Its `sections` field constrains which Templates may appear in it, and those Templates are
+    // created after this Contract. `apply.mjs` therefore revisits it once they exist -- see the
+    // second pass in applyModel.mjs.
+    namesTemplates: true,
+    fields: ({ templates }) => [
       // Mandatory, so a page can never be published without one. Localizable from day one --
       // see the note on `L` above.
       text('Title', 'title', { mandatory: true, localizable: true }),
@@ -84,6 +101,30 @@ export const CONTRACTS = [
       // which is one value doing two jobs rather than two values drifting apart.
       text('Summary', 'description', { localizable: true }),
       rich('Body', 'body', { localizable: true }),
+      // A page built out of parts. Each entry names a Template and the content to render through
+      // it, so a page's shape is authored rather than coded -- reorder the list and the page
+      // reorders. `allowedTemplateIds` is what keeps that from becoming a free-for-all: an author
+      // picks from the Templates that belong on a page, not from every Template in the system.
+      presentationField('Sections', 'sections', {
+        enumerable: true,
+        settings: { allowedTemplateIds: ids(templates, ['hero', 'prose']) },
+      }),
+    ],
+  },
+  {
+    // A heading, some words, and optionally somewhere to go. Deliberately not called `hero` or
+    // `intro`: a Contract describes what content *is*, and naming it after one of its
+    // presentations is the quickest way to end up with `hero-2` a year later.
+    externalId: 'statement',
+    name: 'Statement',
+    fields: () => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      text('Standfirst', 'standfirst', { localizable: true }),
+      // Personalizable as well as localizable, from the start. There are no audiences yet, so
+      // every variant list is empty and this behaves exactly like an ordinary field.
+      rich('Body', 'body', { localizable: true, personalizable: true }),
+      link('Call to action', 'cta', {}),
+      text('Call-to-action label', 'cta-label', { localizable: true }),
     ],
   },
 ]
@@ -101,6 +142,22 @@ export const TEMPLATES = [
     supports: ['page'],
     settings: [],
   },
+  // Two Templates, one Contract. This is the distinction worth internalising early: `statement`
+  // says what the content is, and `hero` and `prose` are two ways of showing it. Adding a third
+  // presentation later is a new Template and a new file in src/presentations -- it is not a new
+  // content type, and nothing already authored has to move.
+  {
+    externalId: 'hero',
+    name: 'Hero',
+    supports: ['statement'],
+    settings: [],
+  },
+  {
+    externalId: 'prose',
+    name: 'Prose section',
+    supports: ['statement'],
+    settings: [],
+  },
 ]
 
 // ---- folders ---------------------------------------------------------------------------------
@@ -116,6 +173,60 @@ export const FOLDERS = [{ name: 'Pages' }]
 // it is not yet a page: it is content, sitting in the library, that a page can point at.
 
 export const COMPONENTS = [
+  {
+    // The front page. It has no body of its own -- it is assembled entirely out of `sections`,
+    // which is what "composition" means here. Each section is a Template plus the content to run
+    // through it, and the content is *inline*: this hero belongs to the front page and to nothing
+    // else, so giving it a life of its own in the library would be clutter rather than reuse.
+    externalId: 'home-page',
+    name: 'Home',
+    contract: 'page',
+    folder: 'Pages',
+    document: ({ contracts, templates, nodes }) => ({
+      title: L('Northwind Coffee'),
+      description: L(
+        'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
+      ),
+      sections: [
+        presentation(
+          templates.hero,
+          inline(contracts.statement, {
+            heading: L('Coffee worth the wait'),
+            standfirst: L('Four farms. Two roast days a week. Nothing older than a month.'),
+            body: P(
+              L(
+                md(
+                  'We are a small roastery on the north coast, and we would rather sell you one coffee you love than six you are unsure about.',
+                ),
+              ),
+            ),
+            // A link to another page in this site, by node identity rather than by URL. The
+            // Delivery API resolves the current path for it on every request, so moving the
+            // target page never leaves this link stale.
+            cta: experienceLink(nodes['about']),
+            'cta-label': L('How we work'),
+          }),
+        ),
+        presentation(
+          templates.prose,
+          inline(contracts.statement, {
+            heading: L('On the roaster this month'),
+            body: P(
+              L(
+                md(
+                  [
+                    "The Guji lot has just landed and it is the best thing we have bought this year — peach, bergamot, and a finish that goes on longer than it has any right to. It will not last.",
+                    '',
+                    'Alongside it: the Huila washed lot we buy every year, which is as reliable as coffee gets, and a Sumatran that divides the room and always has.',
+                  ].join('\n'),
+                ),
+              ),
+            ),
+          }),
+        ),
+      ],
+    }),
+  },
   {
     externalId: 'about-page',
     name: 'About Northwind Coffee',
@@ -162,5 +273,8 @@ export const COMPONENTS = [
 export const SITE = { name: 'Northwind Coffee' }
 
 export const NODES = [
+  // The site root itself. A site *is* its root node, so the front page needs no node of its own --
+  // give the root a payload and `/` is served.
+  { path: '', name: 'Home', template: 'page', component: 'home-page' },
   { path: 'about', name: 'About', template: 'page', component: 'about-page' },
 ]

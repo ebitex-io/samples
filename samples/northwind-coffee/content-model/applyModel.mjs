@@ -1,54 +1,31 @@
 // ---------------------------------------------------------------------------------------------
 // The engine behind apply.mjs: walks model.mjs in dependency order and upserts every piece.
 //
-//   contracts -> templates -> (contracts again, for template constraints)
-//   -> taxonomy -> folders -> blobs -> components -> site -> nodes -> streams
+//   contracts -> templates -> contracts again -> folders
+//   -> site -> nodes (structure only) -> components -> node payloads
 //
-// The order is not arbitrary. A Contract's `presentation` field names the Templates it will
-// accept, and a Template names the Contracts it can render, so the two reference each other and
-// one of them has to be created first and completed second. That second pass is the only subtle
-// thing in this file.
+// The order is not arbitrary, and two parts of it are worth understanding.
+//
+// A Contract's `presentation` field names the Templates it will accept, and a Template names the
+// Contracts it can render. They point at each other, so one has to be created first and completed
+// second -- hence the second contracts pass.
+//
+// Experience nodes are created *before* components, but their payloads are set *after*. A node
+// needs only a name and a slug to exist, so creating the tree early means a component that links
+// to a page already knows that page's id, while a node's payload still gets a component that is
+// fully written. Splitting a node's creation from its payload is what keeps both directions
+// resolvable in a single pass each.
 // ---------------------------------------------------------------------------------------------
 
 import { CONTRACTS, TEMPLATES, FOLDERS, COMPONENTS, SITE, NODES, L } from './model.mjs'
-
-/**
- * Drops `null`/`undefined` keys. An optional field is *absent* from a stored document, never
- * `null` -- a component/link/presentation value's compiled schema rejects `null` outright.
- */
-export function compact(document) {
-  return Object.fromEntries(
-    Object.entries(document).filter(([, value]) => value !== null && value !== undefined),
-  )
-}
-
-export function inline(contract, document) {
-  return {
-    mode: 'inline',
-    contract: contract.id,
-    contractVersion: contract.latestVersion.versionNumber,
-    document: compact(document),
-  }
-}
-
-export function reference(component) {
-  return { mode: 'reference', provider: 'core', key: component.id }
-}
-
-export function templateVersion(template) {
-  return template.latestVersionNumber ?? template.latestVersion?.versionNumber
-}
-
-export function presentation(template, component, settings = {}) {
-  return { template: template.id, templateVersion: templateVersion(template), component, settings }
-}
+import { compact, presentation, reference, templateVersion } from './values.mjs'
 
 export async function applyModel(api, { log = console.log } = {}) {
   const contracts = {}
   const templates = {}
   const components = {}
   const nodes = {}
-  const ctx = { contracts, templates, components }
+  const ctx = { contracts, templates, components, nodes }
 
   // Templates that already exist (this is a re-run) let the contracts name them on the first pass,
   // so the second pass below has nothing to do.
@@ -72,7 +49,9 @@ export async function applyModel(api, { log = console.log } = {}) {
         })
       : await api.createContract(input)
     contracts[def.externalId] = detail
-    log(`contract ${def.externalId} -> v${detail.latestVersion?.versionNumber ?? '?'} (${existing ? 'updated' : 'created'})`)
+    log(
+      `contract ${def.externalId} -> v${detail.latestVersion?.versionNumber ?? '?'} (${existing ? 'updated' : 'created'})`,
+    )
   }
 
   // ---- templates ----
@@ -83,7 +62,7 @@ export async function applyModel(api, { log = console.log } = {}) {
     if (existing) {
       const current = await api.getTemplate(existing.id)
       // A Template's settings are an ordinary Contract it points at, edited through the Contract
-      // API like any other (spec 301). Rewriting it here keeps the model file authoritative.
+      // API like any other. Rewriting it here keeps this file authoritative about them.
       const settingsContract = await api.getContract(current.settingsContractId)
       await api.updateContract(settingsContract.id, {
         name: settingsContract.name,
@@ -113,8 +92,8 @@ export async function applyModel(api, { log = console.log } = {}) {
   }
 
   // ---- contracts, second pass ----
-  // Only for Contracts whose field settings name a Template. On a first run those Templates did
-  // not exist yet, so the constraint was written empty; now it can be filled in. A no-op once the
+  // Only for Contracts whose field settings name a Template. On a first run those Templates did not
+  // exist yet, so the constraint was written empty; now it can be filled in. A no-op once the
   // constraint is already correct, which is what keeps a re-run from churning versions.
   for (const def of CONTRACTS) {
     if (!def.namesTemplates) continue
@@ -131,7 +110,9 @@ export async function applyModel(api, { log = console.log } = {}) {
       fields: wanted,
       rowVersion: current.rowVersion,
     })
-    log(`contract ${def.externalId} -> v${contracts[def.externalId].latestVersion?.versionNumber} (template constraints applied)`)
+    log(
+      `contract ${def.externalId} -> v${contracts[def.externalId].latestVersion?.versionNumber} (template constraints applied)`,
+    )
   }
 
   // ---- folders ----
@@ -141,6 +122,41 @@ export async function applyModel(api, { log = console.log } = {}) {
     const parentId = def.parent ? folders[def.parent].id : null
     const existing = existingFolders.find((f) => f.name === def.name && f.parentFolderId === parentId)
     folders[def.name] = existing ?? (await api.createFolder(def.name, parentId))
+  }
+
+  // ---- site ----
+  let site = (await api.listSites()).find((s) => s.name === SITE.name)
+  if (!site) {
+    site = await api.createSite(SITE.name)
+    log(`site ${SITE.name} created`)
+  }
+  nodes[''] = site
+
+  // ---- experience nodes: structure ----
+  // `path` is slash-separated and creates whatever ancestors it needs. An ancestor no entry claims
+  // is created as a plain structural node: real tree structure, no page of its own, and a 404 at
+  // its own path until something is published there.
+  for (const def of [...NODES].sort((a, b) => a.path.localeCompare(b.path))) {
+    const segments = def.path.split('/').filter(Boolean)
+    let parent = site
+    let walked = ''
+    for (let i = 0; i < segments.length; i++) {
+      const slug = segments[i]
+      walked = walked ? `${walked}/${slug}` : slug
+      if (nodes[walked]) {
+        parent = nodes[walked]
+        continue
+      }
+      const children = await api.listChildren(parent.id)
+      let node = children.find((n) => n.slug?.default === slug)
+      if (!node) {
+        const isLeaf = i === segments.length - 1
+        node = await api.createNode(parent.id, isLeaf ? def.name : titleCase(slug), L(slug))
+        log(`node /${walked} created`)
+      }
+      nodes[walked] = node
+      parent = node
+    }
   }
 
   // ---- components ----
@@ -177,48 +193,17 @@ export async function applyModel(api, { log = console.log } = {}) {
     log(`component ${def.externalId} (${existing ? 'updated' : 'created'})${invalid}`)
   }
 
-  // ---- site ----
-  let site = (await api.listSites()).find((s) => s.name === SITE.name)
-  if (!site) {
-    site = await api.createSite(SITE.name)
-    log(`site ${SITE.name} created`)
-  }
-  nodes[''] = site
-
-  // ---- experience nodes ----
-  // `path` is slash-separated and creates whatever ancestors it needs. An ancestor that no node
-  // claims is created as a plain structural node: real tree structure, no page of its own, and
-  // 404 at its own path until something is published there.
-  for (const def of [...NODES].sort((a, b) => a.path.localeCompare(b.path))) {
-    const segments = def.path.split('/').filter(Boolean)
-    let parent = site
-    let walked = ''
-    for (let i = 0; i < segments.length; i++) {
-      const slug = segments[i]
-      walked = walked ? `${walked}/${slug}` : slug
-      if (nodes[walked]) {
-        parent = nodes[walked]
-        continue
-      }
-      const children = await api.listChildren(parent.id)
-      let node = children.find((n) => n.slug?.default === slug)
-      if (!node) {
-        const isLeaf = i === segments.length - 1
-        node = await api.createNode(parent.id, isLeaf ? def.name : titleCase(slug), L(slug))
-        log(`node /${walked} created`)
-      }
-      nodes[walked] = node
-      parent = node
-    }
-  }
-
-  // Payloads last, so every node exists before anything points at one.
+  // ---- experience nodes: payloads ----
   for (const def of NODES) {
     if (!def.template) continue
     const node = def.path === '' ? site : nodes[def.path]
     await api.setPresentationPayload(
       node.id,
-      presentation(templates[def.template], reference(components[def.component]), def.settings ?? {}),
+      presentation(
+        templates[def.template],
+        reference(components[def.component], def.contextualValues),
+        def.settings ?? {},
+      ),
     )
     log(`node /${def.path} payload set`)
   }
@@ -233,10 +218,10 @@ function titleCase(slug) {
 /**
  * Publishes every page in the site.
  *
- * One call per node rather than one call for the whole site, because a node's publish closure is
- * the node plus whatever its own Presentation reaches -- Components, Templates, Adapters -- and
- * deliberately *not* its children. A page is published on its own terms; publishing the front
- * page does not silently publish a draft two levels down.
+ * One call per node rather than one for the whole site, because a node's publish closure is the
+ * node plus whatever its own Presentation reaches -- Components, Templates, Adapters -- and
+ * deliberately *not* its children. A page is published on its own terms; publishing the front page
+ * does not silently publish a draft two levels down.
  *
  * Ancestors are taken care of: publishing `/coffees/ethiopia-guji` creates the address rows its
  * parents need, so a structural node like `/coffees` never has to be published by hand.

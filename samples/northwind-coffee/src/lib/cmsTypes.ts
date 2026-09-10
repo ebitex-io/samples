@@ -1,0 +1,29 @@
+import type { LinkValue, PresentationEnvelope, RichTextValue } from '@ebitex/content-sdk'
+
+/**
+ * The delivered shapes, in TypeScript.
+ *
+ * These mirror the Contracts in `content-model/model.mjs`. Field keys are the Contract's field
+ * external ids exactly as authored, which is why they are kebab-case rather than camelCase --
+ * `cta-label`, not `ctaLabel`. Nothing translates them on the way through.
+ *
+ * Keeping this file true by hand is a chore, and a chore that fails silently: rename a field and
+ * TypeScript happily keeps compiling against the old name. Step 14 deletes the whole file and
+ * generates it from the delivered schemas instead. It is worth living with the chore until then,
+ * because feeling the problem is what makes the fix land.
+ */
+
+export interface PageContent {
+  title: string
+  description?: string
+  body?: RichTextValue
+  sections?: PresentationEnvelope[]
+}
+
+export interface StatementContent {
+  heading: string
+  standfirst?: string
+  body?: RichTextValue
+  cta?: LinkValue
+  'cta-label'?: string
+}
