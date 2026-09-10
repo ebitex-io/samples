@@ -39,28 +39,22 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
+      northwind-coffee: ${{ steps.filter.outputs.northwind-coffee }}
       unclassified: ${{ steps.unclassified-filter.outputs.unclassified }}
     steps:
       - uses: actions/checkout@v4
 
-      # Per-sample inclusion filters go here as samples are added. One entry per sample, each
-      # naming this workflow alongside its own directory:
-      #
-      #   - uses: dorny/paths-filter@v3
-      #     id: filter
-      #     with:
-      #       filters: |
-      #         northwind-coffee:
-      #           - 'samples/northwind-coffee/**'
-      #           - '.github/workflows/ci.yml'
-      #
-      # ...with a matching `northwind-coffee: ${{ steps.filter.outputs.northwind-coffee }}` output
-      # above and a job gated on it below. See CONTRIBUTING.md, "Adding a sample".
-      #
-      # There is deliberately no sample job yet: this repository has no sample in it. A CI leg
-      # pointing at a directory that does not exist proves nothing, and would either fail or pass
-      # vacuously — both worse than its absence. It lands with the first sample (#561), where it
-      # can actually be seen to work.
+      # One inclusion filter per sample, each naming this workflow alongside its own directory
+      # (rule 1 above). Add a filter, an output, and a job when you add a sample -- and add the
+      # sample's path to the `unclassified` exclusion list below, or every change to it will
+      # additionally run the fail-safe.
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            northwind-coffee:
+              - 'samples/northwind-coffee/**'
+              - '.github/workflows/ci.yml'
 
       - uses: dorny/paths-filter@v3
         id: unclassified-filter
@@ -116,3 +110,32 @@ jobs:
             echo "OK — every sample directory is well-formed (or there are none yet)."
           fi
           exit $status
+
+  # The sample is a standalone project with its own lockfile and its own build -- there is no root
+  # install and nothing hoisted, which is the point (samples/README.md). `npm ci` therefore runs
+  # inside the sample directory, and a green job is real evidence that a reader who copies this
+  # directory out on its own gets something that installs and builds.
+  northwind-coffee:
+    needs: changes
+    if: needs.changes.outputs.northwind-coffee == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/northwind-coffee
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: samples/northwind-coffee/package-lock.json
+
+      - run: npm ci
+
+      # `npm run build` is `tsc -b && vite build`. The typecheck is the half that matters here:
+      # every step tag promises it typechecks, and only the composite build actually walks the
+      # whole project-reference graph, including the test files.
+      - run: npm run build
+
+      - run: npm test

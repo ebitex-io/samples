@@ -1,0 +1,121 @@
+# Northwind Coffee
+
+A speciality coffee roaster's website — a catalogue, brew guides, store list and wholesale enquiry
+form — built on [ebitex](https://ebitex.io) Content.
+
+It is a **static site**: Vite, React and TypeScript, talking to the Content Delivery API from the
+browser with `@ebitex/content-sdk`. There is no server of our own anywhere in it. That is a real
+choice rather than a simplification — a content-driven marketing site is mostly cacheable reads, and
+a static bundle on a CDN is the cheapest, fastest and least breakable way to serve those. The price
+is that a crawler which does not run JavaScript sees only the shell, which is why a server-rendered
+sibling sample is planned.
+
+**Every page on this site is resolved from the CMS.** There is exactly one route in the whole app,
+matching everything, and what lives at a path is a question only the CMS answers. Publishing a page
+makes it live; no code changes and nothing is redeployed.
+
+## What it teaches
+
+| Area | Where to look |
+|---|---|
+| The whole loop: Contract → Component → Template → Experience node → renderer | `content-model/model.mjs`, `src/presentations/page.tsx` |
+| One route, every page — CMS-resolved routing with no page routes at all | `src/App.tsx`, `src/pages/ContentPage.tsx` |
+| Renderer-by-convention: file name *is* the Template's external id | `src/lib/content.ts`, `src/presentations/` |
+| A whole content model as readable data | `content-model/model.mjs` |
+
+More arrives with each tutorial step; this table grows with it.
+
+## Prerequisites
+
+- **Node 20 or newer.**
+- **An ebitex organization you control.** Not one of ours — there is no shared demo organization,
+  by design. You import the content into your own, which is what makes it something you can change.
+- **Content must be enabled for your organization.** Content is currently in Early Access behind the
+  `app.content` flag. If Content shows as "Coming soon" in Hub, that is what is missing — ask us to
+  enable it, and nothing below will work until it is.
+- **A Pro allowance.** A new organization gets a **14-day Pro trial**, and that is the window this
+  tutorial is written for. See "Which parts fit Starter" below for what happens after it.
+
+## 1. Seed the content
+
+The site has nothing to render until the content model and the content exist in your organization.
+Import a bundle from [`seed/`](seed/) through **Content → Configure → Transfer → Import**.
+
+Bundles are named for the tutorial step they match. On `main`, import the highest-numbered one; on a
+step tag, import the highest-numbered bundle at or *below* your step:
+
+| Bundle | Import it if you are on |
+|---|---|
+| _(the first checkpoint lands with step 03)_ | |
+
+Importing gives every entity fresh identity in your organization. It is your content from that
+moment on — rename a Contract, add a field, break something and fix it.
+
+## 2. Configure
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Where to get it |
+|---|---|
+| `VITE_CONTENT_DELIVERY_KEY` | Content → Settings → API Keys, in your own organization |
+| `VITE_CONTENT_API_BASE_URL` | Optional. Leave unset unless you are pointing at a non-production API |
+| `VITE_CONTENT_SITE_ID` | Optional. Content → Configure → Sites. Saves the SDK one discovery request |
+
+**On the key.** A delivery key is read-only, and for local development an unrestricted one is fine.
+A deployed static site is different: the key ships inside the JavaScript bundle where anyone can
+read it, so a deployed copy should use a **browser-safe** key restricted to its own origins. Step 13
+of the tutorial covers this properly, and the sample deliberately does not gloss over it.
+
+## 3. Run
+
+```bash
+npm install
+npm run dev
+```
+
+If you see "No delivery key configured", `.env` is missing or empty — that page is telling you so on
+purpose rather than showing a 404.
+
+## Which parts fit Starter
+
+No Content *capability* is restricted by tier. Localization, personalization, workflow, streams and
+Adapters are all available on every plan. What a plan buys is **scale and environments**.
+
+The relevant limit here is **Experience nodes: 10 on Starter, 200 on Pro**. The finished site has
+more than 10 pages, so a Starter organization can follow the tutorial up to the point where the
+catalogue fills out and then stops. The exact step is recorded here once the count is verified
+against a real organization rather than estimated.
+
+## Following the tutorial
+
+The [tutorial series](https://ebitex.io/blog) builds this site from an empty organization, one step
+at a time, explaining why at each point. Every step is a tag:
+
+```bash
+git checkout northwind-coffee/step-07
+```
+
+At any step tag the sample builds, typechecks, and runs against an organization seeded with the
+nearest bundle at or before that step. It is **not** always visually complete — a step that adds a
+Contract before the code that renders it is a legitimate step, and the post says so when that is
+where you are.
+
+## Structure
+
+```
+src/
+  App.tsx              the whole route table: one catch-all
+  pages/ContentPage.tsx  resolves the current path against the CMS
+  presentations/       one file per Template; the file name is the Template's external id
+  lib/content.ts       the only place configuration is read and the SDK client is built
+content-model/         the content model as data. Internal tooling: read it, do not run it
+seed/                  portable export bundles, one per checkpoint step
+```
+
+`content-model/` and `seed/` are two routes to the same place. The bundles are the fast path — import
+one and the model exists. The script is the *legible* path: the entire model in one readable file,
+which you can diff between step tags to see exactly what each step added. It authenticates against
+the authoring API with a browser session cookie, which is not a supported integration path, so the
+tutorial never asks you to run it.

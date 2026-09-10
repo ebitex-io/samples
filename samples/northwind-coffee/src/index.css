@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/*
+ * Northwind Coffee's whole design system. Two colour sets -- light and, via
+ * prefers-color-scheme, dark -- exposed to Tailwind through @theme inline, so
+ * `bg-surface`, `text-ink`, `border-line` and friends work everywhere.
+ *
+ * There is deliberately no theme toggle and no cookie. The site follows the
+ * reader's own operating-system preference and nothing else: a sample should
+ * not ship a mechanism it does not need to explain.
+ */
+
+:root {
+  --nw-surface: #fbf7f1;
+  --nw-surface-raised: #ffffff;
+  --nw-surface-sunken: #f2e9dc;
+  --nw-ink: #1d1712;
+  --nw-ink-muted: #6b5f52;
+  --nw-line: #e4d8c6;
+  --nw-accent: #a4522a;
+  --nw-accent-ink: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nw-surface: #17120e;
+    --nw-surface-raised: #201a15;
+    --nw-surface-sunken: #251d17;
+    --nw-ink: #f4ece1;
+    --nw-ink-muted: #a9998a;
+    --nw-line: #362c23;
+    --nw-accent: #e08b5a;
+    --nw-accent-ink: #17120e;
+  }
+}
+
+@theme inline {
+  --color-surface: var(--nw-surface);
+  --color-raised: var(--nw-surface-raised);
+  --color-sunken: var(--nw-surface-sunken);
+  --color-ink: var(--nw-ink);
+  --color-ink-muted: var(--nw-ink-muted);
+  --color-line: var(--nw-line);
+  --color-accent: var(--nw-accent);
+  --color-accent-ink: var(--nw-accent-ink);
+
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--nw-surface);
+  color: var(--nw-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--nw-accent);
+  outline-offset: 2px;
+}
