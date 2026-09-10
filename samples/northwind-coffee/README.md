@@ -25,6 +25,7 @@ makes it live; no code changes and nothing is redeployed.
 | Modifiers: mandatory, localizable, enumerable, personalizable | `content-model/model.mjs`, the `coffee` Contract |
 | Blobs, and why alt text belongs on a Contract | `src/components/CmsImage.tsx` |
 | Inline versus referenced content | `content-model/values.mjs` |
+| Contextual values: one Component, a different framing in each place it is used | `content-model/model.mjs`, `src/components/OriginCard.tsx` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |

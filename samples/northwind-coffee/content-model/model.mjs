@@ -210,6 +210,20 @@ export const CONTRACTS = [
       componentField('Image', 'image', {
         settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['image']) },
       }),
+      // Contextual: the value can be overridden *per place this Origin is used*, and the value
+      // written here on the Origin itself is the default for anywhere that doesn't.
+      //
+      // This is the field that makes one Origin read differently in two places. Ethiopia is named
+      // by three of our coffees, and on each of their pages this line says something about that
+      // lot; on Ethiopia's own page it says something general. Same Component, three framings, and
+      // nothing duplicated -- correct a fact about Ethiopian coffee and it is corrected on all four
+      // pages at once, while the sentence that belongs to one coffee stays with that coffee.
+      //
+      // The question to ask is *whose* the value is. `altitude` belongs to the Origin, so it is an
+      // ordinary field. This one belongs to the relationship between a coffee and its origin, which
+      // is neither of them on its own -- and a field on `coffee` could not express it either, since
+      // it is the Origin card that renders it.
+      text('Note', 'note', { contextual: true, localizable: true }),
     ],
   },
   {
@@ -626,6 +640,7 @@ export const COMPONENTS = [
     document: ({ contracts, blobs }) => ({
       name: L('Ethiopia'),
       country: L('Ethiopia'),
+      note: L('Where coffee comes from, and still the most varied thing we buy.'),
       altitude: '1,750–2,200 m',
       summary: L(
         md(
@@ -646,6 +661,7 @@ export const COMPONENTS = [
     document: ({ contracts, blobs }) => ({
       name: L('Colombia'),
       country: L('Colombia'),
+      note: L('Two harvests a year, and the origin we can always get good coffee from.'),
       altitude: '1,500–2,000 m',
       summary: L(
         md(
@@ -666,6 +682,7 @@ export const COMPONENTS = [
     document: ({ contracts, blobs }) => ({
       name: L('Guatemala'),
       country: L('Guatemala'),
+      note: L('Volcanic soil, deep shade, and a cup that rewards patience.'),
       altitude: '1,400-1,800 m',
       summary: L(md('Volcanic soil and a long dry season. We buy from Antigua, where the shade cover slows ripening and the cup comes out dense and cocoa-heavy rather than bright.')),
       image: inline(contracts.image, {
@@ -682,6 +699,7 @@ export const COMPONENTS = [
     document: ({ contracts, blobs }) => ({
       name: L('Kenya'),
       country: L('Kenya'),
+      note: L('The most structured coffee we buy, and the least forgiving to roast.'),
       altitude: '1,600-2,000 m',
       summary: L(md('Sold through an auction system that rewards quality, and it shows. Kenyan lots are the most structured coffee we buy: blackcurrant, tomato leaf, and an acidity that can be startling if you are not expecting it.')),
       image: inline(contracts.image, {
@@ -698,6 +716,7 @@ export const COMPONENTS = [
     document: ({ contracts, blobs }) => ({
       name: L('Sumatra'),
       country: L('Indonesia'),
+      note: L('Wet-hulled and unmistakable. You will know within one sip whether it is for you.'),
       altitude: '1,200-1,600 m',
       summary: L(md('Wet-hulled, a processing method almost unique to Sumatra and responsible for everything people love and hate about it: low acidity, enormous body, and a savoury edge nothing else has.')),
       image: inline(contracts.image, {
@@ -755,7 +774,13 @@ export const COMPONENTS = [
       // A pointer, not a copy. Every Ethiopian coffee names this same Origin, so correcting a
       // detail about the region corrects it everywhere at once -- and the Origin has a page of
       // its own, which content written inside a coffee never could.
-      origin: reference(components['origin-ethiopia']),
+      //
+      // The second argument is this usage's **contextual values**: an override for one field, on
+      // this binding only. Ethiopia is named by three coffees and each supplies a different `note`,
+      // so the same Component reads differently on each page while everything else about it stays
+      // shared. Delivery overlays the override onto the Origin's own document before you see it,
+      // so a renderer reads `content.note` and never knows the difference.
+      origin: reference(components['origin-ethiopia'], { note: L('Guji sits in the south, and its naturals are the loudest coffee Ethiopia produces.') }),
       roast: categoryValue(categories, 'roast', 'light'),
       process: categoryValue(categories, 'process', 'natural'),
     }),
@@ -776,7 +801,7 @@ export const COMPONENTS = [
         file: blobs['coffee-huila'],
         alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
       }),
-      origin: reference(components['origin-colombia']),
+      origin: reference(components['origin-colombia'], { note: L('Huila is the department we have bought from every year since we opened.') }),
       roast: categoryValue(categories, 'roast', 'medium'),
       process: categoryValue(categories, 'process', 'washed'),
     }),
@@ -797,7 +822,7 @@ export const COMPONENTS = [
         file: blobs['coffee-yirgacheffe'],
         alt: L('An abstract pattern of concentric arcs in the colours of a light roast.'),
       }),
-      origin: reference(components['origin-ethiopia']),
+      origin: reference(components['origin-ethiopia'], { note: L('Yirgacheffe washed is the other Ethiopia: floral and clean where Guji is loud.') }),
       roast: categoryValue(categories, 'roast', 'light'),
       process: categoryValue(categories, 'process', 'washed'),
     }),
@@ -818,7 +843,7 @@ export const COMPONENTS = [
         file: blobs['coffee-antigua'],
         alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
       }),
-      origin: reference(components['origin-guatemala']),
+      origin: reference(components['origin-guatemala'], { note: L('Antigua sits between three volcanoes, and the shade there slows everything down.') }),
       roast: categoryValue(categories, 'roast', 'medium'),
       process: categoryValue(categories, 'process', 'washed'),
     }),
@@ -839,7 +864,7 @@ export const COMPONENTS = [
         file: blobs['coffee-kirinyaga'],
         alt: L('An abstract pattern of concentric arcs in the colours of a light roast.'),
       }),
-      origin: reference(components['origin-kenya']),
+      origin: reference(components['origin-kenya'], { note: L('Kirinyaga lots go through the auction like everything else, and still stand out.') }),
       roast: categoryValue(categories, 'roast', 'light'),
       process: categoryValue(categories, 'process', 'washed'),
     }),
@@ -860,7 +885,7 @@ export const COMPONENTS = [
         file: blobs['coffee-gayo'],
         alt: L('An abstract pattern of concentric arcs in the colours of a dark roast.'),
       }),
-      origin: reference(components['origin-sumatra']),
+      origin: reference(components['origin-sumatra'], { note: L('Gayo is the highland end of Sumatra, where wet-hulling is done carefully.') }),
       roast: categoryValue(categories, 'roast', 'dark'),
       process: categoryValue(categories, 'process', 'wet-hulled'),
     }),
@@ -881,7 +906,7 @@ export const COMPONENTS = [
         file: blobs['coffee-narino'],
         alt: L('An abstract pattern of concentric arcs in the colours of a medium roast.'),
       }),
-      origin: reference(components['origin-colombia']),
+      origin: reference(components['origin-colombia'], { note: L('Narino is the high, cold end of Colombia -- it ripens slowly and tastes like it.') }),
       roast: categoryValue(categories, 'roast', 'medium'),
       process: categoryValue(categories, 'process', 'honey'),
     }),
@@ -902,7 +927,7 @@ export const COMPONENTS = [
         file: blobs['coffee-hambela'],
         alt: L('An abstract pattern of concentric arcs in the colours of a medium-dark roast.'),
       }),
-      origin: reference(components['origin-ethiopia']),
+      origin: reference(components['origin-ethiopia'], { note: L('Hambela is Guji too, a few valleys over, and it ferments longer than most.') }),
       roast: categoryValue(categories, 'roast', 'medium-dark'),
       process: categoryValue(categories, 'process', 'natural'),
     }),

@@ -3,14 +3,6 @@
 
 import type { BlobValue, CategoryDescriptor, ComponentValue, LinkValue, PresentationEnvelope, RichTextValue } from '@ebitex/content-sdk'
 
-/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
-export type Page = {
-  title: string
-  description?: string
-  body?: RichTextValue
-  sections?: Array<PresentationEnvelope<Statement | FormEmbed>>
-}
-
 /** coffee (601d3ff2-7e0a-4c6a-a789-0191d909eec9@2) */
 export type Coffee = {
   name: string
@@ -31,15 +23,6 @@ export type Image = {
   alt: string
 }
 
-/** origin (734e1bed-64a1-4beb-a536-74d092b18ed7@1) */
-export type Origin = {
-  name: string
-  country?: string
-  altitude?: string
-  summary?: RichTextValue
-  image?: ComponentValue<Image>
-}
-
 /** coffee-index (b28b41c6-39e1-4797-a82b-1a37812b677c@1) */
 export type CoffeeIndex = {
   heading: string
@@ -51,10 +34,22 @@ export type HeaderContent = {
   links?: Array<ComponentValue<NavLink>>
 }
 
-/** footer-content (73c724c1-3f3a-4664-8c0e-33628cf1671d@1) */
-export type FooterContent = {
-  tagline?: string
-  links?: Array<ComponentValue<NavLink>>
+/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
+export type Page = {
+  title: string
+  description?: string
+  body?: RichTextValue
+  sections?: Array<PresentationEnvelope<Statement | FormEmbed>>
+}
+
+/** origin (734e1bed-64a1-4beb-a536-74d092b18ed7@1) */
+export type Origin = {
+  name: string
+  country?: string
+  altitude?: string
+  summary?: RichTextValue
+  image?: ComponentValue<Image>
+  note?: string
 }
 
 /** guide (ab59b61d-6d13-4648-8907-4955517a5359@1) */
@@ -80,6 +75,18 @@ export type GuideIndex = {
   guides?: Array<ComponentValue<Guide>>
 }
 
+/** footer-content (73c724c1-3f3a-4664-8c0e-33628cf1671d@1) */
+export type FooterContent = {
+  tagline?: string
+  links?: Array<ComponentValue<NavLink>>
+}
+
+/** nav-link (c8913ea3-c1db-45e9-bb6e-5bfeaeb452ec@1) */
+export type NavLink = {
+  label: string
+  link: LinkValue
+}
+
 /** statement (622ad278-e1d2-4abe-87dd-ae4143e6bc6d@1) */
 export type Statement = {
   heading: string
@@ -93,12 +100,6 @@ export type Statement = {
 export type FormEmbed = {
   form: string
   title?: string
-}
-
-/** nav-link (c8913ea3-c1db-45e9-bb6e-5bfeaeb452ec@1) */
-export type NavLink = {
-  label: string
-  link: LinkValue
 }
 
 /** guide-step (dd0f507f-c4d2-49bf-ad34-348ed44c7c98@1) */
