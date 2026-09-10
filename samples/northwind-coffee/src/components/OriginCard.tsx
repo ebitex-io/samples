@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { Resolve } from '@ebitex/content-sdk/react'
 
 import type { Coffee, Origin } from '@/types/content'
+import { useLocale } from '@/lib/locale'
 import { loadOriginPaths } from '@/lib/originPaths'
 
 /**
@@ -27,14 +28,15 @@ import { loadOriginPaths } from '@/lib/originPaths'
  * nothing overrode it there.
  */
 export function OriginCard({ origin }: { origin: Coffee['origin'] }) {
+  const locale = useLocale()
   const [paths, setPaths] = useState<Map<string, string>>()
   useEffect(() => {
     let live = true
-    loadOriginPaths().then((map) => live && setPaths(map))
+    loadOriginPaths(locale).then((map) => live && setPaths(map))
     return () => {
       live = false
     }
-  }, [])
+  }, [locale])
 
   if (!origin) return null
   const path = origin.key ? paths?.get(origin.key) : undefined

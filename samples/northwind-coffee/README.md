@@ -26,6 +26,8 @@ makes it live; no code changes and nothing is redeployed.
 | Blobs, and why alt text belongs on a Contract | `src/components/CmsImage.tsx` |
 | Inline versus referenced content | `content-model/values.mjs` |
 | Contextual values: one Component, a different framing in each place it is used | `content-model/model.mjs`, `src/components/OriginCard.tsx` |
+| Localization: deciding the axis early, and enabling it later | `content-model/model.mjs`'s `L()`, `src/lib/locale.ts` |
+| Locale fallback, and why a partly-translated site is a normal state | `src/components/LocaleSwitcher.tsx` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
@@ -189,6 +191,24 @@ assets/                every image this repo ships, and the script that generate
 content-model/         the content model as data. Internal tooling: read it, do not run it
 seed/                  portable export bundles, one per checkpoint step
 ```
+
+### Two languages
+
+The site is in English and French. Switch with the control in the header, or add `?lang=fr` to any
+URL.
+
+Most of it is **deliberately untranslated** -- the header, the front page, the catalogue, the roast
+and process labels and one coffee are in French, and everything else falls back to English. That is
+not an unfinished job, it is the state every site translating itself passes through, and it is worth
+seeing work.
+
+The part worth noticing is what adding French did *not* touch. No Contract changed, no Template
+changed, no renderer changed. Every localizable field has been written as `{ default, locales }`
+since step 04, while the organization still had one language and the envelope looked like pointless
+ceremony. Enabling the second language was adding a locale in Settings, filling in `locales`, and
+passing one `locale` value to `<Experience>`.
+
+Deciding that axis early costs almost nothing. Deciding it late costs a migration.
 
 ### Types are generated, not hand-written
 

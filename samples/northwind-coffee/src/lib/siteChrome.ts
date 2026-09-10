@@ -27,15 +27,24 @@ export interface SiteChrome {
   footer: FooterContent | null
 }
 
-let inFlight: Promise<SiteChrome> | undefined
+/**
+ * Keyed by locale, because the chrome is translated and a memo that ignored that would serve
+ * whichever language happened to be asked for first. One entry per language the visitor actually
+ * looks at, which is one for almost everybody.
+ */
+const inFlight = new Map<string, Promise<SiteChrome>>()
 
-export function loadSiteChrome(): Promise<SiteChrome> {
+export function loadSiteChrome(locale: string): Promise<SiteChrome> {
   if (!content) return Promise.resolve({ header: null, footer: null })
-  inFlight ??= Promise.all([
-    resolve<HeaderContent>(HEADER_ID),
-    resolve<FooterContent>(FOOTER_ID),
-  ]).then(([header, footer]) => ({ header, footer }))
-  return inFlight
+  let pending = inFlight.get(locale)
+  if (!pending) {
+    pending = Promise.all([
+      resolve<HeaderContent>(HEADER_ID, locale),
+      resolve<FooterContent>(FOOTER_ID, locale),
+    ]).then(([header, footer]) => ({ header, footer }))
+    inFlight.set(locale, pending)
+  }
+  return pending
 }
 
 /**
@@ -44,10 +53,10 @@ export function loadSiteChrome(): Promise<SiteChrome> {
  * chrome is the one thing that must never disappear, because without it there is no way to
  * navigate to the page that would explain what went wrong.
  */
-async function resolve<T>(externalId: string): Promise<T | null> {
+async function resolve<T>(externalId: string, locale: string): Promise<T | null> {
   if (!content) return null
   try {
-    const expanded = await content.resolveReference({ provider: 'core', key: externalId })
+    const expanded = await content.resolveReference({ provider: 'core', key: externalId }, { locale })
     const value = expanded as ComponentValue<T>
     return value.content ?? null
   } catch {
@@ -55,16 +64,16 @@ async function resolve<T>(externalId: string): Promise<T | null> {
   }
 }
 
-export function useSiteChrome(): SiteChrome {
+export function useSiteChrome(locale: string): SiteChrome {
   const [chrome, setChrome] = useState<SiteChrome>({ header: null, footer: null })
 
   useEffect(() => {
     let live = true
-    loadSiteChrome().then((value) => live && setChrome(value))
+    loadSiteChrome(locale).then((value) => live && setChrome(value))
     return () => {
       live = false
     }
-  }, [])
+  }, [locale])
 
   return chrome
 }

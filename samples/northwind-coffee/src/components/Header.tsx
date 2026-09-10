@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router'
 
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import { NavLinks, type NavItem } from '@/components/NavLinks'
 import type { HeaderContent } from '@/types/content'
 
@@ -30,22 +31,25 @@ export function Header({ content }: { content?: HeaderContent | null }) {
         <Link to="/" className="font-display text-xl tracking-tight text-ink">
           Northwind Coffee
         </Link>
-        <nav aria-label="Main">
-          <ul className="flex flex-wrap items-center gap-6 text-sm">
-            <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
-              {(item) => (
-                <NavLink
-                  to={item.to}
-                  className={({ isActive }) =>
-                    isActive ? 'text-ink' : 'text-ink-muted hover:text-ink'
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              )}
-            </NavLinks>
-          </ul>
-        </nav>
+        <div className="flex flex-wrap items-center gap-6">
+          <nav aria-label="Main">
+            <ul className="flex flex-wrap items-center gap-6 text-sm">
+              <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
+                {(item) => (
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive }) =>
+                      isActive ? 'text-ink' : 'text-ink-muted hover:text-ink'
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                )}
+              </NavLinks>
+            </ul>
+          </nav>
+          <LocaleSwitcher />
+        </div>
       </div>
     </header>
   )

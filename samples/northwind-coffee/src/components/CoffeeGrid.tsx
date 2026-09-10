@@ -4,6 +4,7 @@ import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
 import { CmsImage } from '@/components/CmsImage'
 import { content } from '@/lib/content'
+import { useLocale } from '@/lib/locale'
 import type { Coffee } from '@/types/content'
 import { formatPrice } from '@/lib/format'
 
@@ -21,6 +22,7 @@ const PAGE_SIZE = 12
  * Filter state lives in the URL, so a filtered view is a link someone can send.
  */
 export function CoffeeGrid() {
+  const locale = useLocale()
   const [params, setParams] = useSearchParams()
   const roast = params.get('roast') ?? undefined
   const origin = params.get('origin') ?? undefined
@@ -51,9 +53,11 @@ export function CoffeeGrid() {
     const controller = new AbortController()
     setStatus('loading')
     Promise.all([
-      content.delivery.queryStream(STREAM, { filters, limit: PAGE_SIZE, signal: controller.signal }),
-      content.delivery.getStreamFacet(STREAM, 'roast', { filters, signal: controller.signal }),
-      content.delivery.getStreamFacet(STREAM, 'origin', { filters, signal: controller.signal }),
+      content.delivery.queryStream(STREAM, { filters, limit: PAGE_SIZE, locale, signal: controller.signal }),
+      // Facet *labels* are localizable too -- an origin's name is read off its own document -- so
+      // the locale goes on these as well, not only on the query that fetches the cards.
+      content.delivery.getStreamFacet(STREAM, 'roast', { filters, locale, signal: controller.signal }),
+      content.delivery.getStreamFacet(STREAM, 'origin', { filters, locale, signal: controller.signal }),
     ])
       .then(([page, roastFacet, originFacet]) => {
         setItems(page.items)
@@ -74,7 +78,7 @@ export function CoffeeGrid() {
         setStatus('error')
       })
     return () => controller.abort()
-  }, [filters])
+  }, [filters, locale])
 
   const setFilter = useCallback(
     (key: string, value: string | undefined) => {
@@ -96,7 +100,7 @@ export function CoffeeGrid() {
 
   const loadMore = async () => {
     if (!content || !cursor) return
-    const page = await content.delivery.queryStream(STREAM, { filters, limit: PAGE_SIZE, cursor })
+    const page = await content.delivery.queryStream(STREAM, { filters, limit: PAGE_SIZE, cursor, locale })
     setItems((current) => [...current, ...page.items])
     setCursor(page.nextCursor)
   }

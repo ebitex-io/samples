@@ -55,16 +55,29 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
     categoryGroups[def.externalId] = group
     const existing = new Map((await api.listCategories(group.id)).map((c) => [c.key, c]))
     for (const cat of def.categories) {
-      categories[`${def.externalId}/${cat.key}`] =
-        existing.get(cat.key) ??
-        (await api.createCategory({
-          categoryGroupId: group.id,
-          parentCategoryId: null,
-          key: cat.key,
-          value: L(cat.value),
-          isSelectable: true,
-          metadata: null,
-        }))
+      // A category's `value` is Localizable, like any other display text in the system -- so
+      // translating a taxonomy is translating content, not a code change. This is an upsert rather
+      // than create-only for exactly that reason: step 16 added French labels to categories that
+      // already existed, and a create-only pass would have silently left them in English.
+      const value = L(cat.value, cat.locales ?? {})
+      const current = existing.get(cat.key)
+      categories[`${def.externalId}/${cat.key}`] = current
+        ? await api.updateCategory(current.id, {
+            key: cat.key,
+            value,
+            isSelectable: true,
+            metadata: null,
+            parentCategoryId: null,
+            rowVersion: current.rowVersion,
+          })
+        : await api.createCategory({
+            categoryGroupId: group.id,
+            parentCategoryId: null,
+            key: cat.key,
+            value,
+            isSelectable: true,
+            metadata: null,
+          })
     }
     log(`category group ${def.externalId} (${def.categories.length} categories)`)
   }

@@ -13,20 +13,30 @@ import { content } from '@/lib/content'
  *
  * Fetched once per browser session and shared, because it is the same answer for every coffee.
  */
-let inFlight: Promise<Map<string, string>> | undefined
+/**
+ * Keyed by locale. Every slug on this site is the same in both languages, so both keys hold the
+ * same answer today -- but a published path is materialized *per locale slot*, so a site that
+ * translated its slugs would get genuinely different maps here, and a memo that ignored locale
+ * would send French readers to English URLs. Cheap to be right about; expensive to discover later.
+ */
+const inFlight = new Map<string, Promise<Map<string, string>>>()
 
-export function loadOriginPaths(): Promise<Map<string, string>> {
+export function loadOriginPaths(locale: string): Promise<Map<string, string>> {
   if (!content) return Promise.resolve(new Map())
-  inFlight ??= content.delivery
-    .listComponents({ contract: 'origin', paths: true, limit: 100 })
-    .then((page) => {
-      const map = new Map<string, string>()
-      for (const item of page.items) {
-        const path = item.paths?.[0]?.path
-        if (path) map.set(item.key, path)
-      }
-      return map
-    })
-    .catch(() => new Map<string, string>())
-  return inFlight
+  let pending = inFlight.get(locale)
+  if (!pending) {
+    pending = content.delivery
+      .listComponents({ contract: 'origin', paths: true, limit: 100, locale })
+      .then((page) => {
+        const map = new Map<string, string>()
+        for (const item of page.items) {
+          const path = item.paths?.[0]?.path
+          if (path) map.set(item.key, path)
+        }
+        return map
+      })
+      .catch(() => new Map<string, string>())
+    inFlight.set(locale, pending)
+  }
+  return pending
 }

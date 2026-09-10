@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { ContentPage } from '@/pages/ContentPage'
+import { useLocale } from '@/lib/locale'
 import { useSiteChrome } from '@/lib/siteChrome'
 
 /**
@@ -19,7 +20,8 @@ import { useSiteChrome } from '@/lib/siteChrome'
  * otherwise come from.
  */
 export default function App() {
-  const { header, footer } = useSiteChrome()
+  const locale = useLocale()
+  const { header, footer } = useSiteChrome(locale)
 
   return (
     <div className="flex min-h-svh flex-col">

@@ -3,6 +3,12 @@
 
 import type { BlobValue, CategoryDescriptor, ComponentValue, LinkValue, PresentationEnvelope, RichTextValue } from '@ebitex/content-sdk'
 
+/** image (64bc269f-cd6f-4289-9b51-d61a099f58e4@1) */
+export type Image = {
+  file: BlobValue
+  alt: string
+}
+
 /** coffee (601d3ff2-7e0a-4c6a-a789-0191d909eec9@2) */
 export type Coffee = {
   name: string
@@ -17,29 +23,9 @@ export type Coffee = {
   process?: CategoryDescriptor
 }
 
-/** image (64bc269f-cd6f-4289-9b51-d61a099f58e4@1) */
-export type Image = {
-  file: BlobValue
-  alt: string
-}
-
-/** coffee-index (b28b41c6-39e1-4797-a82b-1a37812b677c@1) */
-export type CoffeeIndex = {
-  heading: string
-  intro?: RichTextValue
-}
-
 /** header-content (1adc1dcd-c8bb-4de2-bbb5-6b1a6e4cacc1@1) */
 export type HeaderContent = {
   links?: Array<ComponentValue<NavLink>>
-}
-
-/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
-export type Page = {
-  title: string
-  description?: string
-  body?: RichTextValue
-  sections?: Array<PresentationEnvelope<Statement | FormEmbed>>
 }
 
 /** origin (734e1bed-64a1-4beb-a536-74d092b18ed7@1) */
@@ -68,11 +54,12 @@ export type StoreList = {
   stores?: Array<ComponentValue<Store>>
 }
 
-/** guide-index (e9652a91-9359-4bcf-860e-2d13a1564ecb@1) */
-export type GuideIndex = {
-  heading: string
-  intro?: RichTextValue
-  guides?: Array<ComponentValue<Guide>>
+/** page (50c8cd56-2076-4d95-b161-f863515b281d@2) */
+export type Page = {
+  title: string
+  description?: string
+  body?: RichTextValue
+  sections?: Array<PresentationEnvelope<Statement | FormEmbed>>
 }
 
 /** footer-content (73c724c1-3f3a-4664-8c0e-33628cf1671d@1) */
@@ -81,25 +68,23 @@ export type FooterContent = {
   links?: Array<ComponentValue<NavLink>>
 }
 
+/** coffee-index (b28b41c6-39e1-4797-a82b-1a37812b677c@1) */
+export type CoffeeIndex = {
+  heading: string
+  intro?: RichTextValue
+}
+
+/** guide-index (e9652a91-9359-4bcf-860e-2d13a1564ecb@1) */
+export type GuideIndex = {
+  heading: string
+  intro?: RichTextValue
+  guides?: Array<ComponentValue<Guide>>
+}
+
 /** nav-link (c8913ea3-c1db-45e9-bb6e-5bfeaeb452ec@1) */
 export type NavLink = {
   label: string
   link: LinkValue
-}
-
-/** statement (622ad278-e1d2-4abe-87dd-ae4143e6bc6d@1) */
-export type Statement = {
-  heading: string
-  standfirst?: string
-  body?: RichTextValue
-  cta?: LinkValue
-  "cta-label"?: string
-}
-
-/** form-embed (6f8070d2-f83f-4810-aea3-32c50179bbff@1) */
-export type FormEmbed = {
-  form: string
-  title?: string
 }
 
 /** guide-step (dd0f507f-c4d2-49bf-ad34-348ed44c7c98@1) */
@@ -115,6 +100,21 @@ export type Store = {
   hours?: Array<string>
   phone?: string
   map?: LinkValue
+}
+
+/** statement (622ad278-e1d2-4abe-87dd-ae4143e6bc6d@1) */
+export type Statement = {
+  heading: string
+  standfirst?: string
+  body?: RichTextValue
+  cta?: LinkValue
+  "cta-label"?: string
+}
+
+/** form-embed (6f8070d2-f83f-4810-aea3-32c50179bbff@1) */
+export type FormEmbed = {
+  form: string
+  title?: string
 }
 
 /** experience (00000000-0000-0000-0000-000000000283@0) */

@@ -20,12 +20,28 @@ import { categoryValue, experienceLink, inline, presentation, reference } from '
 /**
  * A localizable field's stored envelope: one default value plus per-locale overrides.
  *
- * Every localizable field is written this way from the very first step, while the organization
- * still has exactly one locale -- so the envelope is always `{ default, locales: {} }` and nothing
- * about the site looks any different. Adding a second locale later fills in `locales` and changes
- * no Contract, no Template and no renderer. That is the whole point.
+ * Every localizable field has been written this way since the very first step, while the
+ * organization still had exactly one locale -- so the envelope was always `{ default, locales: {} }`
+ * and nothing about the site looked any different.
+ *
+ * Step 16 is where that pays off. Adding French meant adding a locale in Settings and filling in
+ * `locales` here. **No Contract changed. No Template changed. No renderer changed.** The only
+ * change to this file's machinery is the optional second argument below.
+ *
+ * That is the single most useful thing this sample can show about content modelling, because the
+ * alternative is what most teams actually live through: discovering they need a second language
+ * after a hundred pages exist, and paying for it in a migration. Deciding the axis early costs
+ * almost nothing. Deciding it late costs a great deal.
+ *
+ *   L('Coffees')                      -- English only; French readers see the English
+ *   L('Coffees', { fr: 'Nos cafés' }) -- translated
+ *
+ * A locale with no value falls back through the tree the organization configured (here `fr` falls
+ * back to `en`), so a partly-translated site is a perfectly normal state rather than a broken one.
+ * Most of this site is deliberately left untranslated for exactly that reason -- switch to French
+ * and you can watch the fallback work.
  */
-export const L = (value) => ({ default: value, locales: {} })
+export const L = (value, locales = {}) => ({ default: value, locales })
 
 /**
  * A personalizable field's stored envelope: one default value plus audience-conditioned variants.
@@ -113,25 +129,29 @@ export function ids(byExternalId, externalIds) {
 // taxonomy rather than a text field because it is a closed set that people filter by: an author
 // picks from it, `/coffees` builds facets from it, and nobody can quietly invent "Med-Dark".
 
+// A category's `key` is its stable identity -- what a filter matches on, what a document stores --
+// and its `value` is display text, which means it is Localizable like any other. Step 16 added the
+// `locales` below and changed nothing else: no field moved, no document was rewritten, and every
+// coffee still stores the same `roast/light` pointer it always did.
 export const CATEGORY_GROUPS = [
   {
     externalId: 'roast',
     name: 'Roast level',
     categories: [
-      { key: 'light', value: 'Light' },
-      { key: 'medium', value: 'Medium' },
-      { key: 'medium-dark', value: 'Medium-dark' },
-      { key: 'dark', value: 'Dark' },
+      { key: 'light', value: 'Light', locales: { fr: 'Clair' } },
+      { key: 'medium', value: 'Medium', locales: { fr: 'Moyen' } },
+      { key: 'medium-dark', value: 'Medium-dark', locales: { fr: 'Moyen-foncé' } },
+      { key: 'dark', value: 'Dark', locales: { fr: 'Foncé' } },
     ],
   },
   {
     externalId: 'process',
     name: 'Process',
     categories: [
-      { key: 'washed', value: 'Washed' },
-      { key: 'natural', value: 'Natural' },
-      { key: 'honey', value: 'Honey' },
-      { key: 'wet-hulled', value: 'Wet-hulled' },
+      { key: 'washed', value: 'Washed', locales: { fr: 'Lavé' } },
+      { key: 'natural', value: 'Natural', locales: { fr: 'Nature' } },
+      { key: 'honey', value: 'Honey', locales: { fr: 'Honey' } },
+      { key: 'wet-hulled', value: 'Wet-hulled', locales: { fr: 'Semi-lavé' } },
     ],
   },
 ]
@@ -533,9 +553,17 @@ export const BLOBS = [
 
 export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }, { name: 'Guides' }]
 
-/** One navigation entry, pointing at a page by node identity rather than by URL. */
-function navLink(contracts, nodes, path, label) {
-  return inline(contracts['nav-link'], { label: L(label), link: experienceLink(nodes[path]) })
+/**
+ * One navigation entry, pointing at a page by node identity rather than by URL.
+ *
+ * `fr` is optional and simply lands in the label's locale envelope -- the same shape every other
+ * localizable value in this file uses. Nothing about `nav-link` changed to support it.
+ */
+function navLink(contracts, nodes, path, label, fr) {
+  return inline(contracts['nav-link'], {
+    label: L(label, fr ? { fr } : {}),
+    link: experienceLink(nodes[path]),
+  })
 }
 
 // ---- components ------------------------------------------------------------------------------
@@ -557,31 +585,41 @@ export const COMPONENTS = [
       title: L('Northwind Coffee'),
       description: L(
         'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
+        {
+          fr: "Du café en petits lots, venu de quatre fermes que nous connaissons par leur nom, torréfié sur la côte nord et expédié dans la semaine.",
+        },
       ),
       sections: [
         presentation(
           templates.hero,
           inline(contracts.statement, {
-            heading: L('Coffee worth the wait'),
-            standfirst: L('Four farms. Two roast days a week. Nothing older than a month.'),
+            heading: L('Coffee worth the wait', { fr: 'Un café qui vaut l’attente' }),
+            standfirst: L('Four farms. Two roast days a week. Nothing older than a month.', {
+              fr: 'Quatre fermes. Deux jours de torréfaction par semaine. Rien de plus vieux qu’un mois.',
+            }),
             body: P(
               L(
                 md(
                   'We are a small roastery on the north coast, and we would rather sell you one coffee you love than six you are unsure about.',
                 ),
+                {
+                  fr: md(
+                    'Nous sommes une petite torréfaction sur la côte nord, et nous préférons vous vendre un café que vous aimez plutôt que six dont vous n’êtes pas sûr.',
+                  ),
+                },
               ),
             ),
             // A link to another page in this site, by node identity rather than by URL. The
             // Delivery API resolves the current path for it on every request, so moving the
             // target page never leaves this link stale.
             cta: experienceLink(nodes['about']),
-            'cta-label': L('How we work'),
+            'cta-label': L('How we work', { fr: 'Notre façon de travailler' }),
           }),
         ),
         presentation(
           templates.prose,
           inline(contracts.statement, {
-            heading: L('On the roaster this month'),
+            heading: L('On the roaster this month', { fr: 'Au torréfacteur ce mois-ci' }),
             body: P(
               L(
                 md(
@@ -731,11 +769,16 @@ export const COMPONENTS = [
     contract: 'coffee-index',
     folder: 'Pages',
     document: () => ({
-      heading: L('What we are roasting'),
+      heading: L('What we are roasting', { fr: 'Ce que nous torréfions' }),
       intro: L(
         md(
           'Eight coffees, five origins and two roast days a week. Everything here was on a farm we have visited, and nothing sits on our shelf for more than a month.',
         ),
+        {
+          fr: md(
+            'Huit cafés, cinq origines et deux jours de torréfaction par semaine. Tout ce qui est ici vient d’une ferme que nous avons visitée, et rien ne reste sur nos étagères plus d’un mois.',
+          ),
+        },
       ),
     }),
   },
@@ -759,12 +802,27 @@ export const COMPONENTS = [
               'This is the coffee we hand people who say they do not like fruity coffee. It usually works.',
             ].join('\n'),
           ),
+          {
+            fr: md(
+              [
+                'Pêche, bergamote et une longue finale, très nette. Un lot nature de la zone de Guji, cueilli à 1 950 mètres et séché sur lits surélevés pendant dix-huit jours.',
+                '',
+                'C’est le café que nous tendons aux gens qui disent ne pas aimer les cafés fruités. En général, cela marche.',
+              ].join('\n'),
+            ),
+          },
         ),
       ),
       // Localizable *and* enumerable, so the list sits inside the locale envelope -- one list per
       // locale, `L([...])`, not a list of separately-translated strings. The modifiers compose as
       // Localizable<list of shortText>, which the compiled schema will tell you if you invert it.
-      'tasting-notes': L(['Peach', 'Bergamot', 'Brown sugar']),
+      //
+      // Which is exactly what the French value below is: one list, translated as a list. Getting
+      // this the wrong way round -- a list of localizable strings -- is the classic mistake, and it
+      // makes a language with a different number of items impossible to express.
+      'tasting-notes': L(['Peach', 'Bergamot', 'Brown sugar'], {
+        fr: ['Pêche', 'Bergamote', 'Sucre roux'],
+      }),
       price: 14.5,
       'weight-grams': 250,
       image: inline(contracts.image, {
@@ -1240,11 +1298,11 @@ export const COMPONENTS = [
     standalone: true,
     document: ({ contracts, nodes }) => ({
       links: [
-        navLink(contracts, nodes, 'coffees', 'Coffees'),
-        navLink(contracts, nodes, 'guides', 'Brew guides'),
-        navLink(contracts, nodes, 'stores', 'Find us'),
-        navLink(contracts, nodes, 'about', 'About'),
-        navLink(contracts, nodes, 'contact', 'Wholesale'),
+        navLink(contracts, nodes, 'coffees', 'Coffees', 'Nos cafés'),
+        navLink(contracts, nodes, 'guides', 'Brew guides', 'Méthodes'),
+        navLink(contracts, nodes, 'stores', 'Find us', 'Nous trouver'),
+        navLink(contracts, nodes, 'about', 'About', 'À propos'),
+        navLink(contracts, nodes, 'contact', 'Wholesale', 'Professionnels'),
       ],
     }),
   },
@@ -1255,13 +1313,15 @@ export const COMPONENTS = [
     folder: 'Pages',
     standalone: true,
     document: ({ contracts, nodes }) => ({
-      tagline: L('Roasted on the north coast. Posted out the same week.'),
+      tagline: L('Roasted on the north coast. Posted out the same week.', {
+        fr: 'Torréfié sur la côte nord. Expédié dans la semaine.',
+      }),
       links: [
-        navLink(contracts, nodes, 'coffees', 'Coffees'),
-        navLink(contracts, nodes, 'guides', 'Brew guides'),
-        navLink(contracts, nodes, 'stores', 'Find us'),
-        navLink(contracts, nodes, 'about', 'About'),
-        navLink(contracts, nodes, 'contact', 'Wholesale'),
+        navLink(contracts, nodes, 'coffees', 'Coffees', 'Nos cafés'),
+        navLink(contracts, nodes, 'guides', 'Brew guides', 'Méthodes'),
+        navLink(contracts, nodes, 'stores', 'Find us', 'Nous trouver'),
+        navLink(contracts, nodes, 'about', 'About', 'À propos'),
+        navLink(contracts, nodes, 'contact', 'Wholesale', 'Professionnels'),
       ],
     }),
   },

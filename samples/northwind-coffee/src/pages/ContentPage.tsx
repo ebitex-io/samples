@@ -4,6 +4,7 @@ import { ContentProvider, Experience } from '@ebitex/content-sdk/react'
 
 import { Markdown } from '@/components/Markdown'
 import { content, renderers } from '@/lib/content'
+import { useLocale } from '@/lib/locale'
 import { NotConfigured } from '@/pages/NotConfigured'
 import { NotFound } from '@/pages/NotFound'
 
@@ -20,6 +21,7 @@ import { NotFound } from '@/pages/NotFound'
  */
 export function ContentPage() {
   const { pathname } = useLocation()
+  const locale = useLocale()
   const navigate = useNavigate()
   const onRedirect = useCallback((to: string) => navigate(to, { replace: true }), [navigate])
 
@@ -29,6 +31,10 @@ export function ContentPage() {
     <ContentProvider client={content} renderers={renderers} markdown={Markdown}>
       <Experience
         path={pathname}
+        // The only change step 16 made to this file. Everything downstream -- every renderer, every
+        // Contract -- is untouched: what arrives is simply the French value where one exists and
+        // the English one where it does not.
+        locale={locale}
         onRedirect={onRedirect}
         notFound={<NotFound />}
         loading={<PageSkeleton />}

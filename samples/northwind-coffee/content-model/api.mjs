@@ -137,6 +137,7 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     createCategoryGroup: (externalId, name) => post('/content/v1/taxonomy/groups', { externalId, name, metadataFields: null }),
     listCategories: (groupId) => get(`/content/v1/taxonomy/groups/${groupId}/categories`),
     createCategory: (input) => post('/content/v1/taxonomy/categories', input),
+    updateCategory: (id, input) => put(`/content/v1/taxonomy/categories/${id}`, input),
 
     // ---- blobs ----
     uploadBlob,
