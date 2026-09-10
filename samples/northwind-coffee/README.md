@@ -71,6 +71,22 @@ another organization's identifiers.
 Importing gives every entity fresh identity in your organization. It is your content from that
 moment on — rename a Contract, add a field, break something and fix it.
 
+**Then publish it.** An import writes drafts; nothing is delivered until it is published. Publish the
+site root and each page from Composer, and publish `site-header` and `site-footer` from the Component
+library — those two belong to no page, so no page's publish reaches them.
+
+> **Known limitations, being fixed.** Two defects in the import path were found while building this
+> sample and are open against ebitex, not against the sample:
+>
+> - [monorepo#568](https://github.com/ebitex-io/monorepo/issues/568) — an imported blob loses its
+>   content type, so any page with an image refuses to publish with *"Descriptor does not match the
+>   actual contentType/sizeBytes"*.
+> - [monorepo#569](https://github.com/ebitex-io/monorepo/issues/569) — a Contract used only *inline*
+>   is left out of the bundle, so the brew guides, the store list and the site chrome fail to publish
+>   with *"Named Contract not found"*.
+>
+> Everything else imports and publishes cleanly. This note goes away when they do.
+
 ## 2. Configure
 
 ```bash
