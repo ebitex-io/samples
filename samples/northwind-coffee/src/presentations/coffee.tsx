@@ -2,6 +2,7 @@ import { RichText, Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CmsImage } from '@/components/CmsImage'
+import { OriginCard } from '@/components/OriginCard'
 import type { CoffeeContent, ImageContent } from '@/lib/cmsTypes'
 import { formatPrice, formatWeight } from '@/lib/format'
 import { useDocumentMeta } from '@/lib/meta'
@@ -28,6 +29,7 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
     price,
     'weight-grams': weight,
     image,
+    origin,
   } = component.content
 
   useDocumentMeta(name, tastingNotes?.join(', '))
@@ -78,6 +80,8 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
             <RichText fragments={description} />
           </div>
         ) : null}
+
+        <OriginCard origin={origin} />
       </div>
     </article>
   )

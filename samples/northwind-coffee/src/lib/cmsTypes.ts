@@ -47,4 +47,13 @@ export interface CoffeeContent {
   price?: number
   'weight-grams'?: number
   image?: ComponentValue<ImageContent>
+  origin?: ComponentValue<OriginContent>
+}
+
+export interface OriginContent {
+  name: string
+  country?: string
+  altitude?: string
+  summary?: RichTextValue
+  image?: ComponentValue<ImageContent>
 }

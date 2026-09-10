@@ -1,0 +1,43 @@
+import { RichText, Resolve } from '@ebitex/content-sdk/react'
+import type { PresentationRenderer } from '@ebitex/content-sdk/react'
+
+import { CmsImage } from '@/components/CmsImage'
+import type { ImageContent, OriginContent } from '@/lib/cmsTypes'
+import { useDocumentMeta } from '@/lib/meta'
+
+/** The `origin` Template. One page per producing country, shared by every coffee from it. */
+const Origin: PresentationRenderer<OriginContent> = ({ component }) => {
+  const { name, country, altitude, summary, image } = component.content
+  useDocumentMeta(name, country)
+
+  return (
+    <article>
+      <div className="border-b border-line bg-sunken">
+        <div className="mx-auto max-w-4xl px-6 py-16">
+          <p className="font-mono text-xs tracking-widest text-ink-muted uppercase">Origin</p>
+          <h1 className="mt-3 font-display text-4xl text-ink sm:text-5xl">{name}</h1>
+          {altitude ? <p className="mt-3 text-ink-muted">Grown at {altitude}</p> : null}
+        </div>
+      </div>
+
+      <div className="mx-auto grid max-w-4xl gap-10 px-6 py-14 md:grid-cols-[2fr_1fr]">
+        {summary ? (
+          <div className="text-ink-muted">
+            <RichText fragments={summary} />
+          </div>
+        ) : null}
+        <Resolve value={image}>
+          {(content: ImageContent) => (
+            <CmsImage
+              file={content.file}
+              alt={content.alt}
+              className="w-full rounded-2xl border border-line"
+            />
+          )}
+        </Resolve>
+      </div>
+    </article>
+  )
+}
+
+export default Origin

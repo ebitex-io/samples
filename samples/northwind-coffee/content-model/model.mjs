@@ -13,7 +13,7 @@
 // See api.mjs for why you should not run this against your own organization.
 // ---------------------------------------------------------------------------------------------
 
-import { experienceLink, inline, presentation } from './values.mjs'
+import { experienceLink, inline, presentation, reference } from './values.mjs'
 
 // ---- value helpers ---------------------------------------------------------------------------
 
@@ -146,9 +146,26 @@ export const CONTRACTS = [
     ],
   },
   {
+    // An origin is shared by several coffees and has a page of its own, so it is a Component in
+    // the library that things point *at*, rather than content written inside each coffee. That is
+    // the whole inline-versus-reference question, and it is answered by asking whether the thing
+    // has an independent life -- not by counting rows.
+    externalId: 'origin',
+    name: 'Origin',
+    fields: ({ contracts }) => [
+      text('Name', 'name', { mandatory: true, localizable: true }),
+      text('Country', 'country', { localizable: true }),
+      text('Altitude', 'altitude', {}),
+      rich('Summary', 'summary', { localizable: true }),
+      componentField('Image', 'image', {
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['image']) },
+      }),
+    ],
+  },
+  {
     externalId: 'coffee',
     name: 'Coffee',
-    fields: () => [
+    fields: ({ contracts }) => [
       text('Name', 'name', { mandatory: true, localizable: true }),
       // Not localizable: a producer's name is a proper noun and stays as it is in every language.
       // Deciding this per field is the work; getting it wrong in either direction is visible.
@@ -164,7 +181,14 @@ export const CONTRACTS = [
       // A picture belongs to one coffee and nothing else shares it, so it is written inline rather
       // than pointed at. Step 05 makes the opposite call for `origin`, and the two decisions side
       // by side are the point.
-      componentField('Image', 'image', { settings: { allowedModes: ['inline'] } }),
+      componentField('Image', 'image', {
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['image']) },
+      }),
+      // Reference-only, and narrowed to one Contract. Without `allowedContractIds` an author could
+      // point this at any Component in the library; with it, the field means what its name says.
+      componentField('Origin', 'origin', {
+        settings: { allowedModes: ['reference'], allowedContractIds: ids(contracts, ['origin']) },
+      }),
     ],
   },
 ]
@@ -204,6 +228,12 @@ export const TEMPLATES = [
     supports: ['coffee'],
     settings: [],
   },
+  {
+    externalId: 'origin',
+    name: 'Origin page',
+    supports: ['origin'],
+    settings: [],
+  },
 ]
 
 // ---- blobs -----------------------------------------------------------------------------------
@@ -214,6 +244,8 @@ export const TEMPLATES = [
 
 export const BLOBS = [
   { externalId: 'coffee-guji', file: 'coffee-guji.svg', contentType: 'image/svg+xml' },
+  { externalId: 'origin-ethiopia', file: 'origin-ethiopia.svg', contentType: 'image/svg+xml' },
+  { externalId: 'origin-colombia', file: 'origin-colombia.svg', contentType: 'image/svg+xml' },
 ]
 
 // ---- folders ---------------------------------------------------------------------------------
@@ -221,7 +253,7 @@ export const BLOBS = [
 // Folders organise the Component library for the people authoring in it. They have nothing to do
 // with URLs -- that is the Experience tree's job, further down.
 
-export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }]
+export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }]
 
 // ---- components ------------------------------------------------------------------------------
 //
@@ -316,6 +348,47 @@ export const COMPONENTS = [
       ),
     }),
   },
+  // ---- origins ----
+  {
+    externalId: 'origin-ethiopia',
+    name: 'Ethiopia',
+    contract: 'origin',
+    folder: 'Origins',
+    document: ({ contracts, blobs }) => ({
+      name: L('Ethiopia'),
+      country: L('Ethiopia'),
+      altitude: '1,750–2,200 m',
+      summary: L(
+        md(
+          'Coffee grew here before anyone wrote it down. Most of what we buy is from smallholders in Guji and Yirgacheffe, in lots of a few hundred kilograms, and the range within a single washing station can be startling.',
+        ),
+      ),
+      image: inline(contracts.image, {
+        file: blobs['origin-ethiopia'],
+        alt: L('Layered hills in muted green, an abstract landscape.'),
+      }),
+    }),
+  },
+  {
+    externalId: 'origin-colombia',
+    name: 'Colombia',
+    contract: 'origin',
+    folder: 'Origins',
+    document: ({ contracts, blobs }) => ({
+      name: L('Colombia'),
+      country: L('Colombia'),
+      altitude: '1,500–2,000 m',
+      summary: L(
+        md(
+          'Two harvests a year and enormous variation between departments. We buy from Huila and Nariño, where the altitude keeps the acidity bright and the sugars slow to develop.',
+        ),
+      ),
+      image: inline(contracts.image, {
+        file: blobs['origin-colombia'],
+        alt: L('Layered hills in warm ochre, an abstract landscape.'),
+      }),
+    }),
+  },
   // ---- coffees ----
 
   {
@@ -323,7 +396,7 @@ export const COMPONENTS = [
     name: 'Ethiopia Guji — Shakiso',
     contract: 'coffee',
     folder: 'Coffees',
-    document: ({ contracts, blobs }) => ({
+    document: ({ contracts, blobs, components }) => ({
       name: L('Ethiopia Guji, Shakiso'),
       producer: 'Kayon Mountain Farm',
       description: P(
@@ -347,9 +420,12 @@ export const COMPONENTS = [
         file: blobs['coffee-guji'],
         alt: L('An abstract pattern of concentric arcs in the pale amber of a light roast.'),
       }),
+      // A pointer, not a copy. Every Ethiopian coffee names this same Origin, so correcting a
+      // detail about the region corrects it everywhere at once -- and the Origin has a page of
+      // its own, which content written inside a coffee never could.
+      origin: reference(components['origin-ethiopia']),
     }),
-  },
-]
+  },]
 
 // ---- site and experience nodes ---------------------------------------------------------------
 //
@@ -375,4 +451,6 @@ export const NODES = [
     template: 'coffee',
     component: 'coffee-guji',
   },
+  { path: 'origins/ethiopia', name: 'Ethiopia', template: 'origin', component: 'origin-ethiopia' },
+  { path: 'origins/colombia', name: 'Colombia', template: 'origin', component: 'origin-colombia' },
 ]
