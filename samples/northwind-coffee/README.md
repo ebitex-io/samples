@@ -53,9 +53,6 @@ More arrives with each tutorial step; this table grows with it.
 - **Node 20 or newer.**
 - **An ebitex organization you control.** Not one of ours — there is no shared demo organization,
   by design. You import the content into your own, which is what makes it something you can change.
-- **Content must be enabled for your organization.** Content is currently in Early Access behind the
-  `app.content` flag. If Content shows as "Coming soon" in Hub, that is what is missing — ask us to
-  enable it, and nothing below will work until it is.
 - **A Pro allowance.** A new organization gets a **14-day Pro trial**, and that is the window this
   tutorial is written for. See "Which parts fit Starter" below for what happens after it.
 
@@ -74,6 +71,11 @@ step tag, import the highest-numbered bundle at or *below* your step:
 | `seed/step-09.zip` | `step-09` … `step-12` |
 | `seed/step-13.zip` | `step-13` … `step-19` |
 | `seed/final.zip` | `step-20` and `main` — the finished site |
+
+`final.zip` was added after `step-20` was tagged, so it lives on
+[`main`](https://github.com/ebitex-io/samples/tree/main/samples/northwind-coffee/seed) only — a
+checkout of the `step-20` tag will not contain it. Download it from `main` rather than looking for it
+in your working tree. Every other bundle is present at the tags its own row names.
 
 Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
 every reference between them — so the content becomes genuinely yours rather than a copy carrying
