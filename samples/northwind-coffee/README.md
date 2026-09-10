@@ -46,7 +46,11 @@ step tag, import the highest-numbered bundle at or *below* your step:
 
 | Bundle | Import it if you are on |
 |---|---|
-| _(the first checkpoint lands with step 03)_ | |
+| `seed/step-03.zip` | `step-01` … `step-03` |
+
+Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
+every reference between them — so the content becomes genuinely yours rather than a copy carrying
+another organization's identifiers.
 
 Importing gives every entity fresh identity in your organization. It is your content from that
 moment on — rename a Contract, add a field, break something and fix it.
