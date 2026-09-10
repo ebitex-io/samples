@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# dorny/paths-filter's default mode calls the GitHub API to list a PR's changed files, which needs
+# pull-requests: read. Granted explicitly and minimally rather than widening the repo/org default.
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Determines which sample a change can actually affect, so touching one sample doesn't build
+  # every other one. Each sample is a standalone project (see samples/README.md), so there is no
+  # shared build to invalidate — the filters really do partition the work.
+  #
+  # Two details are carried deliberately from the ebitex monorepo's own ci.yml, both learned the
+  # hard way there. Do not re-derive them:
+  #
+  #   1. This workflow file is listed under EVERY filter it controls, so a change to the filter
+  #      logic always exercises the jobs that logic governs, rather than risking a broken filter
+  #      silently skipping the jobs that would have caught it.
+  #
+  #   2. `unclassified` needs predicate-quantifier: "every" and its own step. The action's DEFAULT
+  #      quantifier ('some') ORs every listed pattern independently, INCLUDING negated ones — so a
+  #      bare '**' is unconditionally true and each '!exclusion' after it becomes a silent no-op.
+  #      In the monorepo that meant its "docs-only PR skips everything" filter had never once
+  #      worked. 'every' requires a file to match every pattern, which for '**' plus a list of
+  #      '!X' is exactly the exclusion-list semantics intended. It cannot share a step with
+  #      inclusion-list filters, because the quantifier is set per step and a single file cannot
+  #      match every one of several mutually-exclusive globs.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      unclassified: ${{ steps.unclassified-filter.outputs.unclassified }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Per-sample inclusion filters go here as samples are added. One entry per sample, each
+      # naming this workflow alongside its own directory:
+      #
+      #   - uses: dorny/paths-filter@v3
+      #     id: filter
+      #     with:
+      #       filters: |
+      #         northwind-coffee:
+      #           - 'samples/northwind-coffee/**'
+      #           - '.github/workflows/ci.yml'
+      #
+      # ...with a matching `northwind-coffee: ${{ steps.filter.outputs.northwind-coffee }}` output
+      # above and a job gated on it below. See CONTRIBUTING.md, "Adding a sample".
+      #
+      # There is deliberately no sample job yet: this repository has no sample in it. A CI leg
+      # pointing at a directory that does not exist proves nothing, and would either fail or pass
+      # vacuously — both worse than its absence. It lands with the first sample (#561), where it
+      # can actually be seen to work.
+
+      - uses: dorny/paths-filter@v3
+        id: unclassified-filter
+        with:
+          predicate-quantifier: "every"
+          filters: |
+            unclassified:
+              - '**'
+              - '!samples/**'
+              - '!.github/**'
+              - '!docs/**'
+              - '!**/*.md'
+              - '!LICENSE'
+              - '!.gitignore'
+
+  # Enforces the two repository-wide rules that are easy to break by accident and expensive to
+  # discover late. Cheap enough to run unconditionally — gating it would save seconds and lose the
+  # guarantee.
+  repo-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The hardest rule in CONTRIBUTING.md, and the one whose failure is worst: this repository is
+      # public and exists to be copied, so a committed key would be published, cloned, and imitated
+      # by readers as though it were the intended pattern. .env.example is expected; .env is not.
+      - name: No environment files are committed
+        run: |
+          found=$(git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$' || true)
+          if [ -n "$found" ]; then
+            echo "::error::Environment files must never be committed. Found:"
+            echo "$found"
+            exit 1
+          fi
+          echo "OK — no committed .env files."
+
+      # Every sample must be recognisable as a standalone project, which is what makes it copyable
+      # (samples/README.md). A directory missing either file is a half-added sample.
+      - name: Every sample is a standalone project with a README
+        run: |
+          status=0
+          shopt -s nullglob
+          for dir in samples/*/; do
+            name=$(basename "$dir")
+            for required in README.md package.json; do
+              if [ ! -f "$dir$required" ]; then
+                echo "::error::samples/$name is missing $required (see CONTRIBUTING.md)"
+                status=1
+              fi
+            done
+          done
+          if [ "$status" -eq 0 ]; then
+            echo "OK — every sample directory is well-formed (or there are none yet)."
+          fi
+          exit $status

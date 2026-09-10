@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.vite/
+
+# Local configuration.
+# Every sample reads its ebitex organization's delivery key from .env. That key belongs to
+# whoever is running the sample, never to us — this repository must never contain one.
+# .env.example is committed on purpose; .env never is.
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
