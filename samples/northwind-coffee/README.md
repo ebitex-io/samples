@@ -30,6 +30,7 @@ makes it live; no code changes and nothing is redeployed.
 | Locale fallback, and why a partly-translated site is a normal state | `src/components/LocaleSwitcher.tsx` |
 | Personalization: one page, different words for trade and retail | `content-model/model.mjs`'s `AUDIENCES`, `src/lib/visitor.ts` |
 | The context bag: your app reports facts, the CMS owns what they mean | `src/lib/visitor.ts` |
+| Editorial workflow, and why governance needs a *thing* to govern | `content-model/model.mjs`'s `WORKFLOWS` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
@@ -230,6 +231,33 @@ and the CMS side would be identical -- which is the useful part.
 
 The two axes compose: switch to French *and* For a café and you get the trade copy in French,
 without either the locale or the audience knowing the other exists.
+
+### Seasonal copy gets reviewed
+
+The note on the front page about what is on the roaster changes every month and is written in a
+hurry, which makes it exactly the copy worth reading twice. Everything else here is edited by the
+person who knows the answer and published when they are done.
+
+So a review workflow is assigned to one **folder**, `Seasonal`, and inherited by what is in it.
+Governance is a property of where content lives rather than a flag somebody has to remember to set.
+
+The step's real lesson is what it forced. That note used to be written *inline* on the front page,
+and it had to stop being inline before it could be reviewed:
+
+> **You cannot review something that has no independent existence.**
+
+A workflow governs a Component or an Experience node. Inline content has no version of its own and
+no place in the library, so there is nothing for a review to be *about*. Wanting a paragraph
+reviewed turns out to be a reason to make it a Component -- which is the same inline-versus-reference
+question step 05 asked, arriving from the opposite direction.
+
+A workflow's vocabulary comes from its **kind**, not from you. A publishing workflow always has
+Draft and Approved; they cannot be renamed or removed, and Approved is what permits publishing.
+Review and Rework are steps you add and name. You are choosing a shape rather than inventing a state
+machine, which is what stops one team's workflow being unreadable to the next.
+
+Open **On the roaster this month** in Content and look at its Settings tab to see the state and the
+transitions.
 
 ### Types are generated, not hand-written
 

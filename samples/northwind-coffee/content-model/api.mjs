@@ -137,6 +137,15 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     createAudience: (input) => post('/content/v1/audiences', input),
     updateAudience: (id, input) => put(`/content/v1/audiences/${id}`, input),
 
+    // ---- workflow ----
+    listWorkflowDefinitions: () => get('/content/v1/workflow-definitions'),
+    createWorkflowDefinition: (input) => post('/content/v1/workflow-definitions', input),
+    updateWorkflowDefinition: (id, input) => put(`/content/v1/workflow-definitions/${id}`, input),
+    setFolderWorkflow: (folderId, input) => put(`/content/v1/folders/${folderId}/workflow`, input),
+    getWorkflowStatus: (kind, id) => get(`/content/v1/workflow/status?kind=${kind}&id=${id}`),
+    startWorkflowRun: (input) => post('/content/v1/workflow/runs', input),
+    advanceWorkflowRun: (runId, input) => post(`/content/v1/workflow/runs/${runId}/transitions`, input),
+
     // ---- taxonomy (spec 513-blog-index-page: the Topics group backing blog-page's category field) ----
     listCategoryGroups: () => get('/content/v1/taxonomy/groups'),
     createCategoryGroup: (externalId, name) => post('/content/v1/taxonomy/groups', { externalId, name, metadataFields: null }),

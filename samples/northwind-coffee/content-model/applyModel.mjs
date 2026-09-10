@@ -28,6 +28,7 @@ import {
   SITE,
   NODES,
   STREAMS,
+  WORKFLOWS,
   L,
 } from './model.mjs'
 import { compact, presentation, reference, templateVersion } from './values.mjs'
@@ -205,6 +206,26 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
     folders[def.name] = existing ?? (await api.createFolder(def.name, parentId))
   }
 
+  // ---- workflow ----
+  // Definitions are keyed by name (they carry no external id), and assignment is per folder. Both
+  // are configuration rather than content: nothing here is versioned, published or promoted, and a
+  // re-run simply re-states the same shape.
+  const workflows = {}
+  const existingWorkflows = new Map((await api.listWorkflowDefinitions()).map((w) => [w.name, w]))
+  for (const def of WORKFLOWS) {
+    const input = { name: def.name, kind: def.kind, states: def.states, transitions: def.transitions }
+    const current = existingWorkflows.get(def.name)
+    workflows[def.name] = current
+      ? await api.updateWorkflowDefinition(current.id, input)
+      : await api.createWorkflowDefinition(input)
+    await api.setFolderWorkflow(folders[def.folder].id, {
+      mode: 'assigned',
+      workflowDefinitionId: workflows[def.name].id,
+      kind: def.kind,
+    })
+    log(`workflow ${def.name} -> folder ${def.folder} (${current ? 'updated' : 'created'})`)
+  }
+
   // ---- site ----
   let site = (await api.listSites()).find((s) => s.name === SITE.name)
   if (!site) {
@@ -287,6 +308,37 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
       ),
     )
     log(`node /${def.path} payload set`)
+  }
+
+  // ---- workflow runs ----
+  //
+  // Content in a governed folder cannot be published until it reaches a publishable state, so this
+  // walks each governed Component through its review. **This is the one part of this script that
+  // stands in for a person.** In real use somebody reads the copy and clicks Send for review, then
+  // somebody else clicks Approve; the buttons are in the Component editor. It is here only so that
+  // running this script leaves a site that can actually be published.
+  //
+  // It is also why the loop is written as "take whatever transition is available until publishable"
+  // rather than naming the two transitions: a script that hard-codes a route through a workflow is
+  // a script that breaks the moment someone adds a step, which is the sort of thing workflows exist
+  // to let people do.
+  for (const def of COMPONENTS) {
+    if (!def.workflow) continue
+    const id = components[def.externalId].id
+    let status = await api.getWorkflowStatus('component', id)
+
+    // Publishing completes a run, so a Component published on the previous pass has no active run
+    // and is editable again -- which is what made the update above legal, and what makes this
+    // start a fresh review each time rather than trip over the last one.
+    for (let step = 0; step < 10 && !status.isPublishable; step++) {
+      const next = status.availableTransitions.find((t) => t.allowed)
+      if (!next) throw new Error(`workflow for ${def.externalId} is stuck in "${status.stateName}"`)
+      status.activeRun
+        ? await api.advanceWorkflowRun(status.activeRun.id, { transitionId: next.id, comment: 'Applied by the model script' })
+        : await api.startWorkflowRun({ kind: 'component', id, transitionId: next.id, comment: 'Applied by the model script' })
+      log(`workflow ${def.externalId}: ${next.name}`)
+      status = await api.getWorkflowStatus('component', id)
+    }
   }
 
   // ---- streams ----

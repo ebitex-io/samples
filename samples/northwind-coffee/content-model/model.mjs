@@ -164,6 +164,44 @@ export const AUDIENCES = [
   },
 ]
 
+// ---- workflow ----------------------------------------------------------------------------------
+//
+// The seasonal note on the front page changes every month and is written in a hurry, which is
+// exactly the copy worth reading twice before it goes out. Everything else here -- a coffee's
+// tasting notes, a brew guide -- is edited by the person who knows the answer and published when
+// they are done. So the review applies to *one folder*, not to the site.
+//
+// That is the useful shape: governance is assigned to a place in the library and inherited down
+// from it, so "what needs reviewing" is a property of where content lives rather than a flag
+// somebody has to remember to set on each item.
+//
+// A workflow has a **kind**, and its vocabulary comes from that kind rather than from us. A
+// publishing workflow always has Draft and Approved -- they are anchors, they cannot be renamed or
+// removed, and Approved is the state that permits publishing. Review and Rework are steps you can
+// add, rename and repeat. You are choosing a shape, not inventing a state machine, which is what
+// stops one team's workflow from being unreadable to the next.
+export const WORKFLOWS = [
+  {
+    name: 'Seasonal copy review',
+    kind: 'publishing',
+    folder: 'Seasonal',
+    states: [
+      { key: 'draft', templateKey: 'draft', name: 'Draft' },
+      // A step template, so this one we name. "In review" reads better on a badge than "Review".
+      { key: 'review', templateKey: 'review', name: 'In review' },
+      { key: 'approved', templateKey: 'approved', name: 'Approved' },
+    ],
+    // `roleDefinitionIds: []` means anyone who can edit may take the transition. A real team would
+    // name a role here, and the point of leaving it open in a sample is that role ids belong to
+    // your organization -- there is nothing sensible to hard-code.
+    transitions: [
+      { key: 'submit', name: 'Send for review', from: 'draft', to: 'review', roleDefinitionIds: [] },
+      { key: 'approve', name: 'Approve', from: 'review', to: 'approved', roleDefinitionIds: [] },
+      { key: 'send-back', name: 'Send back', from: 'review', to: 'draft', roleDefinitionIds: [] },
+    ],
+  },
+]
+
 // ---- taxonomy ----------------------------------------------------------------------------------
 //
 // Named lists the organization owns, editable without touching the model. Roast level is a taxonomy
@@ -592,7 +630,15 @@ export const BLOBS = [
 // Folders organise the Component library for the people authoring in it. They have nothing to do
 // with URLs -- that is the Experience tree's job, further down.
 
-export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }, { name: 'Guides' }]
+export const FOLDERS = [
+  { name: 'Pages' },
+  { name: 'Coffees' },
+  { name: 'Origins' },
+  { name: 'Guides' },
+  // Step 18. A folder is where governance is assigned, so content that needs reviewing needs a
+  // folder of its own -- which is a real reason for a folder to exist, unlike "tidiness".
+  { name: 'Seasonal' },
+]
 
 /**
  * One navigation entry, pointing at a page by node identity rather than by URL.
@@ -614,6 +660,35 @@ function navLink(contracts, nodes, path, label, fr) {
 
 export const COMPONENTS = [
   {
+    // What is on the roaster this month. Lives in the library rather than inside the front page,
+    // and lives in the `Seasonal` folder specifically, because that folder is where the review
+    // workflow is assigned -- see WORKFLOWS above.
+    //
+    // `workflow: true` is not a field on the Component and means nothing to the API. It is a note
+    // to applyModel.mjs that this one has to be walked through its review before it can be
+    // published, so a re-run of the script leaves a publishable site. A person would click the
+    // buttons instead.
+    externalId: 'seasonal-note',
+    name: 'On the roaster this month',
+    contract: 'statement',
+    folder: 'Seasonal',
+    workflow: true,
+    document: () => ({
+      heading: L('On the roaster this month', { fr: 'Au torréfacteur ce mois-ci' }),
+      body: P(
+        L(
+          md(
+            [
+              'The Guji lot has just landed and it is the best thing we have bought this year — peach, bergamot, and a finish that goes on longer than it has any right to. It will not last.',
+              '',
+              'Alongside it: the Huila washed lot we buy every year, which is as reliable as coffee gets, and a Sumatran that divides the room and always has.',
+            ].join('\n'),
+          ),
+        ),
+      ),
+    }),
+  },
+  {
     // The front page. It has no body of its own -- it is assembled entirely out of `sections`,
     // which is what "composition" means here. Each section is a Template plus the content to run
     // through it, and the content is *inline*: this hero belongs to the front page and to nothing
@@ -622,7 +697,7 @@ export const COMPONENTS = [
     name: 'Home',
     contract: 'page',
     folder: 'Pages',
-    document: ({ audiences, contracts, templates, nodes }) => ({
+    document: ({ audiences, components, contracts, templates, nodes }) => ({
       title: L('Northwind Coffee'),
       description: L(
         'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
@@ -677,23 +752,17 @@ export const COMPONENTS = [
             'cta-label': L('How we work', { fr: 'Notre façon de travailler' }),
           }),
         ),
-        presentation(
-          templates.prose,
-          inline(contracts.statement, {
-            heading: L('On the roaster this month', { fr: 'Au torréfacteur ce mois-ci' }),
-            body: P(
-              L(
-                md(
-                  [
-                    "The Guji lot has just landed and it is the best thing we have bought this year — peach, bergamot, and a finish that goes on longer than it has any right to. It will not last.",
-                    '',
-                    'Alongside it: the Huila washed lot we buy every year, which is as reliable as coffee gets, and a Sumatran that divides the room and always has.',
-                  ].join('\n'),
-                ),
-              ),
-            ),
-          }),
-        ),
+        // This section used to be written inline, here, like the hero above it. Step 18 moved it
+        // into the library as `seasonal-note` -- and the reason is the whole lesson of that step:
+        //
+        //   **You cannot review something that has no independent existence.**
+        //
+        // A workflow governs a Component or an Experience node. Content written inline has neither
+        // a version of its own nor a place in the library, so there is nothing for a review to be
+        // *about*. Wanting this paragraph reviewed is therefore a reason to make it a Component --
+        // which is the same inline-versus-reference question step 05 asked, arriving from a
+        // completely different direction.
+        presentation(templates.prose, reference(components['seasonal-note'])),
       ],
     }),
   },
