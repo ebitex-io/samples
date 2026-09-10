@@ -207,6 +207,48 @@ export const CONTRACTS = [
     ],
   },
   {
+    // One step of a brew guide. Never referenced, never published on its own, never shared: it
+    // belongs to its guide and nothing else, so it is written *inline* and does not appear in the
+    // Component library at all. Compare `origin`, which is the opposite decision for the opposite
+    // reasons.
+    externalId: 'guide-step',
+    name: 'Guide step',
+    fields: () => [
+      text('Heading', 'heading', { localizable: true }),
+      rich('Body', 'body', { localizable: true }),
+    ],
+  },
+  {
+    externalId: 'guide',
+    name: 'Brew guide',
+    titleFieldPath: 'heading',
+    fields: ({ contracts }) => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      text('Summary', 'summary', { localizable: true }),
+      text('Equipment', 'equipment', { enumerable: true, localizable: true }),
+      text('Total time', 'total-time', { localizable: true }),
+      componentField('Steps', 'steps', {
+        enumerable: true,
+        settings: { allowedModes: ['inline'], allowedContractIds: ids(contracts, ['guide-step']) },
+      }),
+    ],
+  },
+  {
+    externalId: 'guide-index',
+    name: 'Guide index',
+    fields: ({ contracts }) => [
+      text('Heading', 'heading', { mandatory: true, localizable: true }),
+      rich('Introduction', 'intro', { localizable: true }),
+      // An *authored* list, deliberately, where `/coffees` is a query. A catalogue should be
+      // complete and maintain itself; a set of guides is editorial -- someone decides which three
+      // a beginner should read and in what order, and that decision is content.
+      componentField('Guides', 'guides', {
+        enumerable: true,
+        settings: { allowedModes: ['reference'], allowedContractIds: ids(contracts, ['guide']) },
+      }),
+    ],
+  },
+  {
     // The catalogue page. Its content is a heading and an introduction; the grid itself is a
     // *query*, not authored -- see STREAMS below.
     externalId: 'coffee-index',
@@ -299,6 +341,27 @@ export const TEMPLATES = [
     settings: [],
   },
   {
+    // Renders an `image` inside a RichText body. A Template, not a field: an image placed in the
+    // middle of a paragraph is a *presentation* of an image, and modelling it as a field would
+    // force every body to choose its figure positions up front.
+    externalId: 'figure',
+    name: 'Figure',
+    supports: ['image'],
+    settings: [],
+  },
+  {
+    externalId: 'guide',
+    name: 'Brew guide',
+    supports: ['guide'],
+    settings: [],
+  },
+  {
+    externalId: 'guide-index',
+    name: 'Guide index',
+    supports: ['guide-index'],
+    settings: [],
+  },
+  {
     externalId: 'coffee-index',
     name: 'Coffee index',
     supports: ['coffee-index'],
@@ -352,6 +415,9 @@ export const BLOBS = [
   'coffee-gayo',
   'coffee-narino',
   'coffee-hambela',
+  'guide-pour-over',
+  'guide-aeropress',
+  'guide-cafetiere',
   'origin-ethiopia',
   'origin-colombia',
   'origin-guatemala',
@@ -364,7 +430,7 @@ export const BLOBS = [
 // Folders organise the Component library for the people authoring in it. They have nothing to do
 // with URLs -- that is the Experience tree's job, further down.
 
-export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }]
+export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }, { name: 'Origins' }, { name: 'Guides' }]
 
 // ---- components ------------------------------------------------------------------------------
 //
@@ -749,6 +815,216 @@ export const COMPONENTS = [
       process: categoryValue(categories, 'process', 'natural'),
     }),
   },
+
+  // ---- brew guides ----
+  {
+    externalId: 'figure-pour-over',
+    name: 'Pour Over figure',
+    contract: 'image',
+    folder: 'Guides',
+    document: ({ blobs }) => ({
+      file: blobs['guide-pour-over'],
+      alt: L('A stylised brewing cone with a stream of water falling into it.'),
+    }),
+  },
+  {
+    externalId: 'figure-aeropress',
+    name: 'Aeropress figure',
+    contract: 'image',
+    folder: 'Guides',
+    document: ({ blobs }) => ({
+      file: blobs['guide-aeropress'],
+      alt: L('A stylised plunger vessel with a stream of water above it.'),
+    }),
+  },
+  {
+    externalId: 'figure-cafetiere',
+    name: 'Cafetiere figure',
+    contract: 'image',
+    folder: 'Guides',
+    document: ({ blobs }) => ({
+      file: blobs['guide-cafetiere'],
+      alt: L('A stylised tall vessel with a stream of water above it.'),
+    }),
+  },
+  {
+    externalId: 'guide-pour-over',
+    name: 'Pour-over, the way we make it',
+    contract: 'guide',
+    folder: 'Guides',
+    document: ({ contracts, templates, components }) => ({
+      heading: L('Pour-over, the way we make it'),
+      summary: L('A V60, a scale and four minutes. The method we use every morning.'),
+      equipment: L(['V60 or similar cone', 'Paper filter', 'Scale', 'Gooseneck kettle']),
+      'total-time': L('4 minutes'),
+      steps: [
+        inline(contracts['guide-step'], {
+          heading: L('Rinse and weigh'),
+          body: L({
+            markdown: 'Rinse the paper filter with hot water and throw the water away — it removes the papery taste and warms the cone. Weigh 15g of coffee and grind it a little coarser than table salt.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('The bloom'),
+          body: L({
+            markdown: 'Start the timer and pour 45g of water, just off the boil, over the grounds. Everything will swell and bubble as trapped carbon dioxide escapes.\n\n{{embed:vessel}}\n\nWait 40 seconds. Skipping this is the single most common reason a pour-over tastes thin.',
+            embeds: {
+              // An *inline* embed: `{{embed:vessel}}` in the markdown above is a placeholder, and
+              // this map says what it is. The embed is a Presentation like any other -- a Template
+              // plus content -- so the front end renders it through `src/presentations/figure.tsx`
+              // exactly as it renders a page section. The token is structural, not text.
+              //
+              // Note the figure is *referenced*, not written inline. An embed's Presentation binds
+              // a Component from the library; the schema rejects an inline value here. That turns
+              // out to be the right constraint anyway -- these three figures are shared by their
+              // guide's several steps, so they were always going to want a life of their own.
+              vessel: {
+                kind: 'presentation',
+                presentation: presentation(templates.figure, reference(components['figure-pour-over'])),
+              },
+            },
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Pour in stages'),
+          body: L({
+            markdown: 'Pour to 150g in slow circles, wait for the bed to drop, then pour to 250g. Keep the stream small and near the centre; chasing the edges pushes grounds up the paper where water no longer reaches them.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Finish and taste'),
+          body: L({
+            markdown: 'The last of the water should drain by about four minutes. Sour and thin means grind finer; bitter and dry means grind coarser. Change one thing at a time.',
+          }),
+        }),
+      ],
+    }),
+  },
+  {
+    externalId: 'guide-aeropress',
+    name: 'AeroPress for one',
+    contract: 'guide',
+    folder: 'Guides',
+    document: ({ contracts, templates, components }) => ({
+      heading: L('AeroPress for one'),
+      summary: L('Forgiving, fast, and almost impossible to ruin. Where to start if you are starting.'),
+      equipment: L(['AeroPress', 'Paper filter', 'Scale']),
+      'total-time': L('2 minutes'),
+      steps: [
+        inline(contracts['guide-step'], {
+          heading: L('Assemble inverted'),
+          body: L({
+            markdown: 'Put the plunger in about a centimetre and stand the whole thing upside down. It feels wrong the first time and then never again.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Coffee and water'),
+          body: L({
+            markdown: 'Weigh 16g of coffee ground like fine sand and add 240g of water at about 90 degrees. Stir twice.\n\n{{embed:vessel}}',
+            embeds: {
+              // An *inline* embed: `{{embed:vessel}}` in the markdown above is a placeholder, and
+              // this map says what it is. The embed is a Presentation like any other -- a Template
+              // plus content -- so the front end renders it through `src/presentations/figure.tsx`
+              // exactly as it renders a page section. The token is structural, not text.
+              //
+              // Note the figure is *referenced*, not written inline. An embed's Presentation binds
+              // a Component from the library; the schema rejects an inline value here. That turns
+              // out to be the right constraint anyway -- these three figures are shared by their
+              // guide's several steps, so they were always going to want a life of their own.
+              vessel: {
+                kind: 'presentation',
+                presentation: presentation(templates.figure, reference(components['figure-aeropress'])),
+              },
+            },
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Wait, then press'),
+          body: L({
+            markdown: 'Wait ninety seconds. Screw on the rinsed filter cap, invert onto your cup, and press slowly — thirty seconds is about right. Stop when it hisses.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Adjust to taste'),
+          body: L({
+            markdown: 'Too sharp? Wait longer. Too heavy? Grind coarser. The AeroPress tolerates a lot of variation, which is exactly why it is a good place to learn.',
+          }),
+        }),
+      ],
+    }),
+  },
+  {
+    externalId: 'guide-cafetiere',
+    name: 'Cafetiere, done properly',
+    contract: 'guide',
+    folder: 'Guides',
+    document: ({ contracts, templates, components }) => ({
+      heading: L('Cafetiere, done properly'),
+      summary: L('The method everyone owns and almost nobody gets right. Two changes fix it.'),
+      equipment: L(['Cafetiere', 'Scale', 'Spoon']),
+      'total-time': L('9 minutes'),
+      steps: [
+        inline(contracts['guide-step'], {
+          heading: L('Grind coarse, and mean it'),
+          body: L({
+            markdown: 'Coarser than you think: like coarse sea salt. A cafetiere has a metal filter, so anything fine ends up in the cup as sludge.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Brew for four minutes'),
+          body: L({
+            markdown: 'Weigh 60g of coffee per litre of water just off the boil. Pour it all at once and leave it alone.\n\n{{embed:vessel}}',
+            embeds: {
+              // An *inline* embed: `{{embed:vessel}}` in the markdown above is a placeholder, and
+              // this map says what it is. The embed is a Presentation like any other -- a Template
+              // plus content -- so the front end renders it through `src/presentations/figure.tsx`
+              // exactly as it renders a page section. The token is structural, not text.
+              //
+              // Note the figure is *referenced*, not written inline. An embed's Presentation binds
+              // a Component from the library; the schema rejects an inline value here. That turns
+              // out to be the right constraint anyway -- these three figures are shared by their
+              // guide's several steps, so they were always going to want a life of their own.
+              vessel: {
+                kind: 'presentation',
+                presentation: presentation(templates.figure, reference(components['figure-cafetiere'])),
+              },
+            },
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Break the crust, then skim'),
+          body: L({
+            markdown: 'At four minutes a crust has formed on top. Stir it gently so it sinks, then skim off the foam and floating grounds with a spoon. This is the change most people have never been told about, and it is the one that matters.',
+          }),
+        }),
+        inline(contracts['guide-step'], {
+          heading: L('Wait, then press gently'),
+          body: L({
+            markdown: 'Leave it another five minutes so the fines settle, then press slowly — the plunger is there to hold grounds down, not to force water through them. Decant everything immediately or it keeps brewing.',
+          }),
+        }),
+      ],
+    }),
+  },
+  {
+    externalId: 'guide-index-page',
+    name: 'Brew guides',
+    contract: 'guide-index',
+    folder: 'Pages',
+    document: ({ components }) => ({
+      heading: L('Brew guides'),
+      intro: L(
+        md(
+          'Three methods, in the order we would teach them. None of them needs equipment you cannot buy for the price of two bags of coffee.',
+        ),
+      ),
+      guides: [
+        reference(components['guide-pour-over']),
+        reference(components['guide-aeropress']),
+        reference(components['guide-cafetiere']),
+      ],
+    }),
+  },
 ]
 
 // ---- site and experience nodes ---------------------------------------------------------------
@@ -769,6 +1045,10 @@ export const NODES = [
   // `/coffees` stops being a bare structural node and becomes a page. Its children are unaffected:
   // a node's payload and its place in the tree are independent.
   { path: 'coffees', name: 'Coffees', template: 'coffee-index', component: 'coffee-index-page' },
+  { path: 'guides', name: 'Brew guides', template: 'guide-index', component: 'guide-index-page' },
+  { path: 'guides/pour-over', name: 'Pour-over, the way we make it', template: 'guide', component: 'guide-pour-over' },
+  { path: 'guides/aeropress', name: 'AeroPress for one', template: 'guide', component: 'guide-aeropress' },
+  { path: 'guides/cafetiere', name: 'Cafetiere, done properly', template: 'guide', component: 'guide-cafetiere' },
   // `/coffees` is not listed and gets created anyway, as an ancestor of the page below it. A node
   // with no payload is real tree structure with no page of its own: `/coffees` itself 404s until
   // step 08 gives it an index. That is a legitimate state, not a gap to paper over.

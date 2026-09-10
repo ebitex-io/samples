@@ -65,3 +65,22 @@ export interface CoffeeIndexContent {
   heading: string
   intro?: RichTextValue
 }
+
+export interface GuideStepContent {
+  heading?: string
+  body?: RichTextValue
+}
+
+export interface GuideContent {
+  heading: string
+  summary?: string
+  equipment?: string[]
+  'total-time'?: string
+  steps?: ComponentValue<GuideStepContent>[]
+}
+
+export interface GuideIndexContent {
+  heading: string
+  intro?: RichTextValue
+  guides?: ComponentValue<GuideContent>[]
+}

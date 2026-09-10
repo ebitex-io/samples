@@ -29,6 +29,8 @@ makes it live; no code changes and nothing is redeployed.
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
 | Published paths from a listing, instead of guessed URLs | `src/lib/originPaths.ts` |
+| RichText with an embedded figure | `content-model/model.mjs`, `src/presentations/figure.tsx` |
+| A query versus an authored list, and when each is right | `src/presentations/guide-index.tsx` |
 
 More arrives with each tutorial step; this table grows with it.
 
@@ -54,7 +56,8 @@ step tag, import the highest-numbered bundle at or *below* your step:
 | Bundle | Import it if you are on |
 |---|---|
 | `seed/step-03.zip` | `step-01` … `step-06` |
-| `seed/step-07.zip` | `step-07` … |
+| `seed/step-07.zip` | `step-07` … `step-08` |
+| `seed/step-09.zip` | `step-09` … |
 
 Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
 every reference between them — so the content becomes genuinely yours rather than a copy carrying

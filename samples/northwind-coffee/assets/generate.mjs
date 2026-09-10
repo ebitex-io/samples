@@ -64,6 +64,31 @@ ${bands}
 `
 }
 
+/**
+ * A brew guide's figure: a stylised vessel and a falling stream, drawn rather than photographed.
+ * Same reasoning as the rest -- and an abstract figure stays legible next to translated text.
+ */
+function brewImage({ ground, ink, accent, seed }) {
+  const lean = ((seed * 19) % 40) - 20
+  const drops = Array.from({ length: 6 }, (_, i) => {
+    const y = 150 + i * 26
+    const x = 400 + Math.round(Math.sin((seed + i) * 1.1) * 6)
+    return `  <line x1="${x}" y1="${y}" x2="${x}" y2="${y + 14}" stroke="${accent}" stroke-opacity="0.75" stroke-width="5" stroke-linecap="round"/>`
+  }).join('\n')
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+  <rect width="800" height="600" fill="${ground}"/>
+  <g transform="rotate(${lean / 8} 400 300)">
+    <path d="M300 300 L500 300 L440 470 L360 470 Z" fill="none" stroke="${ink}" stroke-opacity="0.55" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M320 330 L480 330" stroke="${accent}" stroke-opacity="0.6" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="400" cy="300" rx="100" ry="18" fill="none" stroke="${ink}" stroke-opacity="0.4" stroke-width="8"/>
+  </g>
+${drops}
+  <circle cx="400" cy="110" r="26" fill="none" stroke="${ink}" stroke-opacity="0.35" stroke-width="8"/>
+</svg>
+`
+}
+
 const PALETTES = {
   light: { ground: '#f6ece0', ink: '#7a4a2a', accent: '#c07b3f' },
   medium: { ground: '#efdfcd', ink: '#5f3620', accent: '#a4522a' },
@@ -81,6 +106,10 @@ const IMAGES = [
   ['coffee-gayo.svg', bagImage, 'dark', 6],
   ['coffee-narino.svg', bagImage, 'medium', 7],
   ['coffee-hambela.svg', bagImage, 'dark', 8],
+  // Brew guides.
+  ['guide-pour-over.svg', brewImage, 'medium', 21],
+  ['guide-aeropress.svg', brewImage, 'light', 22],
+  ['guide-cafetiere.svg', brewImage, 'dark', 23],
   // Origins.
   ['origin-ethiopia.svg', originImage, 'green', 11],
   ['origin-colombia.svg', originImage, 'medium', 12],
