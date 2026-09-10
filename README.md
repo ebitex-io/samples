@@ -11,7 +11,7 @@ repository contains no credentials of any kind.
 
 | Sample | Stack | Status |
 |---|---|---|
-| `northwind-coffee` | Static site — Vite, React, TypeScript, `@ebitex/content-sdk` | In progress ([#561](https://github.com/ebitex-io/monorepo/issues/561)) |
+| `northwind-coffee` | Static site — Vite, React, TypeScript, `@ebitex/content-sdk` | Complete — twenty steps, `step-01` … `step-20` |
 
 A second sample — the same site with a Node server and server-side rendering — is anticipated but
 not yet started.

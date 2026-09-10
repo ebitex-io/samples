@@ -72,7 +72,8 @@ step tag, import the highest-numbered bundle at or *below* your step:
 | `seed/step-03.zip` | `step-01` … `step-06` |
 | `seed/step-07.zip` | `step-07` … `step-08` |
 | `seed/step-09.zip` | `step-09` … `step-12` |
-| `seed/step-13.zip` | `step-13` … (the whole foundation arc) |
+| `seed/step-13.zip` | `step-13` … `step-19` |
+| `seed/final.zip` | `step-20` and `main` — the finished site |
 
 Choose **Fresh identity** when the import screen offers it. That is what rewrites every id — and
 every reference between them — so the content becomes genuinely yours rather than a copy carrying
@@ -84,6 +85,21 @@ moment on — rename a Contract, add a field, break something and fix it.
 **Then publish it.** An import writes drafts; nothing is delivered until it is published. Publish the
 site root and each page from Composer, and publish `site-header` and `site-footer` from the Component
 library — those two belong to no page, so no page's publish reaches them.
+
+### Three things a bundle does not carry
+
+A bundle carries **content**: Contracts, Templates, Components, pages, Adapters, Audiences, taxonomy,
+streams, and the images they use. Some of what this sample demonstrates is **organization or
+environment configuration** instead, which is not content and does not travel:
+
+| | Set it up | Which step needs it |
+|---|---|---|
+| **Locales** | Settings → Locales: add `en`, then `fr` with `en` as its parent | 16. Without them the French text is *present in every document* and never selected — `?lang=fr` quietly serves English |
+| **A workflow definition** | Settings → Workflows, then assign it to the `Seasonal` folder | 18 |
+| **A second authoring environment** | Settings → Environments (Pro — Starter allows one) | 19 |
+
+The locale one is worth doing before you conclude anything about step 16: it is the only gap here
+that looks like nothing is wrong.
 ## 2. Configure
 
 ```bash
@@ -154,8 +170,8 @@ key for any of them. What a plan buys is **scale and environments**:
 | Blob storage | 1.5 GB | 15 GB |
 | Delivery requests / day | 6,000 | 60,000 |
 
-**A Starter organization stops at step 07.** This site is 17 Experience nodes and Starter allows
-10. Steps 01–06 build seven of them and fit comfortably; step 07 fills out the catalogue and
+**A Starter organization stops at step 07.** The finished site is 24 Experience nodes and Starter
+allows 10. Steps 01–06 build seven of them and fit comfortably; step 07 fills out the catalogue and
 crosses the limit three pages in, with a plain refusal naming the quota:
 
 ```
