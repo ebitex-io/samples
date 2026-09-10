@@ -17,15 +17,21 @@
 // resolvable in a single pass each.
 // ---------------------------------------------------------------------------------------------
 
-import { CONTRACTS, TEMPLATES, FOLDERS, COMPONENTS, SITE, NODES, L } from './model.mjs'
+import { BLOBS, CONTRACTS, TEMPLATES, FOLDERS, COMPONENTS, SITE, NODES, L } from './model.mjs'
 import { compact, presentation, reference, templateVersion } from './values.mjs'
 
-export async function applyModel(api, { log = console.log } = {}) {
+/**
+ * @param readAsset reads one file from `assets/images/` and returns its bytes. Supplied by the
+ *   caller rather than read here, because this module has to run unchanged both from Node and
+ *   from inside a browser, and only one of those has a filesystem.
+ */
+export async function applyModel(api, { log = console.log, readAsset } = {}) {
   const contracts = {}
   const templates = {}
   const components = {}
+  const blobs = {}
   const nodes = {}
-  const ctx = { contracts, templates, components, nodes }
+  const ctx = { contracts, templates, components, blobs, nodes }
 
   // Templates that already exist (this is a re-run) let the contracts name them on the first pass,
   // so the second pass below has nothing to do.
@@ -113,6 +119,15 @@ export async function applyModel(api, { log = console.log } = {}) {
     log(
       `contract ${def.externalId} -> v${contracts[def.externalId].latestVersion?.versionNumber} (template constraints applied)`,
     )
+  }
+
+  // ---- blobs ----
+  // Uploaded before the components that point at them. The store is content-addressed, so a
+  // re-run uploads the same bytes and gets the same id back: cheap, and idempotent for free.
+  if (BLOBS.length > 0 && !readAsset) throw new Error('applyModel needs a readAsset function to upload blobs')
+  for (const def of BLOBS) {
+    blobs[def.externalId] = await api.uploadBlob(await readAsset(def.file), def.contentType)
+    log(`blob ${def.externalId} uploaded`)
   }
 
   // ---- folders ----

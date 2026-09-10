@@ -37,9 +37,14 @@ export function ContentPage() {
   )
 }
 
+/**
+ * `min-h-svh` is doing real work: without it the skeleton is short, the footer sits in the middle
+ * of the viewport, and it leaps down the page the moment content arrives. That jump is a large
+ * cumulative layout shift on every first visit, and it costs one class to avoid.
+ */
 function PageSkeleton() {
   return (
-    <div className="mx-auto max-w-3xl animate-pulse px-6 py-24" aria-hidden>
+    <div className="mx-auto min-h-svh max-w-3xl animate-pulse px-6 py-24" aria-hidden>
       <div className="h-3 w-24 rounded bg-ink/10" />
       <div className="mt-6 h-10 w-3/4 rounded bg-ink/10" />
       <div className="mt-8 space-y-3">

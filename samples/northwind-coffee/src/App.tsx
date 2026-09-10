@@ -11,14 +11,16 @@ import { ContentPage } from '@/pages/ContentPage'
  * hard-coded `<Route path="/about">` to retire later. The chrome around those pages is the one
  * deliberate exception, and step 12 moves it into the CMS too.
  *
- * `min-h-svh` on the routed area keeps the footer below the fold while a page is loading, so it
- * does not sit in the middle of the viewport and then jump when content arrives.
+ * The routed area grows to fill the viewport, so the footer sits at the bottom of a short page
+ * rather than halfway up it. Keeping the footer *below* the fold while a page is still loading is
+ * the loading skeleton's own job -- see ContentPage -- because that is where the jump would
+ * otherwise come from.
  */
 export default function App() {
   return (
     <div className="flex min-h-svh flex-col">
       <Header />
-      <div className="min-h-svh">
+      <div className="flex-1">
         <Routes>
           <Route path="*" element={<ContentPage />} />
         </Routes>

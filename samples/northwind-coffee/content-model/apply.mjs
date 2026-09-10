@@ -16,6 +16,8 @@
 // ---------------------------------------------------------------------------------------------
 
 import { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { createContentApi } from './api.mjs'
 import { applyModel, publishSite } from './applyModel.mjs'
 
@@ -52,7 +54,8 @@ const api = createContentApi({
   log: args.verbose ? (line) => console.error(`  ${line}`) : undefined,
 })
 
-const applied = await applyModel(api)
+const assetsDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'images')
+const applied = await applyModel(api, { readAsset: (file) => readFileSync(join(assetsDir, file)) })
 
 if (!args['skip-publish']) {
   await publishSite(api, applied)

@@ -1,4 +1,10 @@
-import type { LinkValue, PresentationEnvelope, RichTextValue } from '@ebitex/content-sdk'
+import type {
+  BlobValue,
+  ComponentValue,
+  LinkValue,
+  PresentationEnvelope,
+  RichTextValue,
+} from '@ebitex/content-sdk'
 
 /**
  * The delivered shapes, in TypeScript.
@@ -26,4 +32,19 @@ export interface StatementContent {
   body?: RichTextValue
   cta?: LinkValue
   'cta-label'?: string
+}
+
+export interface ImageContent {
+  file: BlobValue
+  alt: string
+}
+
+export interface CoffeeContent {
+  name: string
+  producer?: string
+  description?: RichTextValue
+  'tasting-notes'?: string[]
+  price?: number
+  'weight-grams'?: number
+  image?: ComponentValue<ImageContent>
 }

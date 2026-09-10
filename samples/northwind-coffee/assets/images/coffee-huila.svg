@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+  <rect width="800" height="600" fill="#efdfcd"/>
+  <g>
+    <circle cx="400" cy="300" r="120" fill="none" stroke="#5f3620" stroke-opacity="0.34" stroke-width="18" stroke-dasharray="66 132" transform="rotate(94 400 300)" stroke-linecap="round"/>
+    <circle cx="400" cy="300" r="166" fill="none" stroke="#a4522a" stroke-opacity="0.29" stroke-width="16" stroke-dasharray="95 190" transform="rotate(125 400 300)" stroke-linecap="round"/>
+    <circle cx="400" cy="300" r="212" fill="none" stroke="#5f3620" stroke-opacity="0.24" stroke-width="14" stroke-dasharray="124 248" transform="rotate(156 400 300)" stroke-linecap="round"/>
+    <circle cx="400" cy="300" r="258" fill="none" stroke="#a4522a" stroke-opacity="0.19" stroke-width="12" stroke-dasharray="63 126" transform="rotate(187 400 300)" stroke-linecap="round"/>
+    <circle cx="400" cy="300" r="304" fill="none" stroke="#5f3620" stroke-opacity="0.14" stroke-width="10" stroke-dasharray="92 184" transform="rotate(218 400 300)" stroke-linecap="round"/>
+  </g>
+  <circle cx="400" cy="300" r="74" fill="#a4522a" fill-opacity="0.9"/>
+  <ellipse cx="400" cy="300" rx="30" ry="66" fill="#efdfcd" fill-opacity="0.85" transform="rotate(46 400 300)"/>
+</svg>

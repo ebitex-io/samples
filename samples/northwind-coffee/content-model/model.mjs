@@ -73,7 +73,14 @@ export const text = (name, id, opts) => field(name, id, 'shortText', opts)
 export const rich = (name, id, opts) => field(name, id, 'richText', opts)
 export const link = (name, id, opts) => field(name, id, 'link', opts)
 export const num = (name, id, opts) => field(name, id, 'number', opts)
+export const blob = (name, id, opts) => field(name, id, 'blob', opts)
 export const presentationField = (name, id, opts) => field(name, id, 'presentation', opts)
+
+/**
+ * A field holding other content: either a pointer to a Component in the library, or content
+ * written inline. `allowedModes` narrows that choice when only one of the two makes sense.
+ */
+export const componentField = (name, id, opts) => field(name, id, 'component', opts)
 
 /** Resolves a list of external ids to the ids of entities created earlier in the same run. */
 export function ids(byExternalId, externalIds) {
@@ -127,6 +134,39 @@ export const CONTRACTS = [
       text('Call-to-action label', 'cta-label', { localizable: true }),
     ],
   },
+  {
+    // An image and the text that belongs with it. Alt text is mandatory and localizable, which is
+    // the whole reason this is a Contract rather than a bare Blob field on everything that needs a
+    // picture: a Blob is bytes, and bytes cannot be described.
+    externalId: 'image',
+    name: 'Image',
+    fields: () => [
+      blob('File', 'file', { mandatory: true }),
+      text('Alt text', 'alt', { mandatory: true, localizable: true }),
+    ],
+  },
+  {
+    externalId: 'coffee',
+    name: 'Coffee',
+    fields: () => [
+      text('Name', 'name', { mandatory: true, localizable: true }),
+      // Not localizable: a producer's name is a proper noun and stays as it is in every language.
+      // Deciding this per field is the work; getting it wrong in either direction is visible.
+      text('Producer', 'producer', {}),
+      // Personalizable, for the same reason `statement.body` is -- a trade buyer and someone
+      // buying a single bag want different things said to them. No audiences exist yet.
+      rich('Description', 'description', { localizable: true, personalizable: true }),
+      // Enumerable: cardinality is a modifier on an ordinary field, never a different field type.
+      // The same `shortText` that holds one value holds a list of them.
+      text('Tasting notes', 'tasting-notes', { enumerable: true, localizable: true }),
+      num('Price (£)', 'price', {}),
+      num('Bag size (g)', 'weight-grams', {}),
+      // A picture belongs to one coffee and nothing else shares it, so it is written inline rather
+      // than pointed at. Step 05 makes the opposite call for `origin`, and the two decisions side
+      // by side are the point.
+      componentField('Image', 'image', { settings: { allowedModes: ['inline'] } }),
+    ],
+  },
 ]
 
 // ---- templates -------------------------------------------------------------------------------
@@ -158,6 +198,22 @@ export const TEMPLATES = [
     supports: ['statement'],
     settings: [],
   },
+  {
+    externalId: 'coffee',
+    name: 'Coffee page',
+    supports: ['coffee'],
+    settings: [],
+  },
+]
+
+// ---- blobs -----------------------------------------------------------------------------------
+//
+// Files, uploaded once and then referred to by id. The store is content-addressed, so uploading
+// identical bytes twice returns the same id and costs nothing -- which is what makes re-running
+// this script cheap even though it "uploads" every image every time.
+
+export const BLOBS = [
+  { externalId: 'coffee-guji', file: 'coffee-guji.svg', contentType: 'image/svg+xml' },
 ]
 
 // ---- folders ---------------------------------------------------------------------------------
@@ -165,7 +221,7 @@ export const TEMPLATES = [
 // Folders organise the Component library for the people authoring in it. They have nothing to do
 // with URLs -- that is the Experience tree's job, further down.
 
-export const FOLDERS = [{ name: 'Pages' }]
+export const FOLDERS = [{ name: 'Pages' }, { name: 'Coffees' }]
 
 // ---- components ------------------------------------------------------------------------------
 //
@@ -260,6 +316,39 @@ export const COMPONENTS = [
       ),
     }),
   },
+  // ---- coffees ----
+
+  {
+    externalId: 'coffee-guji',
+    name: 'Ethiopia Guji — Shakiso',
+    contract: 'coffee',
+    folder: 'Coffees',
+    document: ({ contracts, blobs }) => ({
+      name: L('Ethiopia Guji, Shakiso'),
+      producer: 'Kayon Mountain Farm',
+      description: P(
+        L(
+          md(
+            [
+              'Peach, bergamot and a long, clean finish. A natural-process lot from the Guji zone, picked at 1,950 metres and dried on raised beds for eighteen days.',
+              '',
+              'This is the coffee we hand people who say they do not like fruity coffee. It usually works.',
+            ].join('\n'),
+          ),
+        ),
+      ),
+      // Localizable *and* enumerable, so the list sits inside the locale envelope -- one list per
+      // locale, `L([...])`, not a list of separately-translated strings. The modifiers compose as
+      // Localizable<list of shortText>, which the compiled schema will tell you if you invert it.
+      'tasting-notes': L(['Peach', 'Bergamot', 'Brown sugar']),
+      price: 14.5,
+      'weight-grams': 250,
+      image: inline(contracts.image, {
+        file: blobs['coffee-guji'],
+        alt: L('An abstract pattern of concentric arcs in the pale amber of a light roast.'),
+      }),
+    }),
+  },
 ]
 
 // ---- site and experience nodes ---------------------------------------------------------------
@@ -277,4 +366,13 @@ export const NODES = [
   // give the root a payload and `/` is served.
   { path: '', name: 'Home', template: 'page', component: 'home-page' },
   { path: 'about', name: 'About', template: 'page', component: 'about-page' },
+  // `/coffees` is not listed and gets created anyway, as an ancestor of the page below it. A node
+  // with no payload is real tree structure with no page of its own: `/coffees` itself 404s until
+  // step 08 gives it an index. That is a legitimate state, not a gap to paper over.
+  {
+    path: 'coffees/ethiopia-guji',
+    name: 'Ethiopia Guji',
+    template: 'coffee',
+    component: 'coffee-guji',
+  },
 ]

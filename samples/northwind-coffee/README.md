@@ -22,6 +22,9 @@ makes it live; no code changes and nothing is redeployed.
 | One route, every page — CMS-resolved routing with no page routes at all | `src/App.tsx`, `src/pages/ContentPage.tsx` |
 | Renderer-by-convention: file name *is* the Template's external id | `src/lib/content.ts`, `src/presentations/` |
 | A whole content model as readable data | `content-model/model.mjs` |
+| Modifiers: mandatory, localizable, enumerable, personalizable | `content-model/model.mjs`, the `coffee` Contract |
+| Blobs, and why alt text belongs on a Contract | `src/components/CmsImage.tsx` |
+| Inline versus referenced content | `content-model/values.mjs` |
 
 More arrives with each tutorial step; this table grows with it.
 
@@ -114,6 +117,8 @@ src/
   pages/ContentPage.tsx  resolves the current path against the CMS
   presentations/       one file per Template; the file name is the Template's external id
   lib/content.ts       the only place configuration is read and the SDK client is built
+  lib/cmsTypes.ts      the delivered shapes, in TypeScript (hand-written until step 14)
+assets/                every image this repo ships, and the script that generates them
 content-model/         the content model as data. Internal tooling: read it, do not run it
 seed/                  portable export bundles, one per checkpoint step
 ```
