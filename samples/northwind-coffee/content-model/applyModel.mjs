@@ -18,6 +18,7 @@
 // ---------------------------------------------------------------------------------------------
 
 import {
+  AUDIENCES,
   BLOBS,
   CATEGORY_GROUPS,
   CONTRACTS,
@@ -37,6 +38,7 @@ import { compact, presentation, reference, templateVersion } from './values.mjs'
  *   from inside a browser, and only one of those has a filesystem.
  */
 export async function applyModel(api, { log = console.log, readAsset } = {}) {
+  const audiences = {}
   const contracts = {}
   const templates = {}
   const components = {}
@@ -44,7 +46,20 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
   const categoryGroups = {}
   const categories = {}
   const nodes = {}
-  const ctx = { contracts, templates, components, blobs, categoryGroups, categories, nodes }
+  const ctx = { audiences, contracts, templates, components, blobs, categoryGroups, categories, nodes }
+
+  // ---- audiences ----
+  // Before anything that references one. An Audience is configuration, not content: it is never
+  // published, and its rule is read live at delivery -- so this is a plain upsert with no version
+  // to pin and no snapshot to freeze.
+  const existingAudiences = new Map((await api.listAudiences()).map((a) => [a.externalId, a]))
+  for (const def of AUDIENCES) {
+    const current = existingAudiences.get(def.externalId)
+    audiences[def.externalId] = current
+      ? await api.updateAudience(current.id, { name: def.name, predicate: def.predicate })
+      : await api.createAudience({ externalId: def.externalId, name: def.name, predicate: def.predicate })
+    log(`audience ${def.externalId} (${current ? 'updated' : 'created'})`)
+  }
 
   // ---- taxonomy ----
   // First, because a Category field's settings name the groups it accepts. Categories are keyed

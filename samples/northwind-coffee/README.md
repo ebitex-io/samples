@@ -28,6 +28,8 @@ makes it live; no code changes and nothing is redeployed.
 | Contextual values: one Component, a different framing in each place it is used | `content-model/model.mjs`, `src/components/OriginCard.tsx` |
 | Localization: deciding the axis early, and enabling it later | `content-model/model.mjs`'s `L()`, `src/lib/locale.ts` |
 | Locale fallback, and why a partly-translated site is a normal state | `src/components/LocaleSwitcher.tsx` |
+| Personalization: one page, different words for trade and retail | `content-model/model.mjs`'s `AUDIENCES`, `src/lib/visitor.ts` |
+| The context bag: your app reports facts, the CMS owns what they mean | `src/lib/visitor.ts` |
 | Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 | Streams: a page whose content is a query | `content-model/model.mjs`, `src/components/CoffeeIndex.tsx` |
 | Real facets — counts computed against the other active filters | `src/components/CoffeeIndex.tsx` |
@@ -209,6 +211,25 @@ ceremony. Enabling the second language was adding a locale in Settings, filling 
 passing one `locale` value to `<Experience>`.
 
 Deciding that axis early costs almost nothing. Deciding it late costs a migration.
+
+### Two audiences
+
+Northwind sells a bag at a time to people at home and by the sack to cafés, and those readers want
+different things from the same page. The footer has a "Buying" control; switch it to **For a café**
+and the front page says something else. `?buyer=trade` on any URL does the same thing, which is how
+a wholesale email would link you in.
+
+The site sends one property, `buyerType`. The CMS decides what it *means* -- an Audience called
+"Trade buyers" is the rule `buyerType equals trade`, and that rule lives in Settings. Widening who
+counts as a trade buyer is a settings change that takes effect on already-published pages, because
+audience definitions are read live at delivery rather than frozen at publish.
+
+There is no tracking and no profile here. The bag is a fact this page already has, sent with a
+request and used to resolve it. A real shop would more likely derive it from a signed-in account,
+and the CMS side would be identical -- which is the useful part.
+
+The two axes compose: switch to French *and* For a café and you get the trade copy in French,
+without either the locale or the audience knowing the other exists.
 
 ### Types are generated, not hand-written
 

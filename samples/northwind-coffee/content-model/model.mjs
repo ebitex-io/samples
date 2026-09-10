@@ -46,13 +46,32 @@ export const L = (value, locales = {}) => ({ default: value, locales })
 /**
  * A personalizable field's stored envelope: one default value plus audience-conditioned variants.
  *
- * Same idea as `L`, one axis over. Declared now, with no audiences in the organization and every
- * `variants` list empty, so that step 17 can add a variant without touching the model.
+ * Same idea as `L`, one axis over -- and the same payoff in step 17 as `L` had in step 16. These
+ * envelopes have been written since step 04 with an empty `variants` list, while the organization
+ * had no audiences at all. Adding the first variant changed no Contract, no Template and no
+ * renderer; it changed content.
  *
  * The two compose as `P(L(value))` -- personalization on the outside, locales within each arm --
- * which is the order the compiled schema expects.
+ * which is the order the compiled schema expects. So a trade buyer reading in French gets the
+ * trade variant's French text, and the two axes never had to know about each other.
+ *
+ * The **default is what everyone sees unless a variant's conditions are satisfied**, so a page with
+ * no matching audience is never empty and never a fallback-shaped apology. Write the default for
+ * your largest audience and vary from there.
  */
-export const P = (value) => ({ default: value, variants: [] })
+export const P = (value, variants = []) => ({ default: value, variants })
+
+/**
+ * One variant of a personalizable value, shown to members of a named Audience.
+ *
+ * `conditions` names the Audience by id, never by repeating its rule. The rule itself lives in one
+ * place (see AUDIENCES below) and is read *live* at delivery, so widening who counts as a trade
+ * buyer is a settings change rather than a re-edit of every page that varies for them.
+ */
+export const forAudience = (audiences, externalId, value) => ({
+  conditions: [{ audience: audiences[externalId].id }],
+  value,
+})
 
 /**
  * A link to somewhere outside this site. It must be an absolute URL -- the API rejects a bare
@@ -123,12 +142,34 @@ export function ids(byExternalId, externalIds) {
   return externalIds.map((id) => byExternalId[id]?.id).filter((id) => id !== undefined)
 }
 
+// ---- audiences ---------------------------------------------------------------------------------
+//
+// An Audience is a named rule over the **context bag** the site sends with every request. Northwind
+// sells two ways -- a bag at a time to people at home, and by the sack to cafés -- and those two
+// readers want different things from the same page. A trade buyer wants to know the lead time and
+// whether we can do it in 5 kg; a retail buyer wants to know what it tastes like.
+//
+// The bag is whatever the site chooses to send (`src/lib/visitor.ts` sends `buyerType`), plus the
+// reserved keys the Delivery API fills in. Nothing here is a user account, a cookie we set, or a
+// tracker: the site says what it knows, and the CMS decides what that means.
+//
+// Definitions are read **live** at delivery, not frozen at publish -- so widening who counts as a
+// trade buyer takes effect on already-published pages without republishing any of them. That is the
+// deliberate exception to "published content is frozen", and it is the same call taxonomy makes.
+export const AUDIENCES = [
+  {
+    externalId: 'trade',
+    name: 'Trade buyers',
+    predicate: { kind: 'equals', property: 'buyerType', value: 'trade' },
+  },
+]
+
 // ---- taxonomy ----------------------------------------------------------------------------------
 //
-// Named lists the organization owns, editable without touching the model. Roast level is a
-// taxonomy rather than a text field because it is a closed set that people filter by: an author
-// picks from it, `/coffees` builds facets from it, and nobody can quietly invent "Med-Dark".
-
+// Named lists the organization owns, editable without touching the model. Roast level is a taxonomy
+// rather than a text field because it is a closed set that people filter by: an author picks from
+// it, `/coffees` builds facets from it, and nobody can quietly invent "Med-Dark".
+//
 // A category's `key` is its stable identity -- what a filter matches on, what a document stores --
 // and its `value` is display text, which means it is Localizable like any other. Step 16 added the
 // `locales` below and changed nothing else: no field moved, no document was rewritten, and every
@@ -581,7 +622,7 @@ export const COMPONENTS = [
     name: 'Home',
     contract: 'page',
     folder: 'Pages',
-    document: ({ contracts, templates, nodes }) => ({
+    document: ({ audiences, contracts, templates, nodes }) => ({
       title: L('Northwind Coffee'),
       description: L(
         'Small-batch coffee from four farms we know by name, roasted on the north coast and posted out the same week.',
@@ -597,6 +638,10 @@ export const COMPONENTS = [
             standfirst: L('Four farms. Two roast days a week. Nothing older than a month.', {
               fr: 'Quatre fermes. Deux jours de torréfaction par semaine. Rien de plus vieux qu’un mois.',
             }),
+            // The first personalized value on the site. Everyone gets the default; a trade buyer
+            // gets the variant. Note that the variant carries its own locale envelope -- the two
+            // modifiers compose, so a French trade buyer gets French trade copy without either
+            // axis knowing the other exists.
             body: P(
               L(
                 md(
@@ -608,6 +653,22 @@ export const COMPONENTS = [
                   ),
                 },
               ),
+              [
+                forAudience(
+                  audiences,
+                  'trade',
+                  L(
+                    md(
+                      'We supply around forty cafés and roast to order. Sacks are 5 kg and 12 kg, wholesale pricing starts at six sacks a month, and we can hold a green lot for you if you tell us early enough.',
+                    ),
+                    {
+                      fr: md(
+                        'Nous fournissons une quarantaine de cafés et torréfions à la commande. Les sacs font 5 kg et 12 kg, le tarif professionnel démarre à six sacs par mois, et nous pouvons réserver un lot vert si vous nous prévenez assez tôt.',
+                      ),
+                    },
+                  ),
+                ),
+              ],
             ),
             // A link to another page in this site, by node identity rather than by URL. The
             // Delivery API resolves the current path for it on every request, so moving the

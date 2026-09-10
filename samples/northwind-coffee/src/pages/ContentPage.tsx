@@ -5,6 +5,7 @@ import { ContentProvider, Experience } from '@ebitex/content-sdk/react'
 import { Markdown } from '@/components/Markdown'
 import { content, renderers } from '@/lib/content'
 import { useLocale } from '@/lib/locale'
+import { useVisitorContext } from '@/lib/visitor'
 import { NotConfigured } from '@/pages/NotConfigured'
 import { NotFound } from '@/pages/NotFound'
 
@@ -22,6 +23,7 @@ import { NotFound } from '@/pages/NotFound'
 export function ContentPage() {
   const { pathname } = useLocation()
   const locale = useLocale()
+  const context = useVisitorContext()
   const navigate = useNavigate()
   const onRedirect = useCallback((to: string) => navigate(to, { replace: true }), [navigate])
 
@@ -35,6 +37,10 @@ export function ContentPage() {
         // Contract -- is untouched: what arrives is simply the French value where one exists and
         // the English one where it does not.
         locale={locale}
+        // Step 17's whole change to this file. The SDK re-resolves whenever the bag changes, the
+        // same way it does for the path or the locale -- so switching who you are buying for
+        // re-renders the page with different words and nothing here has to know which words.
+        context={context}
         onRedirect={onRedirect}
         notFound={<NotFound />}
         loading={<PageSkeleton />}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 
+import { BuyerSwitcher } from '@/components/BuyerSwitcher'
 import { NavLinks, type NavItem } from '@/components/NavLinks'
 import type { FooterContent } from '@/types/content'
 
@@ -33,6 +34,9 @@ export function Footer({ content }: { content?: FooterContent | null }) {
             </NavLinks>
           </ul>
         </nav>
+      </div>
+      <div className="mx-auto flex max-w-5xl justify-end px-6 pb-8">
+        <BuyerSwitcher />
       </div>
     </footer>
   )

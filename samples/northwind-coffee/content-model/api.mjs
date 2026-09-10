@@ -132,6 +132,11 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     createStream: (input) => post('/content/v1/streams', input),
     updateStream: (id, input) => put(`/content/v1/streams/${id}`, input),
 
+    // ---- audiences ----
+    listAudiences: () => get('/content/v1/audiences'),
+    createAudience: (input) => post('/content/v1/audiences', input),
+    updateAudience: (id, input) => put(`/content/v1/audiences/${id}`, input),
+
     // ---- taxonomy (spec 513-blog-index-page: the Topics group backing blog-page's category field) ----
     listCategoryGroups: () => get('/content/v1/taxonomy/groups'),
     createCategoryGroup: (externalId, name) => post('/content/v1/taxonomy/groups', { externalId, name, metadataFields: null }),
