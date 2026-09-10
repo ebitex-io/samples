@@ -163,7 +163,7 @@ export const CONTRACTS = [
       // picks from the Templates that belong on a page, not from every Template in the system.
       presentationField('Sections', 'sections', {
         enumerable: true,
-        settings: { allowedTemplateIds: ids(templates, ['hero', 'prose']) },
+        settings: { allowedTemplateIds: ids(templates, ['hero', 'prose', 'form-embed']) },
       }),
     ],
   },
@@ -283,6 +283,17 @@ export const CONTRACTS = [
     ],
   },
   {
+    // A published ebitex Form, embedded on a page. One mandatory field: which form. Everything
+    // else about the embed -- the organization, where Forms is served from -- is configuration
+    // rather than content, because this site embeds only its own forms.
+    externalId: 'form-embed',
+    name: 'Form embed',
+    fields: () => [
+      text('Form id', 'form', { mandatory: true }),
+      text('Accessible title', 'title', { localizable: true }),
+    ],
+  },
+  {
     // The catalogue page. Its content is a heading and an introduction; the grid itself is a
     // *query*, not authored -- see STREAMS below.
     externalId: 'coffee-index',
@@ -399,6 +410,12 @@ export const TEMPLATES = [
     externalId: 'store-list',
     name: 'Store list',
     supports: ['store-list'],
+    settings: [],
+  },
+  {
+    externalId: 'form-embed',
+    name: 'Form embed',
+    supports: ['form-embed'],
     settings: [],
   },
   {
@@ -1110,6 +1127,43 @@ export const COMPONENTS = [
       ],
     }),
   },
+
+  // ---- contact ----
+  {
+    externalId: 'contact-page',
+    name: 'Contact',
+    contract: 'page',
+    folder: 'Pages',
+    document: ({ contracts, templates }) => ({
+      title: L('Wholesale and trade'),
+      description: L(
+        'We supply about thirty cafes across the north east. If you are one, or would like to be, this is the fastest way to reach us.',
+      ),
+      sections: [
+        presentation(
+          templates.prose,
+          inline(contracts.statement, {
+            heading: L('Wholesale and trade'),
+            standfirst: L('Roasted to order, delivered weekly, no minimum after the first order.'),
+            body: P(
+              L(
+                md(
+                  'Tell us roughly what you get through in a week and what you are pouring now. We will send samples of two or three lots we think would suit, and a price list. Nobody will telephone you.',
+                ),
+              ),
+            ),
+          }),
+        ),
+        presentation(
+          templates['form-embed'],
+          inline(contracts['form-embed'], {
+            form: 'wholesale-enquiry',
+            title: L('Wholesale enquiry form'),
+          }),
+        ),
+      ],
+    }),
+  },
 ]
 
 // ---- site and experience nodes ---------------------------------------------------------------
@@ -1131,6 +1185,7 @@ export const NODES = [
   // a node's payload and its place in the tree are independent.
   { path: 'coffees', name: 'Coffees', template: 'coffee-index', component: 'coffee-index-page' },
   { path: 'stores', name: 'Where to find us', template: 'store-list', component: 'store-list-page' },
+  { path: 'contact', name: 'Wholesale and trade', template: 'page', component: 'contact-page' },
   { path: 'guides', name: 'Brew guides', template: 'guide-index', component: 'guide-index-page' },
   { path: 'guides/pour-over', name: 'Pour-over, the way we make it', template: 'guide', component: 'guide-pour-over' },
   { path: 'guides/aeropress', name: 'AeroPress for one', template: 'guide', component: 'guide-aeropress' },

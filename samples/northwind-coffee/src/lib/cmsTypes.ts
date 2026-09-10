@@ -98,3 +98,8 @@ export interface StoreListContent {
   intro?: RichTextValue
   stores?: ComponentValue<StoreContent>[]
 }
+
+export interface FormEmbedContent {
+  form: string
+  title?: string
+}

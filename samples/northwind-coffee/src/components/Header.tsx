@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { to: '/guides', label: 'Brew guides' },
   { to: '/stores', label: 'Find us' },
   { to: '/about', label: 'About' },
+  { to: '/contact', label: 'Wholesale' },
 ]
 
 export function Header() {
