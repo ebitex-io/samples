@@ -2,10 +2,10 @@ import { RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CtaLink } from '@/components/CtaLink'
-import type { StatementContent } from '@/lib/cmsTypes'
+import type { Statement } from '@/types/content'
 
 /** The `prose` Template, over the same `statement` Contract that `hero.tsx` renders. */
-const Prose: PresentationRenderer<StatementContent> = ({ component }) => {
+const Prose: PresentationRenderer<Statement> = ({ component }) => {
   const { heading, standfirst, body, cta, 'cta-label': ctaLabel } = component.content
 
   return (

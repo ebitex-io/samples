@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/sitemap.mjs",
+    "codegen": "node scripts/codegen.mjs",
     "preview": "vite preview",
     "test": "vitest run"
   },
   "dependencies": {
-    "@ebitex/content-sdk": "^0.9.66",
+    "@ebitex/content-sdk": "^0.10.0",
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

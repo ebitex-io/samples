@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import Coffee from '@/presentations/coffee'
-import type { CoffeeContent } from '@/lib/cmsTypes'
+import CoffeePage from '@/presentations/coffee'
+import type { Coffee } from '@/types/content'
 import { renderInProvider } from '@/test/renderInProvider'
 
-const image: CoffeeContent['image'] = {
+const image: Coffee['image'] = {
   provider: 'core',
   key: 'img',
   content: {
@@ -14,9 +14,9 @@ const image: CoffeeContent['image'] = {
   },
 }
 
-function renderCoffee(content: CoffeeContent) {
+function renderCoffee(content: Coffee) {
   renderInProvider(
-    <Coffee
+    <CoffeePage
       template={{ id: 't', externalId: 'coffee', version: 1 }}
       settings={{}}
       component={{ provider: 'core', key: 'c', content }}

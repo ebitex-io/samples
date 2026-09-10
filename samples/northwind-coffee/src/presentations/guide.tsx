@@ -1,7 +1,7 @@
 import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import type { GuideContent, GuideStepContent } from '@/lib/cmsTypes'
+import type { Guide, GuideStep } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /**
@@ -12,7 +12,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * to exactly one guide. `<Resolve>` unwraps them anyway, so this renderer would be unchanged if
  * that modelling decision ever went the other way.
  */
-const Guide: PresentationRenderer<GuideContent> = ({ component }) => {
+const GuidePage: PresentationRenderer<Guide> = ({ component }) => {
   const { heading, summary, equipment, 'total-time': totalTime, steps } = component.content
   useDocumentMeta(heading, summary)
 
@@ -46,7 +46,7 @@ const Guide: PresentationRenderer<GuideContent> = ({ component }) => {
       <ol className="mt-12 space-y-12">
         {steps?.map((step, index) => (
           <Resolve key={index} value={step}>
-            {(stepContent: GuideStepContent) => (
+            {(stepContent: GuideStep) => (
               <li className="grid gap-4 sm:grid-cols-[3rem_1fr]">
                 <span
                   aria-hidden
@@ -73,4 +73,4 @@ const Guide: PresentationRenderer<GuideContent> = ({ component }) => {
   )
 }
 
-export default Guide
+export default GuidePage

@@ -1,7 +1,7 @@
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CmsImage } from '@/components/CmsImage'
-import type { ImageContent } from '@/lib/cmsTypes'
+import type { Image } from '@/types/content'
 
 /**
  * The `figure` Template, rendering an `image` inside a RichText body.
@@ -12,7 +12,7 @@ import type { ImageContent } from '@/lib/cmsTypes'
  * An embed is a Presentation like any other, which is why there is no special "inline image" path
  * anywhere in this app.
  */
-const Figure: PresentationRenderer<ImageContent> = ({ component }) => {
+const Figure: PresentationRenderer<Image> = ({ component }) => {
   const { file, alt } = component.content
   return (
     <figure className="my-6 overflow-hidden rounded-2xl border border-line bg-sunken">

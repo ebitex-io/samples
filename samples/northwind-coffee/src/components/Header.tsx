@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router'
 
 import { NavLinks, type NavItem } from '@/components/NavLinks'
-import type { HeaderContent } from '@/lib/cmsTypes'
+import type { HeaderContent } from '@/types/content'
 
 /**
  * The site header.

@@ -1,8 +1,8 @@
 import { RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import { CoffeeIndex } from '@/components/CoffeeIndex'
-import type { CoffeeIndexContent } from '@/lib/cmsTypes'
+import { CoffeeGrid } from '@/components/CoffeeGrid'
+import type { CoffeeIndex } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /**
@@ -12,7 +12,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * *query* -- authored nowhere, and correct the moment a coffee is published. Authoring a list of
  * links to every coffee would be a list somebody has to remember to update.
  */
-const CoffeeIndexPage: PresentationRenderer<CoffeeIndexContent> = ({ component }) => {
+const CoffeeIndexPage: PresentationRenderer<CoffeeIndex> = ({ component }) => {
   const { heading, intro } = component.content
   useDocumentMeta(heading)
 
@@ -25,7 +25,7 @@ const CoffeeIndexPage: PresentationRenderer<CoffeeIndexContent> = ({ component }
         </div>
       ) : null}
       <div className="mt-10">
-        <CoffeeIndex />
+        <CoffeeGrid />
       </div>
     </div>
   )

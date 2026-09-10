@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { ComponentValue } from '@ebitex/content-sdk'
 
 import { content } from '@/lib/content'
-import type { HeaderContent, FooterContent } from '@/lib/cmsTypes'
+import type { HeaderContent, FooterContent } from '@/types/content'
 
 /**
  * The header and footer, fetched from the CMS.

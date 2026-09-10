@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { formsBaseUrl, formsOrgSlug } from '@/lib/forms'
-import type { FormEmbedContent } from '@/lib/cmsTypes'
+import type { FormEmbed } from '@/types/content'
 
 /**
  * The `form-embed` Template: an ebitex Form, embedded the way any customer would embed it.
@@ -15,7 +15,7 @@ import type { FormEmbedContent } from '@/lib/cmsTypes'
  * `embed.js` is Forms' own script. It listens for the framed form's reported content height and
  * resizes the iframe, so the form grows as steps advance or validation errors appear.
  */
-const FormEmbed: PresentationRenderer<FormEmbedContent> = ({ component }) => {
+const FormEmbedSection: PresentationRenderer<FormEmbed> = ({ component }) => {
   const { form, title } = component.content
   useFormsEmbedScript()
 
@@ -70,4 +70,4 @@ function useFormsEmbedScript() {
   }, [])
 }
 
-export default FormEmbed
+export default FormEmbedSection

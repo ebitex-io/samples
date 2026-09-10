@@ -3,7 +3,7 @@ import { MemoryRouter, Link } from 'react-router'
 import { describe, expect, it } from 'vitest'
 
 import { NavLinks, type NavItem } from '@/components/NavLinks'
-import type { NavLinkContent } from '@/lib/cmsTypes'
+import type { NavLink } from '@/types/content'
 
 const FALLBACK: NavItem[] = [{ to: '/about', label: 'About' }]
 
@@ -25,7 +25,7 @@ const cmsLink = (label: string, url: string | null) => ({
   content: {
     label,
     link: { kind: 'experience' as const, target: { provider: 'core', key: 'n' }, url, resolved: url !== null },
-  } satisfies NavLinkContent,
+  } satisfies NavLink,
 })
 
 describe('NavLinks', () => {

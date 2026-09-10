@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import Page from '@/presentations/page'
+import GeneralPage from '@/presentations/page'
 import { renderInProvider } from '@/test/renderInProvider'
 
 /**
@@ -15,7 +15,7 @@ import { renderInProvider } from '@/test/renderInProvider'
 describe('the page Template', () => {
   it('renders the title, summary and body', () => {
     renderInProvider(
-      <Page
+      <GeneralPage
         template={{ id: 't', externalId: 'page', version: 1 }}
         settings={{}}
         component={{
@@ -37,7 +37,7 @@ describe('the page Template', () => {
 
   it('renders with every optional field absent', () => {
     renderInProvider(
-      <Page
+      <GeneralPage
         template={{ id: 't', externalId: 'page', version: 1 }}
         settings={{}}
         component={{ provider: 'core', key: 'c', content: { title: 'Just a title' } }}

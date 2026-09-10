@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import Hero from '@/presentations/hero'
 import Prose from '@/presentations/prose'
-import type { StatementContent } from '@/lib/cmsTypes'
+import type { Statement } from '@/types/content'
 import { renderInProvider } from '@/test/renderInProvider'
 
 /**
@@ -11,7 +11,7 @@ import { renderInProvider } from '@/test/renderInProvider'
  * tested against the same fixture. If one of them ever needs a field the other does not, that is
  * a signal the Contract has drifted into being two content types wearing one name.
  */
-const statement: StatementContent = {
+const statement: Statement = {
   heading: 'Coffee worth the wait',
   standfirst: 'Four farms. Two roast days a week.',
   body: [{ kind: 'markdown', markdown: 'We are a small roastery.' }],
@@ -21,7 +21,7 @@ const statement: StatementContent = {
 
 function renderStatement(
   Renderer: typeof Hero | typeof Prose,
-  content: StatementContent = statement,
+  content: Statement = statement,
 ) {
   renderInProvider(
     <Renderer

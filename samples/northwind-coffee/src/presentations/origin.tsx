@@ -2,11 +2,11 @@ import { RichText, Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CmsImage } from '@/components/CmsImage'
-import type { ImageContent, OriginContent } from '@/lib/cmsTypes'
+import type { Image, Origin } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /** The `origin` Template. One page per producing country, shared by every coffee from it. */
-const Origin: PresentationRenderer<OriginContent> = ({ component }) => {
+const OriginPage: PresentationRenderer<Origin> = ({ component }) => {
   const { name, country, altitude, summary, image } = component.content
   useDocumentMeta(name, country)
 
@@ -27,7 +27,7 @@ const Origin: PresentationRenderer<OriginContent> = ({ component }) => {
           </div>
         ) : null}
         <Resolve value={image}>
-          {(content: ImageContent) => (
+          {(content: Image) => (
             <CmsImage
               file={content.file}
               alt={content.alt}
@@ -40,4 +40,4 @@ const Origin: PresentationRenderer<OriginContent> = ({ component }) => {
   )
 }
 
-export default Origin
+export default OriginPage

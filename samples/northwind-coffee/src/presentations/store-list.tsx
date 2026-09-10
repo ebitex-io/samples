@@ -1,7 +1,7 @@
 import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import type { StoreContent, StoreListContent } from '@/lib/cmsTypes'
+import type { Store, StoreList } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /**
@@ -12,7 +12,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * The stores are inline, because nothing points at a store and no store has a page of its own.
  * The same call as `guide-step`, reached for the same reason.
  */
-const StoreList: PresentationRenderer<StoreListContent> = ({ component }) => {
+const StoreListSection: PresentationRenderer<StoreList> = ({ component }) => {
   const { heading, intro, stores } = component.content
   useDocumentMeta(heading)
 
@@ -28,7 +28,7 @@ const StoreList: PresentationRenderer<StoreListContent> = ({ component }) => {
       <ul className="mt-10 grid gap-6 sm:grid-cols-2">
         {stores?.map((store, index) => (
           <Resolve key={index} value={store}>
-            {(s: StoreContent) => (
+            {(s: Store) => (
               <li className="rounded-2xl border border-line bg-raised p-6">
                 <h2 className="font-display text-2xl text-ink">{s.name}</h2>
                 {s.address?.length ? (
@@ -73,4 +73,4 @@ const StoreList: PresentationRenderer<StoreListContent> = ({ component }) => {
   )
 }
 
-export default StoreList
+export default StoreListSection

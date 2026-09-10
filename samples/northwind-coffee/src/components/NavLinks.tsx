@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import type { ComponentValue } from '@ebitex/content-sdk'
 
-import type { NavLinkContent } from '@/lib/cmsTypes'
+import type { NavLink } from '@/types/content'
 
 export interface NavItem {
   to: string
@@ -21,7 +21,7 @@ export function NavLinks({
   fallback,
   children,
 }: {
-  links: ComponentValue<NavLinkContent>[] | undefined
+  links: ComponentValue<NavLink>[] | undefined
   fallback: NavItem[]
   children: (item: NavItem) => ReactNode
 }) {
@@ -36,7 +36,7 @@ export function NavLinks({
   )
 }
 
-function toItems(links: ComponentValue<NavLinkContent>[] | undefined): NavItem[] | undefined {
+function toItems(links: ComponentValue<NavLink>[] | undefined): NavItem[] | undefined {
   if (!links?.length) return undefined
 
   const items = links.flatMap((link) => {

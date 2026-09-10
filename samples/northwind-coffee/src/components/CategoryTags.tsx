@@ -1,14 +1,6 @@
 import type { CategoryDescriptor } from '@ebitex/content-sdk'
 
 /**
- * The delivered category descriptor also carries `resolved`, which is `false` once the category
- * has been deleted. The SDK's published type does not declare it yet (@ebitex/content-sdk 0.9.66),
- * so it is widened here rather than worked around by testing something else -- `resolved` is the
- * field the API documents as the signal, and reading anything else would be guessing.
- */
-type DeliveredCategory = CategoryDescriptor & { resolved?: boolean }
-
-/**
  * Renders one or more Category field values.
  *
  * A category value stores a pointer, never a label. The `value` you see here is the category's own
@@ -21,8 +13,8 @@ type DeliveredCategory = CategoryDescriptor & { resolved?: boolean }
  * response; rendering a dangling id is not.
  */
 export function CategoryTags({ categories }: { categories: (CategoryDescriptor | undefined)[] }) {
-  const present = (categories as (DeliveredCategory | undefined)[]).filter(
-    (c): c is DeliveredCategory => c !== undefined && c.resolved !== false && Boolean(c.value),
+  const present = categories.filter(
+    (c): c is CategoryDescriptor => c !== undefined && c.resolved !== false && Boolean(c.value),
   )
   if (present.length === 0) return null
 

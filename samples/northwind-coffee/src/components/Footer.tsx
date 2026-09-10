@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 
 import { NavLinks, type NavItem } from '@/components/NavLinks'
-import type { FooterContent } from '@/lib/cmsTypes'
+import type { FooterContent } from '@/types/content'
 
 /** The site footer. Same migration as the header, and the same fallback for the same reason. */
 const FALLBACK_LINKS: NavItem[] = [

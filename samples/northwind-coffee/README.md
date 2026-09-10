@@ -35,6 +35,7 @@ makes it live; no code changes and nothing is redeployed.
 | Site chrome as content, addressed by external id | `src/lib/siteChrome.ts`, `src/components/NavLinks.tsx` |
 | A sitemap built at deploy time, and why the SDK ships no route | `scripts/sitemap.mjs` |
 | Browser-safe versus server-side keys, and what `VITE_` decides | `scripts/sitemap.mjs`, README step 4 |
+| Generated types, and why a hand-written mirror of the model always rots | `scripts/codegen.mjs`, `src/types/content.d.ts` |
 
 More arrives with each tutorial step; this table grows with it.
 
@@ -182,11 +183,33 @@ src/
   pages/ContentPage.tsx  resolves the current path against the CMS
   presentations/       one file per Template; the file name is the Template's external id
   lib/content.ts       the only place configuration is read and the SDK client is built
-  lib/cmsTypes.ts      the delivered shapes, in TypeScript (hand-written until step 14)
+  types/content.d.ts   the delivered shapes, in TypeScript. Generated -- see below
 assets/                every image this repo ships, and the script that generates them
 content-model/         the content model as data. Internal tooling: read it, do not run it
 seed/                  portable export bundles, one per checkpoint step
 ```
+
+### Types are generated, not hand-written
+
+`src/types/content.d.ts` is generated from the Delivery API's own schemas, and committed so the
+project builds without a key:
+
+```bash
+npm run codegen
+```
+
+Until step 14 this project carried a hand-written types module -- one interface per Contract, kept
+true by hand. It worked, and it was quietly wrong the whole time: rename a field in the CMS and
+TypeScript happily keeps compiling against the old name, because nothing connects the two. Ten steps
+of that is enough to feel the problem, which is the point of having felt it.
+
+Two things to know if you re-run it against your own organization:
+
+- It reads `CONTENT_DELIVERY_KEY` -- the **server-side** key, not `VITE_CONTENT_DELIVERY_KEY`. This
+  runs in a terminal, and a browser-safe key is restricted by `Origin`, which Node never sends. Same
+  distinction as `scripts/sitemap.mjs`, for the same reason.
+- The doc comment above each type carries that Contract's id and version **in your organization**,
+  so regenerating changes those comments. Expect that much diff and nothing more.
 
 `content-model/` and `seed/` are two routes to the same place. The bundles are the fast path — import
 one and the model exists. The script is the *legible* path: the entire model in one readable file,

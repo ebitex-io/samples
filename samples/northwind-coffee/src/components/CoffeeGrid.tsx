@@ -4,7 +4,7 @@ import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
 import { CmsImage } from '@/components/CmsImage'
 import { content } from '@/lib/content'
-import type { CoffeeContent } from '@/lib/cmsTypes'
+import type { Coffee } from '@/types/content'
 import { formatPrice } from '@/lib/format'
 
 const STREAM = 'coffees'
@@ -20,7 +20,7 @@ const PAGE_SIZE = 12
  *
  * Filter state lives in the URL, so a filtered view is a link someone can send.
  */
-export function CoffeeIndex() {
+export function CoffeeGrid() {
   const [params, setParams] = useSearchParams()
   const roast = params.get('roast') ?? undefined
   const origin = params.get('origin') ?? undefined
@@ -214,7 +214,7 @@ function FacetChips({
  * with no published page is not linkable and is skipped: a card has to go somewhere.
  */
 function CoffeeCard({ item }: { item: ComponentListItem }) {
-  const content = item.content as CoffeeContent | undefined
+  const content = item.content as Coffee | undefined
   const path = item.paths?.[0]?.path
   if (!content || !path) return null
 

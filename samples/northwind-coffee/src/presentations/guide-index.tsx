@@ -4,7 +4,7 @@ import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { content as client } from '@/lib/content'
-import type { GuideContent, GuideIndexContent } from '@/lib/cmsTypes'
+import type { Guide, GuideIndex } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /**
@@ -15,7 +15,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * editorial: someone decides which three a beginner should read and in what order, and that
  * decision is content rather than something to infer.
  */
-const GuideIndex: PresentationRenderer<GuideIndexContent> = ({ component }) => {
+const GuideIndexPage: PresentationRenderer<GuideIndex> = ({ component }) => {
   const { heading, intro, guides } = component.content
   const paths = useGuidePaths()
   useDocumentMeta(heading)
@@ -32,7 +32,7 @@ const GuideIndex: PresentationRenderer<GuideIndexContent> = ({ component }) => {
       <ul className="mt-10 divide-y divide-line border-y border-line">
         {guides?.map((guide, index) => (
           <Resolve key={index} value={guide} fallback={() => null}>
-            {(g: GuideContent) => (
+            {(g: Guide) => (
               <GuideRow guide={g} path={guide.key ? paths?.get(guide.key) : undefined} />
             )}
           </Resolve>
@@ -42,7 +42,7 @@ const GuideIndex: PresentationRenderer<GuideIndexContent> = ({ component }) => {
   )
 }
 
-function GuideRow({ guide, path }: { guide: GuideContent; path: string | undefined }) {
+function GuideRow({ guide, path }: { guide: Guide; path: string | undefined }) {
   const body = (
     <>
       <h2 className="font-display text-2xl text-ink">{guide.heading}</h2>
@@ -93,4 +93,4 @@ function useGuidePaths() {
   return paths
 }
 
-export default GuideIndex
+export default GuideIndexPage

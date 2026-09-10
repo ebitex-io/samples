@@ -1,7 +1,7 @@
 import { PresentationList, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import type { PageContent } from '@/lib/cmsTypes'
+import type { Page } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
 /**
@@ -15,7 +15,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * `<PresentationList>` dispatches every section to its own Template's renderer, so adding a new
  * kind of section later is a new file in this directory and no change at all to this one.
  */
-const Page: PresentationRenderer<PageContent> = ({ component }) => {
+const GeneralPage: PresentationRenderer<Page> = ({ component }) => {
   const { title, description, body, sections } = component.content
   useDocumentMeta(title, description)
 
@@ -41,4 +41,4 @@ const Page: PresentationRenderer<PageContent> = ({ component }) => {
   )
 }
 
-export default Page
+export default GeneralPage

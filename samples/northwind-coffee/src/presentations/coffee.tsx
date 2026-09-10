@@ -4,7 +4,7 @@ import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 import { CategoryTags } from '@/components/CategoryTags'
 import { CmsImage } from '@/components/CmsImage'
 import { OriginCard } from '@/components/OriginCard'
-import type { CoffeeContent, ImageContent } from '@/lib/cmsTypes'
+import type { Coffee, Image } from '@/types/content'
 import { formatPrice, formatWeight } from '@/lib/format'
 import { useDocumentMeta } from '@/lib/meta'
 
@@ -21,7 +21,7 @@ import { useDocumentMeta } from '@/lib/meta'
  * Written as a reference instead, the very same code would fetch it. That is the point of
  * `<Resolve>`: the renderer does not need to know which decision the model made.
  */
-const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
+const CoffeePage: PresentationRenderer<Coffee> = ({ component }) => {
   const {
     name,
     producer,
@@ -41,7 +41,7 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
     <article className="mx-auto grid max-w-5xl gap-12 px-6 py-16 md:grid-cols-2">
       <div className="self-start overflow-hidden rounded-2xl border border-line bg-sunken">
         <Resolve value={image}>
-          {(content: ImageContent) => (
+          {(content: Image) => (
             <CmsImage
               file={content.file}
               alt={content.alt}
@@ -92,4 +92,4 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
   )
 }
 
-export default Coffee
+export default CoffeePage

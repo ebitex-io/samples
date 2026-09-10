@@ -2,7 +2,7 @@ import { RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CtaLink } from '@/components/CtaLink'
-import type { StatementContent } from '@/lib/cmsTypes'
+import type { Statement } from '@/types/content'
 
 /**
  * The `hero` Template, over the `statement` Contract.
@@ -11,7 +11,7 @@ import type { StatementContent } from '@/lib/cmsTypes'
  * author moves a section between them by changing which Template a section names -- there is no
  * migration, because the content did not change, only its presentation.
  */
-const Hero: PresentationRenderer<StatementContent> = ({ component }) => {
+const Hero: PresentationRenderer<Statement> = ({ component }) => {
   const { heading, standfirst, body, cta, 'cta-label': ctaLabel } = component.content
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { Resolve } from '@ebitex/content-sdk/react'
 
-import type { CoffeeContent, OriginContent } from '@/lib/cmsTypes'
+import type { Coffee, Origin } from '@/types/content'
 import { loadOriginPaths } from '@/lib/originPaths'
 
 /**
@@ -19,7 +19,7 @@ import { loadOriginPaths } from '@/lib/originPaths'
  * owns rather than a string built out of hope. An origin with no published page simply gets no
  * link, which is the same honest degradation as everything else here.
  */
-export function OriginCard({ origin }: { origin: CoffeeContent['origin'] }) {
+export function OriginCard({ origin }: { origin: Coffee['origin'] }) {
   const [paths, setPaths] = useState<Map<string, string>>()
   useEffect(() => {
     let live = true
@@ -34,7 +34,7 @@ export function OriginCard({ origin }: { origin: CoffeeContent['origin'] }) {
 
   return (
     <Resolve value={origin} fallback={() => null}>
-      {(content: OriginContent) => (
+      {(content: Origin) => (
         <aside className="mt-10 rounded-2xl border border-line bg-sunken p-6">
           <p className="font-mono text-xs tracking-widest text-ink-muted uppercase">Origin</p>
           <h2 className="mt-2 font-display text-2xl text-ink">{content.name}</h2>
