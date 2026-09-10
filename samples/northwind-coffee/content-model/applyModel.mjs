@@ -17,7 +17,17 @@
 // resolvable in a single pass each.
 // ---------------------------------------------------------------------------------------------
 
-import { BLOBS, CONTRACTS, TEMPLATES, FOLDERS, COMPONENTS, SITE, NODES, L } from './model.mjs'
+import {
+  BLOBS,
+  CATEGORY_GROUPS,
+  CONTRACTS,
+  TEMPLATES,
+  FOLDERS,
+  COMPONENTS,
+  SITE,
+  NODES,
+  L,
+} from './model.mjs'
 import { compact, presentation, reference, templateVersion } from './values.mjs'
 
 /**
@@ -30,8 +40,33 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
   const templates = {}
   const components = {}
   const blobs = {}
+  const categoryGroups = {}
+  const categories = {}
   const nodes = {}
-  const ctx = { contracts, templates, components, blobs, nodes }
+  const ctx = { contracts, templates, components, blobs, categoryGroups, categories, nodes }
+
+  // ---- taxonomy ----
+  // First, because a Category field's settings name the groups it accepts. Categories are keyed
+  // here as `<group>/<key>` so the model can name one without carrying ids around.
+  const existingGroups = new Map((await api.listCategoryGroups()).map((g) => [g.externalId, g]))
+  for (const def of CATEGORY_GROUPS) {
+    const group = existingGroups.get(def.externalId) ?? (await api.createCategoryGroup(def.externalId, def.name))
+    categoryGroups[def.externalId] = group
+    const existing = new Map((await api.listCategories(group.id)).map((c) => [c.key, c]))
+    for (const cat of def.categories) {
+      categories[`${def.externalId}/${cat.key}`] =
+        existing.get(cat.key) ??
+        (await api.createCategory({
+          categoryGroupId: group.id,
+          parentCategoryId: null,
+          key: cat.key,
+          value: L(cat.value),
+          isSelectable: true,
+          metadata: null,
+        }))
+    }
+    log(`category group ${def.externalId} (${def.categories.length} categories)`)
+  }
 
   // Templates that already exist (this is a re-run) let the contracts name them on the first pass,
   // so the second pass below has nothing to do.

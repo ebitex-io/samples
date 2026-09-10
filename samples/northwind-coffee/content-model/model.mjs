@@ -13,7 +13,7 @@
 // See api.mjs for why you should not run this against your own organization.
 // ---------------------------------------------------------------------------------------------
 
-import { experienceLink, inline, presentation, reference } from './values.mjs'
+import { categoryValue, experienceLink, inline, presentation, reference } from './values.mjs'
 
 // ---- value helpers ---------------------------------------------------------------------------
 
@@ -82,10 +82,53 @@ export const presentationField = (name, id, opts) => field(name, id, 'presentati
  */
 export const componentField = (name, id, opts) => field(name, id, 'component', opts)
 
+/** A field whose value is one entry from a taxonomy the organization defines. */
+export const category = (name, id, opts) => field(name, id, 'category', opts)
+
+/**
+ * A Category field's group constraint. The entries are `{ provider, key }` references rather than
+ * bare ids -- the settings schema rejects a bare Guid, which is the kind of thing you find out
+ * once and then never forget.
+ */
+export const categoryGroups = (groups, externalIds) =>
+  externalIds
+    .map((id) => groups[id]?.id)
+    .filter((id) => id !== undefined)
+    .map((id) => ({ provider: 'core', key: id }))
+
 /** Resolves a list of external ids to the ids of entities created earlier in the same run. */
 export function ids(byExternalId, externalIds) {
   return externalIds.map((id) => byExternalId[id]?.id).filter((id) => id !== undefined)
 }
+
+// ---- taxonomy ----------------------------------------------------------------------------------
+//
+// Named lists the organization owns, editable without touching the model. Roast level is a
+// taxonomy rather than a text field because it is a closed set that people filter by: an author
+// picks from it, `/coffees` builds facets from it, and nobody can quietly invent "Med-Dark".
+
+export const CATEGORY_GROUPS = [
+  {
+    externalId: 'roast',
+    name: 'Roast level',
+    categories: [
+      { key: 'light', value: 'Light' },
+      { key: 'medium', value: 'Medium' },
+      { key: 'medium-dark', value: 'Medium-dark' },
+      { key: 'dark', value: 'Dark' },
+    ],
+  },
+  {
+    externalId: 'process',
+    name: 'Process',
+    categories: [
+      { key: 'washed', value: 'Washed' },
+      { key: 'natural', value: 'Natural' },
+      { key: 'honey', value: 'Honey' },
+      { key: 'wet-hulled', value: 'Wet-hulled' },
+    ],
+  },
+]
 
 // ---- contracts -------------------------------------------------------------------------------
 //
@@ -165,7 +208,7 @@ export const CONTRACTS = [
   {
     externalId: 'coffee',
     name: 'Coffee',
-    fields: ({ contracts }) => [
+    fields: ({ contracts, categoryGroups: categoryGroups_ }) => [
       text('Name', 'name', { mandatory: true, localizable: true }),
       // Not localizable: a producer's name is a proper noun and stays as it is in every language.
       // Deciding this per field is the work; getting it wrong in either direction is visible.
@@ -188,6 +231,12 @@ export const CONTRACTS = [
       // point this at any Component in the library; with it, the field means what its name says.
       componentField('Origin', 'origin', {
         settings: { allowedModes: ['reference'], allowedContractIds: ids(contracts, ['origin']) },
+      }),
+      category('Roast', 'roast', {
+        settings: { allowedCategoryGroupIds: categoryGroups(categoryGroups_, ['roast']) },
+      }),
+      category('Process', 'process', {
+        settings: { allowedCategoryGroupIds: categoryGroups(categoryGroups_, ['process']) },
       }),
     ],
   },
@@ -396,7 +445,7 @@ export const COMPONENTS = [
     name: 'Ethiopia Guji — Shakiso',
     contract: 'coffee',
     folder: 'Coffees',
-    document: ({ contracts, blobs, components }) => ({
+    document: ({ contracts, blobs, components, categories }) => ({
       name: L('Ethiopia Guji, Shakiso'),
       producer: 'Kayon Mountain Farm',
       description: P(
@@ -424,6 +473,8 @@ export const COMPONENTS = [
       // detail about the region corrects it everywhere at once -- and the Origin has a page of
       // its own, which content written inside a coffee never could.
       origin: reference(components['origin-ethiopia']),
+      roast: categoryValue(categories, 'roast', 'light'),
+      process: categoryValue(categories, 'process', 'natural'),
     }),
   },]
 

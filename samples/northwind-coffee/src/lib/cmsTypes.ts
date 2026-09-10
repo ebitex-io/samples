@@ -1,5 +1,6 @@
 import type {
   BlobValue,
+  CategoryDescriptor,
   ComponentValue,
   LinkValue,
   PresentationEnvelope,
@@ -48,6 +49,8 @@ export interface CoffeeContent {
   'weight-grams'?: number
   image?: ComponentValue<ImageContent>
   origin?: ComponentValue<OriginContent>
+  roast?: CategoryDescriptor
+  process?: CategoryDescriptor
 }
 
 export interface OriginContent {

@@ -1,6 +1,7 @@
 import { RichText, Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
+import { CategoryTags } from '@/components/CategoryTags'
 import { CmsImage } from '@/components/CmsImage'
 import { OriginCard } from '@/components/OriginCard'
 import type { CoffeeContent, ImageContent } from '@/lib/cmsTypes'
@@ -30,13 +31,15 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
     'weight-grams': weight,
     image,
     origin,
+    roast,
+    process,
   } = component.content
 
   useDocumentMeta(name, tastingNotes?.join(', '))
 
   return (
     <article className="mx-auto grid max-w-5xl gap-12 px-6 py-16 md:grid-cols-2">
-      <div className="overflow-hidden rounded-2xl border border-line bg-sunken">
+      <div className="self-start overflow-hidden rounded-2xl border border-line bg-sunken">
         <Resolve value={image}>
           {(content: ImageContent) => (
             <CmsImage
@@ -52,6 +55,8 @@ const Coffee: PresentationRenderer<CoffeeContent> = ({ component }) => {
       <div>
         <h1 className="font-display text-4xl leading-tight text-ink">{name}</h1>
         {producer ? <p className="mt-2 text-ink-muted">{producer}</p> : null}
+
+        <CategoryTags categories={[roast, process]} />
 
         {tastingNotes?.length ? (
           <ul className="mt-6 flex flex-wrap gap-2">

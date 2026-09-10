@@ -62,3 +62,14 @@ export function presentation(template, component, settings = {}) {
 export function experienceLink(node) {
   return { kind: 'experience', target: { provider: 'core', key: node.id, kind: 'experience' } }
 }
+
+/**
+ * A Category field's value: a pointer to one entry in a taxonomy, keyed by `<group>/<key>`.
+ *
+ * Notice what is *not* stored: the label. "Light" is the category's own current value, read live
+ * at delivery, so renaming it in Settings renames it on every page at once without republishing
+ * anything.
+ */
+export function categoryValue(categories, group, key) {
+  return { provider: 'core', key: categories[`${group}/${key}`].id }
+}

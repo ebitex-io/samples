@@ -25,6 +25,7 @@ makes it live; no code changes and nothing is redeployed.
 | Modifiers: mandatory, localizable, enumerable, personalizable | `content-model/model.mjs`, the `coffee` Contract |
 | Blobs, and why alt text belongs on a Contract | `src/components/CmsImage.tsx` |
 | Inline versus referenced content | `content-model/values.mjs` |
+| Taxonomy: closed sets read live, not frozen | `src/components/CategoryTags.tsx` |
 
 More arrives with each tutorial step; this table grows with it.
 
