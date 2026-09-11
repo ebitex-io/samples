@@ -301,11 +301,12 @@ Two things this step teaches that are easy to get wrong:
   each item's identity, and the target's copies come *from* the source. Two environments that each
   grew their own `coffee` Contract have two different ids for it and nothing can reconcile them
   afterwards. So: author in one place, promote outwards. Do not apply a content model twice.
-- **Plan, then execute -- and the root goes first.** The plan returns the whole dependency closure
-  you did not ask for, and does more than it shows: promoting into an empty environment creates the
-  site root and the ancestor nodes without those appearing in the plan at all. `execute` takes its
-  root from the *first* item in the list, so echoing the plan back verbatim -- the obvious thing --
-  makes a Contract the root and promotes one item, successfully and silently.
+- **Plan, then execute -- and name the root.** The plan returns the whole dependency closure you did
+  not ask for, and does more than it shows: promoting into an empty environment creates the site
+  root and the ancestor nodes without those appearing in the plan at all. `execute` re-plans that
+  closure from **one** root, so the request has to name it; echoing the plan's items back without
+  one -- the obvious thing -- is refused rather than guessed at. The items are the include list, and
+  their order means nothing.
 
 ### A coffee, shown as a card
 

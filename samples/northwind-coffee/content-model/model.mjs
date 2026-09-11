@@ -742,7 +742,10 @@ export const STREAMS = [
     resolveDepth: 1,
     declaredFilters: [
       { key: 'q', type: 'fullText' },
-      { key: 'roast', type: 'category' },
+      // `groupExternalId` says which Category Group this filter speaks for. Without it a facet on
+      // a Contract with two category fields answers with both groups' values, and a value from the
+      // wrong one is accepted rather than refused.
+      { key: 'roast', type: 'category', groupExternalId: 'roast' },
       { key: 'origin', type: 'reference', fieldPath: 'origin', labelFieldPath: 'name' },
     ],
   },

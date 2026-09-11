@@ -63,11 +63,10 @@ export function CoffeeGrid() {
         setItems(page.items)
         setCursor(page.nextCursor)
         setFacets({
-          // A category facet returns every category on the matched entities, with no way to say
-          // which Group a declared filter meant -- so a `coffee` carrying both a roast and a
-          // process gets both back under either filter. Narrowing by the `<group>/<key>` path is a
-          // workaround, not the intended shape; raised as a finding against the Delivery API.
-          roast: roastFacet.values.filter((v) => v.path?.startsWith('roast/')),
+          // Both facets arrive already scoped: the `roast` declared filter names the Category
+          // Group it speaks for (`groupExternalId`), which is what keeps a `coffee` carrying both
+          // a roast and a process from answering either facet with the other group's values.
+          roast: roastFacet.values,
           origin: originFacet.values,
         })
         setStatus('ready')

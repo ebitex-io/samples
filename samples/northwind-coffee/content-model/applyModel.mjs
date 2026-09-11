@@ -513,16 +513,15 @@ export async function applyEnvironments(api, { log = console.log } = {}) {
  * which is why it needs `confirmOverwrite` rather than being overwritten quietly. This script
  * confirms, because it owns both sides; a person is shown the list and decides.
  *
- * ---- The root goes first ----
+ * ---- Name the root ----
  *
- * `execute` takes its **root** from the first item in the list, and re-plans the closure from it
- * server-side. The plan's own items are ordered schema-first, so echoing them back verbatim -- the
- * obvious thing to do -- makes a Contract the root, promotes that one Contract, and returns 200
- * with nothing to suggest anything is wrong.
+ * `execute` re-plans the closure server-side from **one** root, so the request has to say which
+ * thing that is: `root`, beside the items. Echoing a plan's own items back without one -- the
+ * obvious thing to do -- is refused with `promotion_root_required` rather than guessed at.
  *
- * So: the root first, then the explicit items. Implicit ones ride along regardless of whether they
- * are listed, which is why they are filtered out here rather than sent. See
- * ebitex-io/monorepo#580.
+ * `items` is then just the include list, and its order means nothing. Implicit items ride along
+ * whether or not they are listed, which is why they are filtered out here rather than sent. See
+ * ebitex-io/monorepo#580, which is what put the root in the request shape.
  */
 export async function promoteStaged(api, applied, targetEnvironmentId, { log = console.log } = {}) {
   const results = []
@@ -537,13 +536,14 @@ export async function promoteStaged(api, applied, targetEnvironmentId, { log = c
     }
 
     log(`/${def.path}: ${plan.items.length} items (${plan.items.map((i) => `${i.kind} ${i.state}`).join(', ')})`)
+    const root = { kind: 'node', id: node.id }
     const items = [
       { kind: 'node', id: node.id, confirmOverwrite: true },
       ...plan.items
         .filter((i) => !i.implicit && !(i.kind === 'node' && i.id === node.id))
         .map((i) => ({ kind: i.kind, id: i.id, confirmOverwrite: i.state === 'diverged' })),
     ]
-    const result = await api.executePromotion(targetEnvironmentId, items)
+    const result = await api.executePromotion(targetEnvironmentId, root, items)
     const failed = result.items.filter((i) => !i.promoted)
     if (failed.length > 0) {
       throw new Error(`promotion of /${def.path} failed: ${failed.map((i) => `${i.kind}: ${i.error}`).join('; ')}`)

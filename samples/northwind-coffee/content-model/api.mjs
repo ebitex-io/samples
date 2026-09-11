@@ -113,7 +113,11 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     // since they last matched. A diverged item needs `confirmOverwrite`, because promoting it
     // throws away work somebody did in the target.
     planPromotion: (targetEnvironmentId, kind, id) => post('/content/v1/promotions/plan', { targetEnvironmentId, kind, id }),
-    executePromotion: (targetEnvironmentId, items) => post('/content/v1/promotions/execute', { targetEnvironmentId, items }),
+    // `root` is the one thing the closure is re-planned from server-side; `items` is the include
+    // list, and its order carries no meaning. Omitting the root is refused outright rather than
+    // guessed at -- see promoteStaged in applyModel.mjs.
+    executePromotion: (targetEnvironmentId, root, items) =>
+      post('/content/v1/promotions/execute', { targetEnvironmentId, root, items }),
 
     // ---- contracts ----
     listContracts: async () => (await get('/content/v1/contracts?pageSize=200')).items,
