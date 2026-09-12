@@ -5,6 +5,15 @@ node_modules/
 dist/
 build/
 .vite/
+# Next.js. Not merely build output: Turbopack's cache under .next/cache records the *environment*
+# a build ran with, so a sample built with a real delivery key in .env.local leaves that key in
+# plaintext on disk. It is never served to a browser — .next/static and the delivered HTML are both
+# clean — but committing .next/ would publish a live key to this public repository, and the
+# `repo-checks` job greps for .env *filenames*, so it would not catch it. Found building the
+# northwind-coffee-ssr sample (monorepo spec 666).
+.next/
+next-env.d.ts
+.turbo/
 
 # Local configuration.
 # Every sample reads its ebitex organization's delivery key from .env. That key belongs to

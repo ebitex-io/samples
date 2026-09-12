@@ -12,9 +12,12 @@ repository contains no credentials of any kind.
 | Sample | Stack | Status |
 |---|---|---|
 | `northwind-coffee` | Static site — Vite, React, TypeScript, `@ebitex/content-sdk` | Complete — twenty steps, `step-01` … `step-20` |
+| `northwind-coffee-ssr` | Server-rendered — Next.js App Router, `@ebitex/content-sdk` | The same site with a server in front of it |
 
-A second sample — the same site with a Node server and server-side rendering — is anticipated but
-not yet started.
+The two Northwind samples are the same site, the same content model and the same seed bundles,
+built two ways. Neither is the better choice: a static build and a site with a server are both
+fully supported, and reading them side by side is the fastest way to see what a server buys and
+what it costs.
 
 ## Running a sample
 

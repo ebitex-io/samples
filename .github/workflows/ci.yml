@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       northwind-coffee: ${{ steps.filter.outputs.northwind-coffee }}
+      northwind-coffee-ssr: ${{ steps.filter.outputs.northwind-coffee-ssr }}
       unclassified: ${{ steps.unclassified-filter.outputs.unclassified }}
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +55,9 @@ jobs:
           filters: |
             northwind-coffee:
               - 'samples/northwind-coffee/**'
+              - '.github/workflows/ci.yml'
+            northwind-coffee-ssr:
+              - 'samples/northwind-coffee-ssr/**'
               - '.github/workflows/ci.yml'
 
       - uses: dorny/paths-filter@v3
@@ -139,3 +143,33 @@ jobs:
       - run: npm run build
 
       - run: npm test
+
+  # The SSR twin of the sample above. Same rules — its own lockfile, its own install, `npm ci` run
+  # inside the sample directory — so a green job is real evidence that a reader who copies this one
+  # directory out on its own gets something that installs and builds.
+  #
+  # `npm run build` is `next build`, which typechecks as part of the build rather than as a separate
+  # step. There is no `npm test`: this sample's subject is the server, and what is worth asserting
+  # about it needs a running server and a seeded organization, neither of which CI has. The static
+  # sample's own suite covers the renderers, which are the same files.
+  northwind-coffee-ssr:
+    needs: changes
+    if: needs.changes.outputs.northwind-coffee-ssr == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/northwind-coffee-ssr
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: samples/northwind-coffee-ssr/package-lock.json
+
+      - run: npm ci
+
+      # No delivery key here, and that is the point of the check rather than a gap in it: a sample
+      # must build without credentials, showing its "not configured yet" page instead of failing.
+      - run: npm run build
