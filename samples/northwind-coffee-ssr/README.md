@@ -17,7 +17,7 @@ both are fully supported. What it buys and what it costs is the whole subject be
 |---|---|
 | Resolving on the server, hydrating in the browser | `app/[[...path]]/page.tsx`, `app/content-root.tsx` |
 | **Keeping the delivery key off the browser** | `lib/content.ts` (`import 'server-only'`) |
-| One client per process — and why `globalThis` is what makes that true | `lib/content.ts` |
+| One client for the life of the process — and why a module-level `const` is not one | `lib/content.ts` |
 | Personalization that travels with the request | `lib/buyerType.ts`, `lib/visitor.ts` |
 | Links without a second query (`referencePaths`) | `presentations/card.tsx`, `components/OriginCard.tsx` |
 | Your own API in front of the CMS, and when you need one | `app/api/coffees/route.ts` |

@@ -36,9 +36,11 @@ export async function POST(request: Request) {
   content?.invalidate()
   revalidatePath('/', 'layout')
 
-  // `instance` is diagnostics worth keeping: if two calls ever report different values, the
-  // `globalThis` pin in lib/content.ts has stopped working and this route is clearing a cache no
-  // page uses — which is exactly the failure it was written to fix, and it reports success while
-  // doing nothing.
+  // `instance` is diagnostics worth keeping, but compare it against the PAGE rather than against
+  // another call to this route: two calls here share one module graph and always agree, pinned or
+  // not, so that comparison detects nothing. The root layout renders the same id into a
+  // `x-content-instance` meta tag; if the two differ, the pin in lib/content.ts has stopped working
+  // and this route is clearing a cache no page uses — the exact failure it was written to fix, and
+  // it reports success while doing nothing.
   return NextResponse.json({ revalidated: true, instance: INSTANCE_ID, at: new Date().toISOString() })
 }
