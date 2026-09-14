@@ -187,10 +187,9 @@ the only place the server publishes the site's strategy, so the client would add
 though its URLs carried no locale — and the server refuses every page with
 `400 locale_not_addressable`.
 
-**This needs the `@ebitex/content-sdk` release that contains server-side locale addressing
-(ebitex spec 712)** — the minor after 0.18. `package.json` still names `^0.18.0` until that release
-is published; against 0.18 the SDK does not read the site's strategy, sends `locale=` beside a
-prefixed path, and gets the same `400`. The content configuration, the SDK version and this code
+**This needs `@ebitex/content-sdk` 0.19 or later** — `package.json` names `^0.19.0`, the first
+release containing server-side locale addressing (ebitex spec 712). Against 0.18 the SDK does not
+read the site's strategy, sends `locale=` beside a prefixed path, and gets the same `400`. The content configuration, the SDK version and this code
 change have to go out together: the old code against a prefixed site produced `/fr/fr/…`.
 
 ## What is cached, and what is not
