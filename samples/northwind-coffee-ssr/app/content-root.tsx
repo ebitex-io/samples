@@ -1,6 +1,8 @@
 'use client'
 
+import { useSyncExternalStore, type ReactNode } from 'react'
 import { ContentProvider, Experience, PreviewBridge } from '@ebitex/content-sdk/react'
+import { isPreviewActivated } from '@ebitex/content-sdk/preview'
 import type { ExperienceResult } from '@ebitex/content-sdk'
 import { CatalogueSeedProvider } from '@/lib/catalogueSeed'
 import type { CatalogueSeed } from '@/lib/catalogue'
@@ -57,6 +59,57 @@ export function ContentRoot({
     </ContentProvider>
   )
 }
+
+/**
+ * The same bridge, for a path with no published page -- rendered by `not-found.tsx` around its
+ * message.
+ *
+ * ---- Why a missing page needs a bridge at all ----
+ *
+ * Composer frames a page at its *authoring* path, which exists before the page has ever been
+ * published. This server resolves against *published* content, so for a page nobody has published
+ * yet the answer is "not found". Until this existed the not-found page mounted no bridge, never told
+ * Composer it was ready, and a new page could not be previewed until it was already live. The static
+ * sample never had the gap: its `<Experience path>` sits inside the bridge whatever the path
+ * resolves to.
+ *
+ * Nothing about the response changes. It is still a real 404, still `noindex`, and outside a preview
+ * it renders exactly the message it always did.
+ *
+ * No empty result has to be invented to get here, either. The bridge renders its children until
+ * Composer's first document arrives and then replaces them with it, which is the mechanism the
+ * published case already relies on -- there, the children are the published page.
+ *
+ * ---- Why the message is hidden inside a preview ----
+ *
+ * Composer shows the frame as soon as the bridge says it is ready, and the draft lands a beat later.
+ * Left alone, the frame would say "We could not find that page" for that beat, about the very page
+ * the author is looking at the draft of. So inside a preview the message renders nothing, and the
+ * frame is briefly empty instead.
+ */
+export function PreviewableNotFound({ children }: { children: ReactNode }) {
+  return (
+    <ContentProvider renderers={renderers} markdown={Markdown} fallback={() => null}>
+      <PreviewBridge origins={previewOrigins()}>
+        <HiddenInPreview>{children}</HiddenInPreview>
+      </PreviewBridge>
+    </ContentProvider>
+  )
+}
+
+/**
+ * `isPreviewActivated` reads `window`, which a server render does not have, so it is read through
+ * `useSyncExternalStore` with a server answer of `false`: the server render and hydration both
+ * produce the message, and a browser that is a preview then renders nothing. Activation cannot change
+ * for the life of the page (it is the URL plus being framed), so there is nothing to subscribe to.
+ */
+function HiddenInPreview({ children }: { children: ReactNode }) {
+  const previewing = useSyncExternalStore(noSubscription, readActivation, () => false)
+  return previewing ? null : <>{children}</>
+}
+
+const noSubscription = () => () => {}
+const readActivation = () => isPreviewActivated(window.location, window)
 
 /**
  * Which window may drive preview. Defaults to ebitex's own Composer; a self-hosted or local

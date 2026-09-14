@@ -25,7 +25,7 @@ both are fully supported. What it buys and what it costs is the whole subject be
 | **A `<head>` a crawler receives**, with its title from the CMS | `app/[[...path]]/page.tsx`, `lib/pageMetadata.ts` |
 | Structured data, social tags, canonical URLs, `robots.txt` | `lib/pageMetadata.ts`, `app/robots.ts` |
 | How a publish reaches a long-running server | `app/api/revalidate/route.ts` |
-| Live preview, which needs nothing server-side | `app/content-root.tsx` |
+| Live preview, including a page nobody has published yet | `app/content-root.tsx`, `app/[[...path]]/not-found.tsx` |
 
 ## What differs from the static sample
 
