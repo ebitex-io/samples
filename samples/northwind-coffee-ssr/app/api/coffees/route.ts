@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { content } from '@/lib/content'
-import { COFFEE_STREAM as STREAM } from '@/lib/streams'
+import { catalogueFiltersFrom, PAGE_SIZE } from '@/lib/catalogue'
+import { fetchCataloguePage } from '@/lib/catalogueQuery'
 
 /**
  * The coffee browse query, as this site's own endpoint rather than the CMS's.
@@ -14,13 +15,17 @@ import { COFFEE_STREAM as STREAM } from '@/lib/streams'
  * through your own API rather than the CMS's.**
  *
  * What you get back for the inconvenience is a seam you own: the browser now talks to an endpoint
- * you can cache, rate-limit, log, or change the shape of without touching the CMS. This handler
- * uses that immediately -- the grid needs a page of results and two facet counts, which the static
- * sample fetches as three parallel requests from the browser. Here they are one round trip,
- * because a server can fan out on the client's behalf.
+ * you can cache, rate-limit, log, or change the shape of without touching the CMS.
  *
  * It stays *thin* on purpose. It forwards filters and returns what the SDK returned; it does not
  * reshape the data, because a BFF that starts transforming content is a second content model.
+ *
+ * ---- What it is no longer the only caller of ----
+ *
+ * The query itself moved to `lib/catalogueQuery.ts` when the server started rendering the grid's
+ * first page. This handler answers *changes* to the filters; the page answers the first question
+ * before any HTML is sent. Two implementations of "a page of coffees" would show up as the grid
+ * replacing its own contents on hydration, so there is one.
  */
 export async function GET(request: Request) {
   if (!content) {
@@ -30,34 +35,18 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const locale = url.searchParams.get('locale') ?? undefined
   const cursor = url.searchParams.get('cursor') ?? undefined
-  const limit = Number(url.searchParams.get('limit') ?? 12)
-
-  // Only the filters this stream declares. An allow-list rather than a passthrough: the browser
-  // does not get to name arbitrary filter keys on a server-side credential.
-  const filters: Record<string, string> = {}
-  for (const key of ['roast', 'origin', 'q']) {
-    const value = url.searchParams.get(key)
-    if (value) filters[key] = value
-  }
+  const limit = Number(url.searchParams.get('limit') ?? PAGE_SIZE)
+  const filters = catalogueFiltersFrom(url.searchParams)
 
   try {
-    // A `cursor` request is paging an existing result, and its facet counts have not changed --
-    // so "load more" costs one query rather than three.
-    if (cursor) {
-      const page = await content.delivery.queryStream(STREAM, { filters, limit, cursor, locale })
-      return NextResponse.json({ items: page.items, nextCursor: page.nextCursor ?? null })
-    }
+    const page = await fetchCataloguePage({ filters, locale, cursor, limit })
 
-    const [page, roast, origin] = await Promise.all([
-      content.delivery.queryStream(STREAM, { filters, limit, locale }),
-      content.delivery.getStreamFacet(STREAM, 'roast', { filters, locale }),
-      content.delivery.getStreamFacet(STREAM, 'origin', { filters, locale }),
-    ])
-
+    // `facets` is absent for a cursor request and is passed through as absent, not as an empty
+    // pair — the grid keeps the counts it already has rather than blanking its own chips.
     return NextResponse.json({
       items: page.items,
-      nextCursor: page.nextCursor ?? null,
-      facets: { roast: roast.values, origin: origin.values },
+      nextCursor: page.nextCursor,
+      ...(page.facets ? { facets: page.facets } : {}),
     })
   } catch (error) {
     console.error('coffee browse failed', error)

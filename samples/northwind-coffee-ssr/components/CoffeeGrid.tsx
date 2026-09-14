@@ -7,12 +7,10 @@ import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
 import { CmsImage } from '@/components/CmsImage'
 import { useLocale } from '@/lib/locale'
-import { COFFEE_STREAM as STREAM } from '@/lib/streams'
+import { useCatalogueSeed } from '@/lib/catalogueSeed'
+import { PAGE_SIZE, catalogueSignature, type CatalogueFacets } from '@/lib/catalogue'
 import type { Coffee } from '@/types/content'
 import { formatPrice } from '@/lib/format'
-
-
-const PAGE_SIZE = 12
 
 /**
  * The catalogue grid: one server-side query, not a client-side filter over everything.
@@ -23,9 +21,20 @@ const PAGE_SIZE = 12
  * back facet counts that are actually true.
  *
  * Filter state lives in the URL, so a filtered view is a link someone can send.
+ *
+ * ---- The first page comes from the server ----
+ *
+ * This is a client component and cannot fetch on the server, so `app/[[...path]]/page.tsx` fetches
+ * the first page for it and hands it down through context. Without that, the flagship browse page
+ * delivered a search box and an empty list to anything that does not run JavaScript — as invisible
+ * to a crawler as the static sample's, which is the one comparison this sample exists to make.
+ *
+ * Everything below still works with no seed at all: that is the path a filter change takes, and the
+ * path the whole page takes if the prefetch failed.
  */
 export function CoffeeGrid() {
   const locale = useLocale()
+  const seed = useCatalogueSeed()
   const params = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
@@ -43,13 +52,6 @@ export function CoffeeGrid() {
   const q = params.get('q') ?? ''
 
   const [search, setSearch] = useState(q)
-  const [items, setItems] = useState<ComponentListItem[]>([])
-  const [cursor, setCursor] = useState<string | null>(null)
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
-  const [facets, setFacets] = useState<{ roast: StreamFacetValue[]; origin: StreamFacetValue[] }>({
-    roast: [],
-    origin: [],
-  })
 
   // Every request carries the *same* active filters. The facets endpoint excludes a facet's own
   // dimension server-side, so asking for roast counts while a roast is selected still returns
@@ -62,22 +64,47 @@ export function CoffeeGrid() {
     return f
   }, [roast, origin, q])
 
+  // The question being asked right now, as one string. Compared against the seed's own, because a
+  // reader can arrive at /coffees?roast=light with a seed the server built for exactly that.
+  const signature = catalogueSignature(filters, locale)
+  const seeded = seed !== undefined && seed.signature === signature
+
+  const [items, setItems] = useState<ComponentListItem[]>(seeded ? seed.items : [])
+  const [cursor, setCursor] = useState<string | null>(seeded ? seed.nextCursor : null)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(seeded ? 'ready' : 'loading')
+  const [facets, setFacets] = useState<CatalogueFacets>(
+    seeded ? seed.facets : { roast: [], origin: [] },
+  )
+
+  // Which question the data in state currently answers.
+  //
+  // This is deliberately *not* a "have I mounted yet?" flag, and the difference is the whole reason
+  // the server's work survives. A first-render flag stops being true one render later, so the effect
+  // below would fetch anyway and replace an already-rendered grid with a loading state -- the exact
+  // shape of bug spec 601 was filed for. Asking "do I already have data for this?" instead stays
+  // correct for as long as it should: it survives React's double-invoked effects in development,
+  // and it goes stale the moment a filter changes, including a change back to the seeded one.
+  const answered = useRef<string | null>(seeded ? signature : null)
+
   // The static sample calls the Delivery API directly here, with a browser-safe key. This sample's
   // key is server-side only, so the browser asks *this site* instead -- see app/api/coffees/route.ts
   // for what that buys and what it costs. The three parallel requests became one, because a server
   // can fan out on the client's behalf.
   useEffect(() => {
+    if (answered.current === signature) return
+
     const controller = new AbortController()
     setStatus('loading')
     fetch(`/api/coffees?${query(filters, locale)}`, { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
       .then((data) => {
+        answered.current = signature
         setItems(data.items)
-        setCursor(data.nextCursor ?? undefined)
+        setCursor(data.nextCursor ?? null)
         // Both facets arrive already scoped: the `roast` declared filter names the Category Group
         // it speaks for (`groupExternalId`), which is what keeps a `coffee` carrying both a roast
         // and a process from answering either facet with the other group's values.
-        setFacets({ roast: data.facets.roast, origin: data.facets.origin })
+        if (data.facets) setFacets({ roast: data.facets.roast, origin: data.facets.origin })
         setStatus('ready')
       })
       .catch((error: unknown) => {
@@ -86,7 +113,7 @@ export function CoffeeGrid() {
         setStatus('error')
       })
     return () => controller.abort()
-  }, [filters, locale])
+  }, [filters, locale, signature])
 
   const setFilter = useCallback(
     (key: string, value: string | undefined) => {
@@ -112,7 +139,7 @@ export function CoffeeGrid() {
     if (!response.ok) return
     const data = await response.json()
     setItems((current) => [...current, ...data.items])
-    setCursor(data.nextCursor ?? undefined)
+    setCursor(data.nextCursor ?? null)
   }
 
   const hasFilters = Boolean(roast || origin || q)

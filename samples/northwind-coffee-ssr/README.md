@@ -153,6 +153,26 @@ contain. That is fine and is the reason each file says so in a comment — Next 
 `noindex`, so the one page whose body a crawler should not read is the one page whose body is not
 there. The **status codes** are real either way, and that is the claim this sample actually makes.
 
+## What is cached, and what is not
+
+Worth stating rather than leaving to inference, because "bounded by cache TTL rather than by deploy
+cadence" is one of the things a server is supposed to buy.
+
+| Response | Posture | Why |
+|---|---|---|
+| Every HTML page | **Not cached** | Each one reads a cookie (`resolveOptionsFor`) to resolve personalized content, so it is per-visitor by construction. A shared cache must not hold it, and Next marks it dynamic for that reason. |
+| `/sitemap.xml` and its shards | `public, max-age=300, stale-while-revalidate=3600` | Identical for every visitor, and a crawler is not in a hurry. `stale-while-revalidate` means a publish shows up on the next crawl rather than the one after it. |
+| `/api/coffees` | Not cached | It carries the visitor's filters; the expensive part is already cached upstream in the Delivery API's own response cache, and a second TTL here would add a second staleness window for nothing. |
+
+The uncached HTML is the honest cost of reading a cookie while resolving. A site that does **not**
+personalize can cache its pages at the edge and should — that is a decision about the site rather
+than about this SDK, and it is the one knob to reach for first if these pages ever need to be
+cheaper.
+
+Note what is *not* on the list: nothing here is invalidated by a publish. Freshness comes from the
+pages not being cached at all, plus the Delivery API's own purge-on-publish behind them. See
+`app/api/revalidate/route.ts` for the one thing this site does hold onto.
+
 ## Following the tutorial
 
 Steps are tagged `northwind-coffee-ssr/step-NN`. The series is on
@@ -174,11 +194,16 @@ same reason.
       robots.ts              the only place the sitemap is advertised
       not-found.tsx          the page behind the real 404
       error.tsx              the page behind a Delivery API outage, deliberately self-sufficient
+    middleware.ts            routes sitemap shard URLs onto the one sitemap route
     lib/
-      content.ts             the one place a client is built, and the only server-only module
+      content.ts             the one place a client is built
       buyerType.ts           the context bag, shared by the server that reads it and the control that sets it
       renderers.ts           external id → component, as a plain map
       pageMetadata.ts        what each Contract means to a crawler: description, image, JSON-LD
       resolveOptions.ts      the options both resolves of a page share, so the two cost one request
+      catalogue.ts           what the browser, this site's API and the page all have to agree on
+      catalogueQuery.ts      the catalogue query itself — server-only, one implementation for two callers
+      catalogueSeed.tsx      carries the server's first page of results down to the grid
+      sitemapPaths.ts        where sitemap shards live, defined once for the index and the routing
     presentations/           one file per Template — ported unchanged from the static sample
     components/              the site's own components
