@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { SiteLink } from '@/components/SiteLink'
 import { pathForSite } from '@ebitex/content-sdk'
 import { Resolve } from '@ebitex/content-sdk/react'
 
@@ -43,9 +43,9 @@ export function OriginCard({ origin }: { origin: Coffee['origin'] }) {
           {content.note ? <p className="mt-3 text-ink-muted">{content.note}</p> : null}
           {path ? (
             <p className="mt-4">
-              <Link href={path} className="text-accent underline underline-offset-4">
+              <SiteLink href={path} className="text-accent underline underline-offset-4">
                 More about {content.name}
-              </Link>
+              </SiteLink>
             </p>
           ) : null}
         </aside>

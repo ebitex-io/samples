@@ -1,9 +1,26 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 import { shardFromPath } from '@/lib/sitemapPaths'
+import { splitLocale } from '@/lib/locales'
 
 /**
- * Serves sitemap shards from real root-level URLs.
+ * Two jobs, and they are unrelated -- a file with one export gets both.
+ *
+ * ============================================================================================
+ * 1. Tells the root layout which language this request is in
+ * ============================================================================================
+ *
+ * `app/layout.tsx` renders `<html lang>` and receives no `params` and no `searchParams`, because a
+ * root layout sits above whichever route matched. Request headers are the one thing it *can* read,
+ * so the locale is put in one here.
+ *
+ * `NextResponse.next({ request: { headers } })` is the shape that matters: it forwards a modified
+ * set of **request** headers onward, rather than setting a response header the layout would never
+ * see. Getting that wrong is a page that renders perfectly and declares the wrong language.
+ *
+ * ============================================================================================
+ * 2. Serves sitemap shards from real root-level URLs
+ * ============================================================================================
  *
  * ---- Why this is needed at all ----
  *
@@ -36,7 +53,13 @@ import { shardFromPath } from '@/lib/sitemapPaths'
  * because the day it matters is the day a crawler quietly stops.
  */
 export function middleware(request: NextRequest) {
-  if (shardFromPath(request.nextUrl.pathname) === null) return NextResponse.next()
+  const { locale } = splitLocale(request.nextUrl.pathname)
+  const headers = new Headers(request.headers)
+  headers.set('x-locale', locale)
+
+  if (shardFromPath(request.nextUrl.pathname) === null) {
+    return NextResponse.next({ request: { headers } })
+  }
 
   // Only the *route* needs changing. The shard number is read back from the original pathname by
   // the handler rather than passed along as a query parameter, because a rewritten request still
@@ -44,7 +67,7 @@ export function middleware(request: NextRequest) {
   // silent 200 serving the index in place of a shard rather than an error anyone would notice.
   const url = request.nextUrl.clone()
   url.pathname = '/sitemap.xml'
-  return NextResponse.rewrite(url)
+  return NextResponse.rewrite(url, { request: { headers } })
 }
 
 /**
@@ -57,4 +80,9 @@ export function middleware(request: NextRequest) {
  *
  * The cost is one regex test per request. The thing it buys is that the filter and the rewrite are
  * the same expression, in one place, in a language with no version-dependent surprises.
+ *
+ * It is now also load-bearing rather than merely tidy: the locale header above has to be set on
+ * *every* request a page is rendered for, so a matcher scoped to sitemap URLs would leave `<html
+ * lang>` reading whatever the layout defaults to on every real page -- the exact bug this file was
+ * extended to fix.
  */

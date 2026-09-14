@@ -2,7 +2,7 @@ import 'server-only'
 import { cookies } from 'next/headers'
 
 import { BUYER_COOKIE, contextFor, parseBuyerType } from '@/lib/buyerType'
-import { localeFrom } from '@/lib/locales'
+import type { LocaleCode } from '@/lib/locales'
 
 /**
  * The options every resolve of the current page is made with -- built in exactly one place.
@@ -22,10 +22,14 @@ import { localeFrom } from '@/lib/locales'
  * the page quietly costs twice what it should. Nothing fails, so nothing tells you. One function
  * means the two cannot drift apart, and the check for it is to *count* requests rather than to
  * read the code and agree with it.
+ *
+ * The locale is passed in rather than read here, because it now lives in the **path** and this
+ * module is handed the request's query string. The caller has already split it off the route in
+ * order to know which path to ask the CMS for, so asking for it back is both cheaper and harder to
+ * get wrong than parsing the same URL a second time in a second place.
  */
-export async function resolveOptionsFor(searchParams: Record<string, string | string[] | undefined>) {
+export async function resolveOptionsFor(locale: LocaleCode) {
   const cookieStore = await cookies()
-  const locale = localeFrom(searchParams.lang)
   const buyerType = parseBuyerType(cookieStore.get(BUYER_COOKIE)?.value)
   return { locale, context: contextFor(buyerType) }
 }

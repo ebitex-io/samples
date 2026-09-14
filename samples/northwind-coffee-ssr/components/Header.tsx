@@ -1,7 +1,8 @@
 'use client'
 
-import Link from 'next/link'
+import { SiteLink } from '@/components/SiteLink'
 import { usePathname } from 'next/navigation'
+import { splitLocale } from '@/lib/locales'
 
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import { NavLinks, type NavItem } from '@/components/NavLinks'
@@ -28,27 +29,30 @@ const FALLBACK_LINKS: NavItem[] = [
 ]
 
 export function Header({ content }: { content?: HeaderContent | null }) {
-  const pathname = usePathname()
+  // The locale prefix is stripped before comparing, because `item.to` is a CMS path and carries
+  // none. Without this every nav item is inactive in French -- a silent, purely visual failure, and
+  // exactly the class of bug a path-prefix scheme scatters around a codebase.
+  const { path: pathname } = splitLocale(usePathname())
   return (
     <header className="border-b border-line">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-        <Link href="/" className="font-display text-xl tracking-tight text-ink">
+        <SiteLink href="/" className="font-display text-xl tracking-tight text-ink">
           Northwind Coffee
-        </Link>
+        </SiteLink>
         <div className="flex flex-wrap items-center gap-6">
           <nav aria-label="Main">
             <ul className="flex flex-wrap items-center gap-6 text-sm">
               <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
                 {(item) => (
-                  <Link
+                  <SiteLink
                     href={item.to}
                     // react-router's NavLink hands its className an `isActive` flag. next/link has
                     // no such callback, so the active check is `usePathname()` — the same question,
-                    // asked directly.
+                    // asked directly, with the locale prefix taken off first (see above).
                     className={pathname === item.to ? 'text-ink' : 'text-ink-muted hover:text-ink'}
                   >
                     {item.label}
-                  </Link>
+                  </SiteLink>
                 )}
               </NavLinks>
             </ul>

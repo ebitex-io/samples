@@ -5,7 +5,7 @@ import { loadSiteChrome } from '@/lib/siteChrome'
 import { ContentRoot } from '@/app/content-root'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { DEFAULT_LOCALE, localeFrom } from '@/lib/locales'
+import { localePath, splitLocale } from '@/lib/locales'
 import { metadataFor } from '@/lib/pageMetadata'
 import { resolveOptionsFor } from '@/lib/resolveOptions'
 import { catalogueFiltersFrom, catalogueSignature, type CatalogueSeed } from '@/lib/catalogue'
@@ -18,7 +18,15 @@ type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-const pathFrom = (path: string[] | undefined) => '/' + (path ?? []).join('/')
+/**
+ * The route's segments, split back into the locale the reader asked for and the path the CMS
+ * should be asked for.
+ *
+ * `/fr/guides` arrives here as `['fr', 'guides']` -- the catch-all matches the prefix like any
+ * other segment, which is why a prefix scheme needs no extra route -- and the CMS never sees the
+ * prefix, because a locale is an argument to a resolve rather than part of an address in the tree.
+ */
+const routeFrom = (path: string[] | undefined) => splitLocale('/' + (path ?? []).join('/'))
 
 /**
  * The page's `<head>`, written on the server, before any of it renders.
@@ -51,7 +59,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   if (!content) return { title: { absolute: SITE_NAME } }
 
   const [{ path }, query] = await Promise.all([params, searchParams])
-  const options = await resolveOptionsFor(query)
+  const { locale, path: cmsPath } = routeFrom(path)
+  const options = await resolveOptionsFor(locale)
 
   // Metadata is decoration, and must never be what decides how a failure is presented.
   //
@@ -67,7 +76,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   // notice, and a body that says what happened.
   let result
   try {
-    result = await content.resolveLocation(pathFrom(path), options)
+    result = await content.resolveLocation(cmsPath, options)
   } catch {
     return { title: { absolute: SITE_NAME } }
   }
@@ -86,10 +95,31 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   // `?origin=` and `?q=`, which are this app's own state and never reach the CMS, are excluded by
   // construction rather than by an allow-list somebody has to keep up to date.
   //
-  // `?lang=` is the exception and is kept: the French page is different content, not a
-  // parameterized view of the English one.
-  const locale = localeFrom(query.lang)
-  const canonical = result.path + (locale === DEFAULT_LOCALE ? '' : `?lang=${locale}`)
+  // The locale is re-applied, because the French page is different content rather than a
+  // parameterized view of the English one and so has a canonical of its own. Note this reads
+  // `result.path` -- what the CMS says, which for a page reached through a renamed slug is not what
+  // was asked for.
+  const canonical = localePath(result.path, locale)
+
+  // ---- Why there is no `hreflang` in this <head> ----
+  //
+  // Because this function cannot produce a correct one, and an incorrect one is worse than none.
+  //
+  // A resolve answers for the locale it was asked about and nothing else: at `/coffees` it knows
+  // `/coffees`, and it does not know that the French edition of this page is served at `/cafes`.
+  // Composing the French URL from what it *does* know gives `/fr/coffees` -- which is not a slow
+  // path or a redirect, it is a **404**, because once a node carries a French slug its English one
+  // is not an address in the French slot at all. That is a dead link advertised to crawlers as the
+  // page for French readers, and it was in this file until somebody fetched it.
+  //
+  // The one thing that knows every locale's path for every page is `getSitemap()`, which returns
+  // exactly that in `localeSlots` -- so the alternates are declared in `app/sitemap.xml/route.ts`
+  // instead. Search engines accept a sitemap and `<link rel="alternate">` as equal ways to say it,
+  // and only one of them has the data.
+  //
+  // A site that wanted them in the head too would have to hold its own copy of the CMS's per-locale
+  // paths, and a second copy of something the CMS already owns goes stale the first time an editor
+  // renames a slug -- silently, and in the direction of advertising a 404 again.
 
   // `result.title ?? …` rather than a bare read: the member is optional because it can genuinely be
   // absent -- against an origin older than it, or on a result built locally rather than fetched.
@@ -104,6 +134,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   return {
     title: titled,
     description,
+    // No `languages` here, deliberately. See the note above `canonical`.
     alternates: { canonical },
     openGraph: {
       type: 'website',
@@ -136,6 +167,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   }
 
   const [{ path }, query] = await Promise.all([params, searchParams])
+  const { locale, path: cmsPath } = routeFrom(path)
 
   // Read while resolving, so the first bytes are already personalized. `ctx` is part of every
   // cache key, so one client shared by every request cannot serve one reader's variant to another
@@ -144,19 +176,21 @@ export default async function Page({ params, searchParams }: PageProps) {
   //
   // Built by the same helper `generateMetadata` uses, which is what makes the two resolves one
   // request rather than two.
-  const options = await resolveOptionsFor(query)
+  const options = await resolveOptionsFor(locale)
 
   // Both awaited before anything is sent, so the chrome arrives with the document rather than a
   // moment after it. The static sample fetches its header and footer in an effect.
   const [result, chrome] = await Promise.all([
-    content.resolveLocation(pathFrom(path), options),
+    content.resolveLocation(cmsPath, options),
     loadSiteChrome(options.locale),
   ])
 
   // The SDK reports a redirect and never performs one -- it does not know what router you use.
   // Server-side, "performing it" is simply the right status code.
   if (result.kind === 'redirect') {
-    permanentRedirect(result.targetPath)
+    // Re-prefixed, or a French reader following a renamed slug lands in English and never finds
+    // out why. The CMS answers in its own path space, which has no notion of this app's routing.
+    permanentRedirect(localePath(result.targetPath, locale))
   }
 
   if (result.kind === 'notFound') {

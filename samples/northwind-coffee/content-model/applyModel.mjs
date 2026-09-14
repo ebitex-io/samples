@@ -273,12 +273,21 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
         parent = nodes[walked]
         continue
       }
+      const isLeaf = i === segments.length - 1
+      // Only the entry's own final segment carries its localized slugs -- an ancestor this entry
+      // merely passes through belongs to whichever entry names it, or to nobody.
+      const locales = isLeaf ? def.slugLocales : undefined
       const children = await api.listChildren(parent.id)
       let node = children.find((n) => n.slug?.default === slug)
       if (!node) {
-        const isLeaf = i === segments.length - 1
-        node = await api.createNode(parent.id, isLeaf ? def.name : titleCase(slug), L(slug))
+        node = await api.createNode(parent.id, isLeaf ? def.name : titleCase(slug), L(slug, locales))
         log(`node /${walked} created`)
+      } else if (locales && !sameLocales(node.slug?.locales, locales)) {
+        // Re-applying the model has to be able to *add* a localized slug to a node that already
+        // exists, or a slug declared after the first run never lands. Compared first so an
+        // unchanged run stays a true no-op rather than a version bump on every node every time.
+        node = await api.updateNode(node.id, node.name ?? def.name, L(slug, locales))
+        log(`node /${walked} localized slug set`)
       }
       nodes[walked] = node
       parent = node
@@ -390,6 +399,13 @@ export async function applyModel(api, { log = console.log, readAsset } = {}) {
   }
 
   return { contracts, templates, components, folders, site, nodes, streams }
+}
+
+/** Whether a node already carries exactly the localized slugs the model declares. */
+function sameLocales(current, wanted) {
+  const has = current ?? {}
+  const keys = Object.keys(wanted)
+  return keys.length === Object.keys(has).length && keys.every((k) => has[k] === wanted[k])
 }
 
 function titleCase(slug) {
