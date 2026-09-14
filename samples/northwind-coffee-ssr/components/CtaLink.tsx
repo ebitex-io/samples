@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { SiteLink } from '@/components/SiteLink'
 import type { LinkValue } from '@ebitex/content-sdk'
 
 /**
@@ -29,9 +29,9 @@ export function CtaLink({
       : 'text-accent underline underline-offset-4'
 
   return href.startsWith('/') ? (
-    <Link href={href} className={className}>
+    <SiteLink href={href} className={className}>
       {label}
-    </Link>
+    </SiteLink>
   ) : (
     <a href={href} className={className}>
       {label}

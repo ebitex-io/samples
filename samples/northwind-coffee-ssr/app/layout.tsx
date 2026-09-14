@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { headers } from 'next/headers'
 import './globals.css'
 import { INSTANCE_ID } from '@/lib/content'
+import { localeFrom } from '@/lib/locales'
 
 /**
  * The site-wide defaults every page's own `generateMetadata` builds on.
@@ -21,9 +23,23 @@ export const metadata: Metadata = {
   title: { default: 'Northwind Coffee', template: '%s — Northwind Coffee' },
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+/**
+ * `<html lang>`, and why it takes a header to set it.
+ *
+ * A root layout receives no `params` and no `searchParams` -- it is rendered once, above the route
+ * that matched -- so it cannot read the locale out of the URL directly however that URL is shaped.
+ * It *can* read request headers, and `middleware.ts` puts the locale in one, which is the seam.
+ *
+ * This is not decoration. `lang` is what tells a screen reader which voice to use and a translation
+ * tool what it is looking at, and a document that serves French while declaring English is wrong in
+ * a way no test notices (WCAG 3.1.1). It said `lang="en"` on every page of this site until the
+ * locale moved into the path.
+ */
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const locale = localeFrom((await headers()).get('x-locale') ?? undefined)
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         {/*
           Diagnostics, and the ONE place the client-identity claim can actually be checked from

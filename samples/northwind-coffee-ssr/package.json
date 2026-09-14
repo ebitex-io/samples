@@ -10,7 +10,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@ebitex/content-sdk": "^0.17.80",
+    "@ebitex/content-sdk": "^0.18.0",
     "next": "^16.3.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

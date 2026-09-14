@@ -1694,12 +1694,27 @@ export const SITE = { name: 'Northwind Coffee' }
 
 export const NODES = [
   // The site root itself. A site *is* its root node, so the front page needs no node of its own --
-  // give the root a payload and `/` is served.
+  // give the root a payload and `/` is served. It is also the one node that cannot carry a localized
+  // slug: a site root resolves to `/` in every locale, by definition.
   { path: '', name: 'Home', template: 'page', component: 'home-page' },
   { path: 'about', name: 'About', template: 'page', component: 'about-page' },
   // `/coffees` stops being a bare structural node and becomes a page. Its children are unaffected:
   // a node's payload and its place in the tree are independent.
-  { path: 'coffees', name: 'Coffees', template: 'coffee-index', component: 'coffee-index-page' },
+  //
+  // `slugLocales` is the first localized slug in this model, and it does two things. The visible
+  // one: this page is served at `/cafes` in the French slot, so a translated page gets a translated
+  // address. The structural one, which is easy to miss and worth knowing: a locale slot materializes
+  // for **every** node in the site as soon as **any** node carries a slug in it. So this single
+  // entry is what gives all 22 pages a French path -- most of them the English slug under the French
+  // slot, which is correct and is exactly why the front end has to decide for itself which pages are
+  // worth advertising as French. See `lib/locales.ts` in the northwind-coffee-ssr sample.
+  {
+    path: 'coffees',
+    name: 'Coffees',
+    template: 'coffee-index',
+    component: 'coffee-index-page',
+    slugLocales: { fr: 'cafes' },
+  },
   { path: 'stores', name: 'Where to find us', template: 'store-list', component: 'store-list-page' },
   { path: 'contact', name: 'Wholesale and trade', template: 'page', component: 'contact-page' },
   { path: 'guides', name: 'Brew guides', template: 'guide-index', component: 'guide-index-page' },
@@ -1714,6 +1729,10 @@ export const NODES = [
     name: 'Ethiopia Guji',
     template: 'coffee',
     component: 'coffee-guji',
+    // The one coffee whose copy is translated, so the one whose address is. Its French path is
+    // `/cafes/ethiopia-guji` -- the parent's localized slug applies to every descendant, which is
+    // the ancestor effect worth seeing once: a slug is a segment, not a whole path.
+    slugLocales: { fr: 'ethiopia-guji' },
   },
   { path: 'origins/ethiopia', name: 'Ethiopia', template: 'origin', component: 'origin-ethiopia' },
   { path: 'origins/colombia', name: 'Colombia', template: 'origin', component: 'origin-colombia' },  { path: 'coffees/colombia-huila', name: 'Colombia Huila, La Esperanza', template: 'coffee', component: 'coffee-huila' },

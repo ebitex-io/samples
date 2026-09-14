@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import Link from 'next/link'
+import { SiteLink } from '@/components/SiteLink'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
@@ -261,7 +261,7 @@ function CoffeeCard({ item }: { item: ComponentListItem }) {
 
   return (
     <li className="group">
-      <Link href={path} className="block">
+      <SiteLink href={path} className="block">
         <div className="overflow-hidden rounded-2xl border border-line bg-sunken">
           {content.image?.content ? (
             <CmsImage
@@ -282,7 +282,7 @@ function CoffeeCard({ item }: { item: ComponentListItem }) {
         {content.price !== undefined ? (
           <p className="mt-2 text-ink">{formatPrice(content.price)}</p>
         ) : null}
-      </Link>
+      </SiteLink>
     </li>
   )
 }

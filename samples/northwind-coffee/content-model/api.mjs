@@ -184,6 +184,9 @@ export function createContentApi({ baseUrl, cookie, environmentId, deliveryEnvir
     getNode: (id) => get(`/content/v1/experience/nodes/${id}`),
     listChildren: (id) => get(`/content/v1/experience/nodes/${id}/children`),
     createNode: (parentNodeId, name, slug) => post('/content/v1/experience/nodes', { parentNodeId, name, slug }),
+    // Used only to add a localized slug to a node that already exists, which is why it sends the
+    // name as well: the endpoint replaces what it is given.
+    updateNode: (id, name, slug) => put(`/content/v1/experience/nodes/${id}`, { name, slug }),
     setPresentationPayload: (id, presentation) => put(`/content/v1/experience/nodes/${id}/payload`, { kind: 'presentation', presentation }),
 
     // ---- publishing & delivery ----
