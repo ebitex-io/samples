@@ -345,6 +345,16 @@ export const CONTRACTS = [
   {
     externalId: 'page',
     name: 'Page',
+    // Which field is this type's human-readable title -- the first of several Contracts here to
+    // declare one. It is resolved once, at publish, and frozen onto the published row, so a
+    // navigation menu, a search result, or a server writing <head> before its render tree
+    // exists can all show a real name without resolving the whole document to find one.
+    //
+    // Two consequences worth knowing. Declaring it changes nothing a reader sees until the
+    // affected pages are **republished** -- the value is frozen, not computed per request. And
+    // it is inherited down the Contract chain, so declaring it on an ancestor covers every
+    // subtype that does not override it.
+    titleFieldPath: 'title',
     // Its `sections` field constrains which Templates may appear in it, and those Templates are
     // created after this Contract. `apply.mjs` therefore revisits it once they exist -- see the
     // second pass in applyModel.mjs.
@@ -491,6 +501,7 @@ export const CONTRACTS = [
   {
     externalId: 'guide-index',
     name: 'Guide index',
+    titleFieldPath: 'heading',
     fields: ({ contracts }) => [
       text('Heading', 'heading', { mandatory: true, localizable: true }),
       rich('Introduction', 'intro', { localizable: true }),
@@ -522,6 +533,7 @@ export const CONTRACTS = [
   {
     externalId: 'store-list',
     name: 'Store list',
+    titleFieldPath: 'heading',
     fields: ({ contracts }) => [
       text('Heading', 'heading', { mandatory: true, localizable: true }),
       rich('Introduction', 'intro', { localizable: true }),
@@ -577,6 +589,7 @@ export const CONTRACTS = [
     // *query*, not authored -- see STREAMS below.
     externalId: 'coffee-index',
     name: 'Coffee index',
+    titleFieldPath: 'heading',
     fields: () => [
       text('Heading', 'heading', { mandatory: true, localizable: true }),
       rich('Introduction', 'intro', { localizable: true }),
@@ -585,9 +598,6 @@ export const CONTRACTS = [
   {
     externalId: 'coffee',
     name: 'Coffee',
-    // Which field is this type's human-readable title. The Delivery API freezes it at publish and
-    // hands it back on every listing, so a navigation menu or a search result can show a real name
-    // without resolving the whole document to find one.
     titleFieldPath: 'name',
     fields: ({ contracts, categoryGroups: categoryGroups_ }) => [
       text('Name', 'name', { mandatory: true, localizable: true }),

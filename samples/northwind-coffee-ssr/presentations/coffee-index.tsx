@@ -3,7 +3,6 @@ import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CoffeeGrid } from '@/components/CoffeeGrid'
 import type { CoffeeIndex } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `coffee-index` Template.
@@ -14,7 +13,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const CoffeeIndexPage: PresentationRenderer<CoffeeIndex> = ({ component }) => {
   const { heading, intro } = component.content
-  useDocumentMeta(heading)
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-14">

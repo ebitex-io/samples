@@ -2,7 +2,6 @@ import { PresentationList, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import type { Page } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `page` Template.
@@ -17,7 +16,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const GeneralPage: PresentationRenderer<Page> = ({ component }) => {
   const { title, description, body, sections } = component.content
-  useDocumentMeta(title, description)
 
   // A page assembled purely out of sections lets its hero carry the heading, so repeating the
   // title above it would be a duplicate <h1> on every composed page.

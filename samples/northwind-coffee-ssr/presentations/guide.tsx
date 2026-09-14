@@ -2,7 +2,6 @@ import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import type { Guide, GuideStep } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `guide` Template.
@@ -14,7 +13,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const GuidePage: PresentationRenderer<Guide> = ({ component }) => {
   const { heading, summary, equipment, 'total-time': totalTime, steps } = component.content
-  useDocumentMeta(heading, summary)
 
   return (
     <article className="mx-auto max-w-3xl px-6 py-14">

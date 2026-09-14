@@ -6,7 +6,6 @@ import { CmsImage } from '@/components/CmsImage'
 import { OriginCard } from '@/components/OriginCard'
 import type { Coffee, Image } from '@/types/content'
 import { formatPrice, formatWeight } from '@/lib/format'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `coffee` Template.
@@ -34,8 +33,6 @@ const CoffeePage: PresentationRenderer<Coffee> = ({ component }) => {
     roast,
     process,
   } = component.content
-
-  useDocumentMeta(name, tastingNotes?.join(', '))
 
   return (
     <article className="mx-auto grid max-w-5xl gap-12 px-6 py-16 md:grid-cols-2">
