@@ -1,13 +1,14 @@
-import { buildSitemapXml } from '@ebitex/content-sdk/sitemap'
+import { buildSitemapDocuments } from '@ebitex/content-sdk/sitemap'
 import { content } from '@/lib/content'
+import { shardFromPath, shardPath } from '@/lib/sitemapPaths'
 
 /**
  * `/sitemap.xml`, served per request.
  *
  * This is the same capability the static sample produces at build time, and deliberately the same
- * *surface*: `getSitemap()` for the data and `buildSitemapXml` for the XML. The SDK ships no route,
- * handler or CLI for this on purpose (spec 544) — serving is hosting, and hosting is the one thing
- * an SDK cannot know about. So the plumbing is thirty lines here, and thirty different lines in
+ * *surface*: `getSitemap()` for the data and `buildSitemapDocuments` for the XML. The SDK ships no
+ * route or handler for this on purpose (spec 544) — serving is hosting, and hosting is the one
+ * thing an SDK cannot know about. So the plumbing is this file here, and different plumbing in
  * `scripts/sitemap.mjs` over in the static sample.
  *
  * Reading the two side by side is the whole argument for that decision: the capability is
@@ -17,6 +18,29 @@ import { content } from '@/lib/content'
  * What a server adds is freshness. The static sample's sitemap is a build artifact, so a page
  * published after the last deploy is missing from it until the next one. This is generated per
  * request, so it is never older than its cache headers.
+ *
+ * ---- Why `buildSitemapDocuments` and not `buildSitemapXml` ----
+ *
+ * A sitemap is capped at 50,000 URLs *and* 50 MB. `buildSitemapXml` returns one document and throws
+ * past either cap, which this handler previously did not catch — a site that outgrew a single file
+ * got a 500 with no explanation. `buildSitemapDocuments` splits it across an index plus shards
+ * instead, and below the caps returns a single document byte-identical to what the other function
+ * would have produced, so there is nothing to give up by calling it first (spec 699).
+ *
+ * Northwind has 22 URLs and will not shard. The point of writing it this way anyway is that the
+ * page it breaks on is not one anybody sees coming: the byte cap arrives at about 3,100 pages once
+ * a site has ten locales, because every URL then carries the full set of alternates.
+ *
+ * ---- Where the shards live ----
+ *
+ * At the root, as `/sitemap-1.xml`, `/sitemap-2.xml`, … — the SDK's own defaults, because a sitemap
+ * may only contain URLs **at or below its own location** and one served from `/sitemaps/` could not
+ * list `/about`.
+ *
+ * Getting them *served* from there is this app's problem rather than the SDK's, and is a rewrite in
+ * `next.config.ts`: `app/[[...path]]/page.tsx` already claims every root path as a page, so there is
+ * nowhere to add a root-level dynamic route handler. See that file for the approach that looked
+ * simpler and silently does not work.
  */
 export async function GET(request: Request) {
   if (!content) {
@@ -30,17 +54,32 @@ export async function GET(request: Request) {
     return new Response('CONTENT_SITE_ID is required to build a sitemap', { status: 503 })
   }
 
+  const url = new URL(request.url)
   // The origin the URLs should carry. Behind a proxy this is the forwarded host, not the socket's.
-  const origin = process.env.SITE_ORIGIN ?? new URL(request.url).origin
+  const origin = process.env.SITE_ORIGIN ?? url.origin
 
   const result = await content.delivery.getSitemap({ site })
 
   // Membership is already decided server-side: live pages with a real path, no redirects, no
   // payload-less structural nodes. `exclude` is for decisions about *this deployment* rather than
   // about the content — a staging-only section, say. Northwind has none.
-  const xml = buildSitemapXml(result, { origin })
+  const documents = buildSitemapDocuments(result, { origin, shardPath })
 
-  return new Response(xml, {
+  // One document below the caps, so an unsharded site never looks up anything: `documents[0]` is
+  // the index when there are shards and the whole sitemap when there are not, which is exactly why
+  // both cases are served by one route with no branch on "did we shard".
+  // Read from the *path*, not from a query parameter. A middleware rewrite leaves `request.url`
+  // carrying the URL that was actually requested, so anything the rewrite adds to the destination
+  // never arrives here — and the symptom is this handler quietly serving the index instead of the
+  // shard, with a 200 and the right content type.
+  const shard = shardFromPath(url.pathname)
+  const document = shard === null ? documents[0] : documents.find((candidate) => candidate.path === shardPath(Number(shard)))
+
+  if (!document) {
+    return new Response('not found', { status: 404 })
+  }
+
+  return new Response(document.xml, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
       // A crawler is not in a hurry and this is not cheap to generate, so let a shared cache hold

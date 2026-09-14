@@ -8,6 +8,8 @@ import { Footer } from '@/components/Footer'
 import { DEFAULT_LOCALE, localeFrom } from '@/lib/locales'
 import { metadataFor } from '@/lib/pageMetadata'
 import { resolveOptionsFor } from '@/lib/resolveOptions'
+import { catalogueFiltersFrom, catalogueSignature, type CatalogueSeed } from '@/lib/catalogue'
+import { fetchCataloguePage } from '@/lib/catalogueQuery'
 
 const SITE_NAME = 'Northwind Coffee'
 
@@ -161,6 +163,9 @@ export default async function Page({ params, searchParams }: PageProps) {
     notFound()
   }
 
+  // The catalogue's first page, resolved here so it is in the delivered HTML (see `catalogueSeedFor`).
+  const catalogue = await catalogueSeedFor(result.presentation, query, options.locale)
+
   // Structured data, from the same map that produced the description. It is rendered here rather
   // than returned from `generateMetadata` because Next's `Metadata` object has no slot for JSON-LD
   // -- it is a script element, not a meta tag. The resolve is already cached, so reading the
@@ -181,13 +186,69 @@ export default async function Page({ params, searchParams }: PageProps) {
       ) : null}
       <Header content={chrome.header} />
       <div className="flex-1">
-        <ContentRoot result={result} />
+        <ContentRoot result={result} catalogue={catalogue} />
       </div>
       <Footer content={chrome.footer} />
     </>
   )
 }
 
+
+/**
+ * The catalogue grid's first page, fetched before any HTML is sent.
+ *
+ * ---- Why the *page* does this, and not the component that needs it ----
+ *
+ * `CoffeeGrid` is a client component, several layers below `app/content-root.tsx`'s `'use client'`
+ * boundary, and a client component cannot `await`. So there is no server component sitting where
+ * the data is needed — the only place on this page that can fetch is the top.
+ *
+ * That is the real cost of data-fetching below a client boundary, and it is worth naming rather
+ * than hiding: **a server prefetch for a component further down has to be arranged up here, which
+ * means this file has to know that this kind of page wants it.** The alternative is a protocol for
+ * renderers to declare their data requirements, which is a framework, and this is a sample.
+ *
+ * Everything *authored* renders server-side with none of this, because it needs no data beyond the
+ * document already resolved above. The grid is the one thing on the site that is a query.
+ *
+ * ---- Keyed by Template, unlike `lib/pageMetadata.ts` ----
+ *
+ * That file keys on the Contract, deliberately, because a description is a property of what the
+ * content *is*. This is the opposite question: "does the thing rendered here need data fetched?"
+ * is a property of how it is *rendered*, which is what a Template names — the same key the renderer
+ * registry dispatches on.
+ *
+ * A failure is swallowed on purpose. The grid falls back to fetching for itself, which is exactly
+ * what it did before this existed, so a catalogue query that is down costs the first paint and
+ * never the page.
+ */
+async function catalogueSeedFor(
+  envelope: Parameters<typeof metadataFor>[0],
+  query: Record<string, string | string[] | undefined>,
+  locale: string,
+): Promise<CatalogueSeed | undefined> {
+  if (envelope?.template?.externalId !== 'coffee-index') return undefined
+
+  // The same declared filters the browser would have sent, read from the URL it was given.
+  const filters = catalogueFiltersFrom(query)
+
+  try {
+    const page = await fetchCataloguePage({ filters, locale })
+    if (!page.facets) return undefined
+
+    return {
+      items: page.items,
+      nextCursor: page.nextCursor,
+      facets: page.facets,
+      // The question this answers. The grid compares it against what is being asked at render time
+      // and re-fetches only when they differ, which is what stops the prefetch being discarded.
+      signature: catalogueSignature(filters, locale),
+    }
+  } catch (error) {
+    console.error('catalogue prefetch failed; the grid will fetch for itself', error)
+    return undefined
+  }
+}
 
 /**
  * The normal state of a fresh clone. "You have not configured this yet" is a different message from

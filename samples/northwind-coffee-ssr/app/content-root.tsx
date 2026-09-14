@@ -2,6 +2,8 @@
 
 import { ContentProvider, Experience, PreviewBridge } from '@ebitex/content-sdk/react'
 import type { ExperienceResult } from '@ebitex/content-sdk'
+import { CatalogueSeedProvider } from '@/lib/catalogueSeed'
+import type { CatalogueSeed } from '@/lib/catalogue'
 import { renderers } from '@/lib/renderers'
 import { Markdown } from '@/components/Markdown'
 
@@ -20,7 +22,20 @@ import { Markdown } from '@/components/Markdown'
  * `fallback={() => null}` keeps the SDK's developer panel, which is right in development, out of
  * delivered HTML.
  */
-export function ContentRoot({ result }: { result: ExperienceResult }) {
+export function ContentRoot({
+  result,
+  catalogue,
+}: {
+  result: ExperienceResult
+  /**
+   * The catalogue grid's first page, already fetched on the server.
+   *
+   * It arrives here rather than at the component that needs it because that component sits below
+   * this file's `'use client'` boundary and cannot fetch. Plain JSON, like `result` — which is the
+   * only reason it can cross at all.
+   */
+  catalogue?: CatalogueSeed
+}) {
   return (
     <ContentProvider renderers={renderers} markdown={Markdown} fallback={() => null}>
       {/*
@@ -35,7 +50,9 @@ export function ContentRoot({ result }: { result: ExperienceResult }) {
         sample, and the server render is simply the first paint.
       */}
       <PreviewBridge origins={previewOrigins()}>
-        <Experience result={result} />
+        <CatalogueSeedProvider seed={catalogue}>
+          <Experience result={result} />
+        </CatalogueSeedProvider>
       </PreviewBridge>
     </ContentProvider>
   )
