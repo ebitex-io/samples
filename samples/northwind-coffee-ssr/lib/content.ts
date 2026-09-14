@@ -30,6 +30,7 @@ import { createContentClient, sharedContentClient, type ContentClient } from '@e
  * hard part -- knowing you need them is, since the failure reports success.
  */
 const deliveryKey = process.env.CONTENT_DELIVERY_KEY
+const siteId = process.env.CONTENT_SITE_ID || undefined
 
 const diagnostics = globalThis as unknown as { ebitexContentId?: string }
 
@@ -43,7 +44,18 @@ function create(): ContentClient | null {
   return createContentClient({
     apiKey: deliveryKey,
     baseUrl: process.env.CONTENT_API_BASE_URL,
-    site: process.env.CONTENT_SITE_ID || undefined,
+    // The function form, never the plain string -- and on this site the difference is not style.
+    //
+    // A string is taken at its word: the client skips `GET /sites` entirely, and `/sites` is the
+    // only place the server publishes how this site puts a locale into an address (spec 712). A
+    // client that never read it addresses the site as though its URLs carried no locale, sends
+    // `locale=` beside a `/fr/...` path, and the server refuses the pair with
+    // `400 locale_not_addressable` -- on every page, with nothing in the config looking wrong.
+    //
+    // The function costs one `/sites` request per process (the client memoizes it), and in return
+    // the client knows the strategy: it passes the request path through as it is and lets the
+    // server read the locale off it.
+    site: siteId ? (sites) => sites.find((candidate) => candidate.rootNodeId === siteId) : undefined,
     // Spec 565. Every reference descriptor in a delivered document carries its target's own
     // published path(s), so a renderer that links to another page reads the answer off the value it
     // already has. The static sample instead fetches a whole-contract listing in a `useEffect`,

@@ -1,4 +1,4 @@
-import { SiteLink } from '@/components/SiteLink'
+import Link from 'next/link'
 import { pathForSite } from '@ebitex/content-sdk'
 import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
@@ -50,9 +50,9 @@ function GuideRow({ guide, path }: { guide: Guide; path: string | undefined }) {
   return (
     <li className="py-6">
       {path ? (
-        <SiteLink href={path} className="block hover:text-accent">
+        <Link href={path} className="block hover:text-accent">
           {body}
-        </SiteLink>
+        </Link>
       ) : (
         body
       )}

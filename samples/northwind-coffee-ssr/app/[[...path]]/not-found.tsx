@@ -32,6 +32,7 @@ import { loadSiteChrome } from '@/lib/siteChrome'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { DEFAULT_LOCALE } from '@/lib/locales'
+import { pageAddressesFor } from '@/lib/pageAddressesQuery'
 
 export default async function NotFound() {
   // Opts this route out of static prerendering. Every other route here is already dynamic because
@@ -40,11 +41,14 @@ export default async function NotFound() {
   // build outright. The value is deliberately unused: it is the asking that matters.
   await headers()
 
-  const chrome = await loadSiteChrome(DEFAULT_LOCALE)
+  // The default locale, because a missing page resolved no node and so reported no locale -- and
+  // this app does not read one off the URL, since that is the server's rule to apply. With no node
+  // to anchor on, the switcher offers each language's front page.
+  const [chrome, addresses] = await Promise.all([loadSiteChrome(DEFAULT_LOCALE), pageAddressesFor(DEFAULT_LOCALE)])
 
   return (
     <>
-      <Header content={chrome.header} />
+      <Header content={chrome.header} home={addresses.home} alternates={addresses.alternates} />
       <div className="flex-1">
         <main className="mx-auto max-w-2xl px-6 py-24 text-center">
           <p className="font-mono text-xs tracking-widest text-ink-muted uppercase">404</p>

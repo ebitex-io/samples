@@ -1,11 +1,11 @@
 'use client'
 
-import { SiteLink } from '@/components/SiteLink'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { splitLocale } from '@/lib/locales'
 
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import { NavLinks, type NavItem } from '@/components/NavLinks'
+import type { LocaleAlternate } from '@/lib/pageAddresses'
 import type { HeaderContent } from '@/types/content'
 
 /**
@@ -19,6 +19,11 @@ import type { HeaderContent } from '@/types/content'
  * If the header Component has not been published, or its shape has drifted, the site keeps a
  * working navigation. Chrome is the one thing that must never disappear: without it there is no
  * way to reach the page that would explain what went wrong.
+ *
+ * The fallback's addresses are English ones, and stay that way on a French page. That is the one
+ * place on the site a French reader can be dropped into English, and it is accepted rather than
+ * patched: the alternative is this app composing `/fr/...` itself, which is exactly the rule the
+ * server now owns. The CMS's own links arrive already addressed for the page's locale.
  */
 const FALLBACK_LINKS: NavItem[] = [
   { to: '/coffees', label: 'Coffees' },
@@ -28,36 +33,48 @@ const FALLBACK_LINKS: NavItem[] = [
   { to: '/contact', label: 'Wholesale' },
 ]
 
-export function Header({ content }: { content?: HeaderContent | null }) {
-  // The locale prefix is stripped before comparing, because `item.to` is a CMS path and carries
-  // none. Without this every nav item is inactive in French -- a silent, purely visual failure, and
-  // exactly the class of bug a path-prefix scheme scatters around a codebase.
-  const { path: pathname } = splitLocale(usePathname())
+export function Header({
+  content,
+  home = '/',
+  alternates = [],
+}: {
+  content?: HeaderContent | null
+  /** The front page in the current locale, as the server addressed it (`/`, or `/fr`). */
+  home?: string
+  /** This page in every locale the site offers -- see `lib/pageAddresses.ts`. */
+  alternates?: LocaleAlternate[]
+}) {
+  // Compared as they are. `item.to` is a Link field's `url`, which the server composed in this
+  // site's URL space -- `/fr/cafes` on a French page -- and the pathname is the same space, so the
+  // two are directly comparable. This used to strip the prefix off the pathname first, because the
+  // links carried none; the one place that asymmetry lived was a place every nav item could be
+  // silently inactive in French.
+  const pathname = usePathname()
   return (
     <header className="border-b border-line">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-        <SiteLink href="/" className="font-display text-xl tracking-tight text-ink">
+        <Link href={home} className="font-display text-xl tracking-tight text-ink">
           Northwind Coffee
-        </SiteLink>
+        </Link>
         <div className="flex flex-wrap items-center gap-6">
           <nav aria-label="Main">
             <ul className="flex flex-wrap items-center gap-6 text-sm">
               <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
                 {(item) => (
-                  <SiteLink
+                  <Link
                     href={item.to}
                     // react-router's NavLink hands its className an `isActive` flag. next/link has
                     // no such callback, so the active check is `usePathname()` — the same question,
-                    // asked directly, with the locale prefix taken off first (see above).
+                    // asked directly.
                     className={pathname === item.to ? 'text-ink' : 'text-ink-muted hover:text-ink'}
                   >
                     {item.label}
-                  </SiteLink>
+                  </Link>
                 )}
               </NavLinks>
             </ul>
           </nav>
-          <LocaleSwitcher />
+          <LocaleSwitcher alternates={alternates} />
         </div>
       </div>
     </header>

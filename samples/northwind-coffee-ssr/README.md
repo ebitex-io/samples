@@ -129,12 +129,13 @@ It is a plain function rather than a hook for a reason worth internalising: `gen
 *before* the render tree exists. That is exactly what lets it write a `<head>` a crawler receives,
 and exactly why the `useDocumentMeta` effect this replaced never could.
 
-**Both resolves of a page cost one request.** `generateMetadata` and the page component each call
-`resolveLocation`, and the SDK's request cache collapses them — but only because they pass identical
-options, which is why `lib/resolveOptions.ts` exists and why nothing else builds them. The locale
-and the personalization context are part of the cache key, so a caller that passes a slightly
-different context is not an error and not a visible bug; it is silently two requests per page. If
-you change this, **count the requests** rather than reading the code and agreeing with it.
+**All three resolves of a page cost one request.** The layout (for `<html lang>`),
+`generateMetadata` and the page component each call `resolveLocation` with the same path, and the
+SDK's request cache collapses them — but only because they pass identical options, which is why
+`lib/resolveOptions.ts` exists and why nothing else builds them. The personalization context is part
+of the cache key, so a caller that passes a slightly different context is not an error and not a
+visible bug; it is silently another request per page. If you change this, **count the requests**
+rather than reading the code and agreeing with it.
 
 ### Checking any of this
 
@@ -153,6 +154,45 @@ contain. That is fine and is the reason each file says so in a comment — Next 
 `noindex`, so the one page whose body a crawler should not read is the one page whose body is not
 there. The **status codes** are real either way, and that is the claim this sample actually makes.
 
+## Locales live in the address, and the server reads them
+
+French is served under a `/fr` prefix and English is bare: `/coffees` and `/fr/cafes`. The site is
+configured that way **in Content** (Sites → Manage → Locale addressing: `pathPrefix`, with the
+default locale unprefixed), and that is the whole of the routing. This app does not parse, strip or
+add a prefix anywhere:
+
+- The page passes the request path to `resolveLocation` exactly as it arrived. The server reads the
+  locale off it, and `result.locale` says which one it found.
+- Every address the API hands back is already in this site's URL space — the page's own `path` (the
+  canonical), a redirect's `targetPath`, a navigation link's `url`, a reference's `paths`, and every
+  path in `getSitemap()`. They are used as delivered. `/en/about` is answered with a redirect to
+  `/about`, by the server, so each page has one address.
+- `<html lang>` comes from `result.locale`. The root layout lives in `app/[[...path]]/`, which is
+  what lets it receive the route's params and resolve the page itself; the resolve is shared with
+  the page's through the SDK's request cache.
+- Client components that need the locale (the catalogue grid's queries, the switcher) read it from a
+  context the page fills in from `result.locale` — never from the URL.
+- The language switcher links to **the same page** in each locale. That address cannot be composed
+  here — a page with a French slug lives at `/fr/cafes`, and `/fr/coffees` is a 404, not a fallback —
+  so the page asks `GET /nodes` for it, anchored on the page's node id, once per locale.
+
+Two things stay this app's, because the server cannot answer them: which languages it has UI for,
+and which pages are actually translated (`TRANSLATED_PATHS` in `lib/locales.ts`, which decides what
+the sitemap advertises as `hreflang`). And a visitor's first landing — sending a French browser from
+`/` to `/fr` — is not done here at all; if you want it, it is middleware.
+
+**Name the site with a function, not a string.** `lib/content.ts` passes
+`site: (sites) => sites.find((s) => s.rootNodeId === id)`. A plain string skips `GET /sites`, which is
+the only place the server publishes the site's strategy, so the client would address the site as
+though its URLs carried no locale — and the server refuses every page with
+`400 locale_not_addressable`.
+
+**This needs the `@ebitex/content-sdk` release that contains server-side locale addressing
+(ebitex spec 712)** — the minor after 0.18. `package.json` still names `^0.18.0` until that release
+is published; against 0.18 the SDK does not read the site's strategy, sends `locale=` beside a
+prefixed path, and gets the same `400`. The content configuration, the SDK version and this code
+change have to go out together: the old code against a prefixed site produced `/fr/fr/…`.
+
 ## What is cached, and what is not
 
 Worth stating rather than leaving to inference, because "bounded by cache TTL rather than by deploy
@@ -160,7 +200,7 @@ cadence" is one of the things a server is supposed to buy.
 
 | Response | Posture | Why |
 |---|---|---|
-| Every HTML page | **Not cached** | Each one reads a cookie (`resolveOptionsFor`) to resolve personalized content, so it is per-visitor by construction. A shared cache must not hold it, and Next marks it dynamic for that reason. |
+| Every HTML page | **Not cached** | Each one reads a cookie (`resolveOptions`) to resolve personalized content, so it is per-visitor by construction. A shared cache must not hold it, and Next marks it dynamic for that reason. |
 | `/sitemap.xml` and its shards | `public, max-age=300, stale-while-revalidate=3600` | Identical for every visitor, and a crawler is not in a hurry. `stale-while-revalidate` means a publish shows up on the next crawl rather than the one after it. |
 | `/api/coffees` | Not cached | It carries the visitor's filters; the expensive part is already cached upstream in the Delivery API's own response cache, and a second TTL here would add a second staleness window for nothing. |
 
@@ -186,21 +226,25 @@ same reason.
 ## Structure
 
     app/
+      [[...path]]/layout.tsx the root layout — in the catch-all so it can set <html lang> from the resolve
       [[...path]]/page.tsx   the server component: resolves a path, renders the chrome around it
+      [[...path]]/not-found.tsx  the page behind the real 404
+      [[...path]]/error.tsx  the page behind a Delivery API outage, deliberately self-sufficient
       content-root.tsx       the 'use client' boundary — where the renderer map lives
       api/coffees/route.ts   this site's own API, for the one genuinely dynamic query
       api/revalidate/route.ts  how a publish gets in
       sitemap.xml/route.ts   the same pure function the static sample calls from a build script
       robots.ts              the only place the sitemap is advertised
-      not-found.tsx          the page behind the real 404
-      error.tsx              the page behind a Delivery API outage, deliberately self-sufficient
     middleware.ts            routes sitemap shard URLs onto the one sitemap route
     lib/
       content.ts             the one place a client is built
       buyerType.ts           the context bag, shared by the server that reads it and the control that sets it
       renderers.ts           external id → component, as a plain map
       pageMetadata.ts        what each Contract means to a crawler: description, image, JSON-LD
-      resolveOptions.ts      the options both resolves of a page share, so the two cost one request
+      resolveOptions.ts      the options every resolve of a page shares, so they cost one request
+      locales.ts             the languages this app offers, and which pages are really translated
+      localeContext.tsx      the locale the server reported, for client components
+      pageAddresses.ts       the switcher's links and the home link, from one /nodes read per locale
       catalogue.ts           what the browser, this site's API and the page all have to agree on
       catalogueQuery.ts      the catalogue query itself — server-only, one implementation for two callers
       catalogueSeed.tsx      carries the server's first page of results down to the grid
