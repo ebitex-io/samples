@@ -4,7 +4,6 @@ import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import type { Guide, GuideIndex } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `guide-index` Template.
@@ -16,7 +15,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const GuideIndexPage: PresentationRenderer<GuideIndex> = ({ component }) => {
   const { heading, intro, guides } = component.content
-  useDocumentMeta(heading)
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-14">
@@ -61,6 +59,5 @@ function GuideRow({ guide, path }: { guide: Guide; path: string | undefined }) {
     </li>
   )
 }
-
 
 export default GuideIndexPage

@@ -22,6 +22,8 @@ both are fully supported. What it buys and what it costs is the whole subject be
 | Links without a second query (`referencePaths`) | `presentations/card.tsx`, `components/OriginCard.tsx` |
 | Your own API in front of the CMS, and when you need one | `app/api/coffees/route.ts` |
 | Serving a sitemap per request | `app/sitemap.xml/route.ts` |
+| **A `<head>` a crawler receives**, with its title from the CMS | `app/[[...path]]/page.tsx`, `lib/pageMetadata.ts` |
+| Structured data, social tags, canonical URLs, `robots.txt` | `lib/pageMetadata.ts`, `app/robots.ts` |
 | How a publish reaches a long-running server | `app/api/revalidate/route.ts` |
 | Live preview, which needs nothing server-side | `app/content-root.tsx` |
 
@@ -37,6 +39,7 @@ Everything else is a straight port — the renderers are the same files.
 | Buyer type | `localStorage` | a cookie, read while resolving |
 | Not found / redirect | a component / a client navigation | a real `404` / a real `308` |
 | Sitemap | generated at build time | served per request |
+| `<title>` and `<meta description>` | written by an effect, after the HTML | in the HTML, written before it |
 
 The first row is the one that matters. A static site has no choice but to publish its key — which
 is why ebitex has [browser-safe keys](https://ebitex.io) restricted to your own origins. A server
@@ -68,6 +71,7 @@ you are done — point this sample at the same organization.
 |---|---|
 | `CONTENT_DELIVERY_KEY` | Content → Configure → Delivery. **Leave it unrestricted** — it never reaches a browser, and an origin-restricted key would be refused here, because a server sends no `Origin`. |
 | `CONTENT_SITE_ID` | Content → Configure → Sites. Required: the API infers the site from a request's hostname, and this server's hostname is the app's, not the site's. |
+| `SITE_ORIGIN` | This site's own public origin (`https://northwind.example`) — **not** the API's. It makes canonical links, `og:image` and the sitemap reference in `robots.txt` absolute, which all three have to be. Required, because `app/robots.ts` is handed no request to derive one from. |
 | `NEXT_PUBLIC_FORMS_ORG_SLUG` | Your organization's slug, for the embedded contact form. |
 
 Note which variables carry `NEXT_PUBLIC_` and which do not. The prefix means "inline this into the
@@ -93,6 +97,62 @@ process restarts.
 *both* caches — the SDK's and Next's — because clearing either one alone looks like it works and
 does not.
 
+## What goes into `<head>`, and where each value comes from
+
+A server-rendered site should put its title and description in the HTML, not write them from an
+effect once the browser has already been handed the page. This sample does, and the split between
+what the CMS supplies and what the app supplies is the part worth reading.
+
+**The title comes from the CMS.** A Contract declares which of its own fields is its title
+(`titleFieldPath` in `content-model/model.mjs`); Content resolves that at publish, freezes it, and
+returns it on `GET /path`. So `generateMetadata` reads `result.title` and this app contains no map
+from a page to its heading at all — a new kind of page needs no change here. `result.titleSource`
+says which step of the ladder answered: `content` for an authored title, `name` for the node's own
+editor label, which is the floor when nothing in the Contract chain declares one.
+
+Two things follow that are easy to trip over:
+
+- **A `titleFieldPath` is frozen at publish.** Declaring one changes nothing a reader sees until the
+  affected pages are republished. If you add one and the title does not move, that is the expected
+  order of events, not a broken deploy.
+- The title member is **optional** on the SDK type, because it can genuinely be absent — against an
+  older origin, or on a result built locally rather than fetched. Write `result.title ?? fallback`.
+
+**Everything else comes from `lib/pageMetadata.ts`** — the description, the social image and the
+JSON-LD — because nothing in the CMS declares those. That file is one pure function keyed by
+*Contract*, not by Template: a description is a property of what the content **is**, not of how it
+is presented, so two Templates over one Contract describe a page the same way. An unrecognised
+Contract simply returns nothing, so a new Template renders a page that describes itself less rather
+than a page that breaks.
+
+It is a plain function rather than a hook for a reason worth internalising: `generateMetadata` runs
+*before* the render tree exists. That is exactly what lets it write a `<head>` a crawler receives,
+and exactly why the `useDocumentMeta` effect this replaced never could.
+
+**Both resolves of a page cost one request.** `generateMetadata` and the page component each call
+`resolveLocation`, and the SDK's request cache collapses them — but only because they pass identical
+options, which is why `lib/resolveOptions.ts` exists and why nothing else builds them. The locale
+and the personalization context are part of the cache key, so a caller that passes a slightly
+different context is not an error and not a visible bug; it is silently two requests per page. If
+you change this, **count the requests** rather than reading the code and agreeing with it.
+
+### Checking any of this
+
+Read the HTML, never the status code and never the browser:
+
+    curl -s http://localhost:3000/coffees/ethiopia-guji | grep -oE '<title>[^<]*</title>|<meta name="description"[^>]*>'
+
+And when checking whether something is *rendered*, strip the `<script>` tags first. Next ships the
+React payload inside them, so a plain `grep` over the whole response finds text that is only data
+for the browser — reporting a page as rendered when its body is empty, which is the exact failure
+worth testing for.
+
+Two places in this sample where that distinction bites: `app/not-found.tsx` and `app/error.tsx` are
+**client-rendered** by Next, so their bodies really are empty in the HTML no matter what they
+contain. That is fine and is the reason each file says so in a comment — Next marks a 404
+`noindex`, so the one page whose body a crawler should not read is the one page whose body is not
+there. The **status codes** are real either way, and that is the claim this sample actually makes.
+
 ## Following the tutorial
 
 Steps are tagged `northwind-coffee-ssr/step-NN`. The series is on
@@ -111,9 +171,14 @@ same reason.
       api/coffees/route.ts   this site's own API, for the one genuinely dynamic query
       api/revalidate/route.ts  how a publish gets in
       sitemap.xml/route.ts   the same pure function the static sample calls from a build script
+      robots.ts              the only place the sitemap is advertised
+      not-found.tsx          the page behind the real 404
+      error.tsx              the page behind a Delivery API outage, deliberately self-sufficient
     lib/
       content.ts             the one place a client is built, and the only server-only module
       buyerType.ts           the context bag, shared by the server that reads it and the control that sets it
       renderers.ts           external id → component, as a plain map
+      pageMetadata.ts        what each Contract means to a crawler: description, image, JSON-LD
+      resolveOptions.ts      the options both resolves of a page share, so the two cost one request
     presentations/           one file per Template — ported unchanged from the static sample
     components/              the site's own components

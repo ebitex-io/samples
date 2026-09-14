@@ -3,7 +3,6 @@ import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CmsImage } from '@/components/CmsImage'
 import type { Image, Origin } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `origin` Template. One page per producing country, shared by every coffee from it.
@@ -15,7 +14,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const OriginPage: PresentationRenderer<Origin> = ({ component }) => {
   const { name, country, altitude, summary, image, note } = component.content
-  useDocumentMeta(name, country)
 
   return (
     <article>

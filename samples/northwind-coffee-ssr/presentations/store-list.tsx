@@ -2,7 +2,6 @@ import { Resolve, RichText } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import type { Store, StoreList } from '@/types/content'
-import { useDocumentMeta } from '@/lib/meta'
 
 /**
  * The `store-list` Template. The smallest page on the site, and the one that shows how little a
@@ -14,7 +13,6 @@ import { useDocumentMeta } from '@/lib/meta'
  */
 const StoreListSection: PresentationRenderer<StoreList> = ({ component }) => {
   const { heading, intro, stores } = component.content
-  useDocumentMeta(heading)
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-14">
