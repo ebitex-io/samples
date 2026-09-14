@@ -1,26 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 import { shardFromPath } from '@/lib/sitemapPaths'
-import { splitLocale } from '@/lib/locales'
 
 /**
- * Two jobs, and they are unrelated -- a file with one export gets both.
+ * Serves sitemap shards from real root-level URLs.
  *
- * ============================================================================================
- * 1. Tells the root layout which language this request is in
- * ============================================================================================
- *
- * `app/layout.tsx` renders `<html lang>` and receives no `params` and no `searchParams`, because a
- * root layout sits above whichever route matched. Request headers are the one thing it *can* read,
- * so the locale is put in one here.
- *
- * `NextResponse.next({ request: { headers } })` is the shape that matters: it forwards a modified
- * set of **request** headers onward, rather than setting a response header the layout would never
- * see. Getting that wrong is a page that renders perfectly and declares the wrong language.
- *
- * ============================================================================================
- * 2. Serves sitemap shards from real root-level URLs
- * ============================================================================================
+ * (This file used to have a second job: reading the locale prefix off every request and putting it
+ * in an `x-locale` request header, because the root layout could see no URL and had to be told
+ * which language to declare in `<html lang>`. That job is gone. The layout now lives in the
+ * catch-all segment, where it receives the route's params, and it takes the locale from the
+ * server's own answer to `GET /path` -- see `app/[[...path]]/layout.tsx`. So nothing in this app
+ * parses a locale out of a URL any more, which was the point.)
  *
  * ---- Why this is needed at all ----
  *
@@ -53,12 +43,8 @@ import { splitLocale } from '@/lib/locales'
  * because the day it matters is the day a crawler quietly stops.
  */
 export function middleware(request: NextRequest) {
-  const { locale } = splitLocale(request.nextUrl.pathname)
-  const headers = new Headers(request.headers)
-  headers.set('x-locale', locale)
-
   if (shardFromPath(request.nextUrl.pathname) === null) {
-    return NextResponse.next({ request: { headers } })
+    return NextResponse.next()
   }
 
   // Only the *route* needs changing. The shard number is read back from the original pathname by
@@ -67,7 +53,7 @@ export function middleware(request: NextRequest) {
   // silent 200 serving the index in place of a shard rather than an error anyone would notice.
   const url = request.nextUrl.clone()
   url.pathname = '/sitemap.xml'
-  return NextResponse.rewrite(url, { request: { headers } })
+  return NextResponse.rewrite(url)
 }
 
 /**
@@ -79,10 +65,7 @@ export function middleware(request: NextRequest) {
  * top is the filter, and a non-match returns `NextResponse.next()` before anything else happens.
  *
  * The cost is one regex test per request. The thing it buys is that the filter and the rewrite are
- * the same expression, in one place, in a language with no version-dependent surprises.
- *
- * It is now also load-bearing rather than merely tidy: the locale header above has to be set on
- * *every* request a page is rendered for, so a matcher scoped to sitemap URLs would leave `<html
- * lang>` reading whatever the layout defaults to on every real page -- the exact bug this file was
- * extended to fix.
+ * the same expression, in one place, in a language with no version-dependent surprises. (With the
+ * locale header gone, nothing else needs every request any more, so a matcher is *possible* again —
+ * but the DSL's failure mode has not changed, so neither has the decision.)
  */

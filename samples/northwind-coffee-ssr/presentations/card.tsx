@@ -1,4 +1,4 @@
-import { SiteLink } from '@/components/SiteLink'
+import Link from 'next/link'
 import { pathForSite } from '@ebitex/content-sdk'
 import { Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
@@ -54,9 +54,9 @@ const CardTile: PresentationRenderer<Card> = ({ component }) => {
   )
 
   return path ? (
-    <SiteLink href={path} className="group block">
+    <Link href={path} className="group block">
       {body}
-    </SiteLink>
+    </Link>
   ) : (
     <div>{body}</div>
   )

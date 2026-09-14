@@ -1,7 +1,7 @@
 import { buildSitemapDocuments } from '@ebitex/content-sdk/sitemap'
 import { content } from '@/lib/content'
 import { shardFromPath, shardPath } from '@/lib/sitemapPaths'
-import { DEFAULT_LOCALE, LOCALES, localePath, TRANSLATED_PATHS } from '@/lib/locales'
+import { DEFAULT_LOCALE, LOCALES, TRANSLATED_PATHS } from '@/lib/locales'
 
 /**
  * `/sitemap.xml`, served per request.
@@ -40,8 +40,11 @@ import { DEFAULT_LOCALE, LOCALES, localePath, TRANSLATED_PATHS } from '@/lib/loc
  *
  * ---- Why `localeUrl` returns `undefined` for most pages ----
  *
- * Supplying `localeUrl` at all is what makes the sitemap carry `hreflang`, and this site routes
- * locales in the path, so the mapping is `localePath`. The interesting half is the refusal.
+ * Supplying `localeUrl` at all is what makes the sitemap carry `hreflang`. It composes nothing: this
+ * site is configured `pathPrefix` in Content, so every `path` and `localeSlots` entry `getSitemap()`
+ * returns already carries its prefix, and the mapping is the identity -- prefixing again would give
+ * `/fr/fr/...`. What is left for `localeUrl` is the decision, and the interesting half is the
+ * refusal.
  *
  * `getSitemap()` reports a French path for **every** page, because a locale slot materializes for
  * every node once any node carries a localized slug. Those URLs are real and they work — they serve
@@ -51,8 +54,8 @@ import { DEFAULT_LOCALE, LOCALES, localePath, TRANSLATED_PATHS } from '@/lib/loc
  *
  * Only the consumer can tell the difference, which is why the SDK lets one say so: return
  * `undefined` and that alternate is dropped. A page left with a single alternate declares none at
- * all rather than linking to itself. `lib/locales.ts` holds the list, and `generateMetadata` reads
- * the same one for the page's own `<link rel="alternate">` — two surfaces making one claim.
+ * all rather than linking to itself. `lib/locales.ts` holds the list, and this is the only surface
+ * that makes the claim — the page's own `<head>` declares none, and says why.
  *
  * Getting them *served* from there is this app's problem rather than the SDK's, and is a rewrite in
  * `next.config.ts`: `app/[[...path]]/page.tsx` already claims every root path as a page, so there is
@@ -83,20 +86,20 @@ export async function GET(request: Request) {
   const documents = buildSitemapDocuments(result, {
     origin,
     shardPath,
-    // `node.path`, not `path`. The first argument is the path for *that locale* -- for `/coffees`,
-    // which has a French slug, the French call arrives with `/cafes`. The question being asked is
-    // about the page, so it keys on the node's own default path, which is the same key
-    // `generateMetadata` uses. Keying on `path` would silently drop exactly the pages that are
-    // translated enough to have earned a French address.
+    // `node.path`, not `path`. The first argument is the address for *that locale* -- for
+    // `/coffees`, which has a French slug, the French call arrives with `/fr/cafes`. The question
+    // being asked is about the page, so it keys on the node's own default path, which carries no
+    // prefix here (the default locale is bare). Keying on `path` would silently drop exactly the
+    // pages that are translated enough to have earned a French address.
     localeUrl: (path, locale, node) => {
       // A slot this site has no UI for. Emitting an English URL under its hreflang would be worse
       // than emitting nothing, and the CMS's locale tree is free to grow ahead of this app.
       const known = LOCALES.find((l) => l.code === locale)
       if (known === undefined) return undefined
 
-      if (known.code === DEFAULT_LOCALE) return localePath(path, known.code)
+      if (known.code === DEFAULT_LOCALE) return path
 
-      return TRANSLATED_PATHS.has(node.path) ? localePath(path, known.code) : undefined
+      return TRANSLATED_PATHS.has(node.path) ? path : undefined
     },
   })
 

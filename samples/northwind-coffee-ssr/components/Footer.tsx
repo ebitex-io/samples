@@ -1,4 +1,4 @@
-import { SiteLink } from '@/components/SiteLink'
+import Link from 'next/link'
 
 import { BuyerSwitcher } from '@/components/BuyerSwitcher'
 import { NavLinks, type NavItem } from '@/components/NavLinks'
@@ -27,9 +27,9 @@ export function Footer({ content }: { content?: FooterContent | null }) {
           <ul className="flex flex-wrap gap-5 text-sm text-ink-muted">
             <NavLinks links={content?.links} fallback={FALLBACK_LINKS}>
               {(item) => (
-                <SiteLink href={item.to} className="hover:text-ink">
+                <Link href={item.to} className="hover:text-ink">
                   {item.label}
-                </SiteLink>
+                </Link>
               )}
             </NavLinks>
           </ul>

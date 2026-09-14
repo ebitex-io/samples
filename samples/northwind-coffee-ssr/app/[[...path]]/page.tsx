@@ -5,9 +5,11 @@ import { loadSiteChrome } from '@/lib/siteChrome'
 import { ContentRoot } from '@/app/content-root'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { localePath, splitLocale } from '@/lib/locales'
+import { DEFAULT_LOCALE } from '@/lib/locales'
+import { LocaleProvider } from '@/lib/localeContext'
+import { pageAddressesFor } from '@/lib/pageAddressesQuery'
 import { metadataFor } from '@/lib/pageMetadata'
-import { resolveOptionsFor } from '@/lib/resolveOptions'
+import { requestPath, resolveOptions } from '@/lib/resolveOptions'
 import { catalogueFiltersFrom, catalogueSignature, type CatalogueSeed } from '@/lib/catalogue'
 import { fetchCataloguePage } from '@/lib/catalogueQuery'
 
@@ -17,16 +19,6 @@ type PageProps = {
   params: Promise<{ path?: string[] }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }
-
-/**
- * The route's segments, split back into the locale the reader asked for and the path the CMS
- * should be asked for.
- *
- * `/fr/guides` arrives here as `['fr', 'guides']` -- the catch-all matches the prefix like any
- * other segment, which is why a prefix scheme needs no extra route -- and the CMS never sees the
- * prefix, because a locale is an argument to a resolve rather than part of an address in the tree.
- */
-const routeFrom = (path: string[] | undefined) => splitLocale('/' + (path ?? []).join('/'))
 
 /**
  * The page's `<head>`, written on the server, before any of it renders.
@@ -58,9 +50,8 @@ const routeFrom = (path: string[] | undefined) => splitLocale('/' + (path ?? [])
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   if (!content) return { title: { absolute: SITE_NAME } }
 
-  const [{ path }, query] = await Promise.all([params, searchParams])
-  const { locale, path: cmsPath } = routeFrom(path)
-  const options = await resolveOptionsFor(locale)
+  const { path } = await params
+  const options = await resolveOptions()
 
   // Metadata is decoration, and must never be what decides how a failure is presented.
   //
@@ -76,7 +67,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   // notice, and a body that says what happened.
   let result
   try {
-    result = await content.resolveLocation(cmsPath, options)
+    result = await content.resolveLocation(requestPath(path), options)
   } catch {
     return { title: { absolute: SITE_NAME } }
   }
@@ -95,31 +86,27 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   // `?origin=` and `?q=`, which are this app's own state and never reach the CMS, are excluded by
   // construction rather than by an allow-list somebody has to keep up to date.
   //
-  // The locale is re-applied, because the French page is different content rather than a
-  // parameterized view of the English one and so has a canonical of its own. Note this reads
-  // `result.path` -- what the CMS says, which for a page reached through a renamed slug is not what
-  // was asked for.
-  const canonical = localePath(result.path, locale)
+  // Used exactly as delivered. The French page is different content rather than a parameterized
+  // view of the English one and so has a canonical of its own -- and `result.path` already *is* it,
+  // prefix and all, because the server composed it in this site's URL space. Note it is what the
+  // CMS says rather than what was asked for, and for a page reached through a renamed slug the two
+  // differ.
+  const canonical = result.path
 
   // ---- Why there is no `hreflang` in this <head> ----
   //
-  // Because this function cannot produce a correct one, and an incorrect one is worse than none.
-  //
   // A resolve answers for the locale it was asked about and nothing else: at `/coffees` it knows
-  // `/coffees`, and it does not know that the French edition of this page is served at `/cafes`.
+  // `/coffees`, and it does not know that the French edition of this page is served at `/fr/cafes`.
   // Composing the French URL from what it *does* know gives `/fr/coffees` -- which is not a slow
   // path or a redirect, it is a **404**, because once a node carries a French slug its English one
-  // is not an address in the French slot at all. That is a dead link advertised to crawlers as the
-  // page for French readers, and it was in this file until somebody fetched it.
+  // is not an address in the French slot at all.
   //
-  // The one thing that knows every locale's path for every page is `getSitemap()`, which returns
-  // exactly that in `localeSlots` -- so the alternates are declared in `app/sitemap.xml/route.ts`
-  // instead. Search engines accept a sitemap and `<link rel="alternate">` as equal ways to say it,
-  // and only one of them has the data.
-  //
-  // A site that wanted them in the head too would have to hold its own copy of the CMS's per-locale
-  // paths, and a second copy of something the CMS already owns goes stale the first time an editor
-  // renames a slug -- silently, and in the direction of advertising a 404 again.
+  // The page *does* now ask for every locale's address, for the language switcher
+  // (`lib/pageAddressesQuery.ts`), so the addresses themselves are no longer the obstacle. What is
+  // left is the other half of an alternate: the claim that a French reader will find French there,
+  // which is `TRANSLATED_PATHS`' question and is answered in exactly one place,
+  // `app/sitemap.xml/route.ts`. Search engines accept a sitemap and `<link rel="alternate">` as
+  // equal ways to say it, and one surface making the claim cannot disagree with a second.
 
   // `result.title ?? …` rather than a bare read: the member is optional because it can genuinely be
   // absent -- against an origin older than it, or on a result built locally rather than fetched.
@@ -142,7 +129,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       title,
       description,
       url: canonical,
-      locale,
+      locale: result.locale ?? DEFAULT_LOCALE,
       ...(image ? { images: [{ url: image.url, alt: image.alt }] } : {}),
     },
     twitter: { card: image ? 'summary_large_image' : 'summary', title, description },
@@ -167,7 +154,6 @@ export default async function Page({ params, searchParams }: PageProps) {
   }
 
   const [{ path }, query] = await Promise.all([params, searchParams])
-  const { locale, path: cmsPath } = routeFrom(path)
 
   // Read while resolving, so the first bytes are already personalized. `ctx` is part of every
   // cache key, so one client shared by every request cannot serve one reader's variant to another
@@ -176,29 +162,42 @@ export default async function Page({ params, searchParams }: PageProps) {
   //
   // Built by the same helper `generateMetadata` uses, which is what makes the two resolves one
   // request rather than two.
-  const options = await resolveOptionsFor(locale)
+  const options = await resolveOptions()
 
-  // Both awaited before anything is sent, so the chrome arrives with the document rather than a
-  // moment after it. The static sample fetches its header and footer in an effect.
-  const [result, chrome] = await Promise.all([
-    content.resolveLocation(cmsPath, options),
-    loadSiteChrome(options.locale),
-  ])
+  // The request path, exactly as it arrived -- `/fr/cafes/ethiopia-guji` included. The server reads
+  // the locale off it; this app no longer splits it into a locale and "the path the CMS should be
+  // asked for", because the site's prefix rule is the server's, not a copy kept here.
+  const result = await content.resolveLocation(requestPath(path), options)
 
   // The SDK reports a redirect and never performs one -- it does not know what router you use.
   // Server-side, "performing it" is simply the right status code.
   if (result.kind === 'redirect') {
-    // Re-prefixed, or a French reader following a renamed slug lands in English and never finds
-    // out why. The CMS answers in its own path space, which has no notion of this app's routing.
-    permanentRedirect(localePath(result.targetPath, locale))
+    // As delivered: the server composed the target in this site's URL space, so a French reader
+    // following a renamed slug stays in French with nothing added here. It is also how `/en/about`
+    // becomes `/about` -- the default locale is bare on this site, and the server says so with a
+    // redirect rather than serving one page at two addresses.
+    permanentRedirect(result.targetPath)
   }
 
   if (result.kind === 'notFound') {
     notFound()
   }
 
-  // The catalogue's first page, resolved here so it is in the delivered HTML (see `catalogueSeedFor`).
-  const catalogue = await catalogueSeedFor(result.presentation, query, options.locale)
+  // The locale the server says this address is in. Everything below that has no address of its
+  // own -- the chrome (a Component read by external id), the catalogue query, the switcher's
+  // lookups -- is asked in it explicitly, which is legal: only an *address* carries a locale.
+  const locale = result.locale ?? DEFAULT_LOCALE
+
+  // All awaited before anything is sent, so the chrome arrives with the document rather than a
+  // moment after it (the static sample fetches its header and footer in an effect). They wait for
+  // the resolve, because they need the locale it reported; the chrome is memoized per process, so
+  // that ordering costs nothing after the first request.
+  const [chrome, addresses, catalogue] = await Promise.all([
+    loadSiteChrome(locale),
+    pageAddressesFor(locale, { nodeId: result.nodeId, siteRootNodeId: result.site.rootNodeId }),
+    // The catalogue's first page, resolved here so it is in the delivered HTML (see `catalogueSeedFor`).
+    catalogueSeedFor(result.presentation, query, locale),
+  ])
 
   // Structured data, from the same map that produced the description. It is rendered here rather
   // than returned from `generateMetadata` because Next's `Metadata` object has no slot for JSON-LD
@@ -218,11 +217,18 @@ export default async function Page({ params, searchParams }: PageProps) {
           }}
         />
       ) : null}
-      <Header content={chrome.header} />
-      <div className="flex-1">
-        <ContentRoot result={result} catalogue={catalogue} />
-      </div>
-      <Footer content={chrome.footer} />
+      {/*
+        The locale the server reported, for the client components below that need it -- the
+        switcher's active state, the catalogue grid's own queries. Provided rather than read back
+        off the URL, because parsing the address is the server's job now.
+      */}
+      <LocaleProvider locale={locale}>
+        <Header content={chrome.header} home={addresses.home} alternates={addresses.alternates} />
+        <div className="flex-1">
+          <ContentRoot result={result} catalogue={catalogue} />
+        </div>
+        <Footer content={chrome.footer} />
+      </LocaleProvider>
     </>
   )
 }

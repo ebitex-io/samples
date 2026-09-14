@@ -1,4 +1,4 @@
-import { SiteLink } from '@/components/SiteLink'
+import Link from 'next/link'
 import type { LinkValue } from '@ebitex/content-sdk'
 
 /**
@@ -9,7 +9,9 @@ import type { LinkValue } from '@ebitex/content-sdk'
  * time. That is the reason to prefer the experience arm where you can -- the URL is never stored,
  * so moving the target page never leaves a stale link behind.
  *
- * A same-site URL is routed client-side rather than reloading the whole application.
+ * A same-site URL is routed client-side rather than reloading the whole application. It is used as
+ * delivered: the server composed it in this site's URL space, so a French page's link already reads
+ * `/fr/...` and there is nothing to add to it.
  */
 export function CtaLink({
   link,
@@ -29,9 +31,9 @@ export function CtaLink({
       : 'text-accent underline underline-offset-4'
 
   return href.startsWith('/') ? (
-    <SiteLink href={href} className={className}>
+    <Link href={href} className={className}>
       {label}
-    </SiteLink>
+    </Link>
   ) : (
     <a href={href} className={className}>
       {label}
