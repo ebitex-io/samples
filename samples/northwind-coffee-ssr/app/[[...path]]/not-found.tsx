@@ -25,12 +25,19 @@
  * a page as rendered when its body is empty. Strip the script tags first and search what is left.
  * Several conclusions in the building of this file were wrong until that was fixed -- including,
  * twice, a conclusion about which component was at fault.
+ *
+ * ---- It is also where a new page is previewed ----
+ *
+ * Composer frames a page at its authoring path, so a page nobody has published yet arrives *here*.
+ * The message is wrapped in `PreviewableNotFound` so the live-preview bridge still mounts and the
+ * draft can replace it. See `app/content-root.tsx` for why that changes nothing for a reader.
  */
 import { headers } from 'next/headers'
 
 import { loadSiteChrome } from '@/lib/siteChrome'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { PreviewableNotFound } from '@/app/content-root'
 import { DEFAULT_LOCALE } from '@/lib/locales'
 import { pageAddressesFor } from '@/lib/pageAddressesQuery'
 
@@ -50,23 +57,25 @@ export default async function NotFound() {
     <>
       <Header content={chrome.header} home={addresses.home} alternates={addresses.alternates} />
       <div className="flex-1">
-        <main className="mx-auto max-w-2xl px-6 py-24 text-center">
-          <p className="font-mono text-xs tracking-widest text-ink-muted uppercase">404</p>
-          <h1 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
-            We could not find that page
-          </h1>
-          <p className="mt-4 text-lg text-ink-muted">
-            It may have been moved, or the link that brought you here may be out of date.
-          </p>
-          <p className="mt-10">
-            <a
-              href="/"
-              className="rounded-full border border-line px-5 py-2.5 text-sm text-ink hover:text-accent"
-            >
-              Back to the front page
-            </a>
-          </p>
-        </main>
+        <PreviewableNotFound>
+          <main className="mx-auto max-w-2xl px-6 py-24 text-center">
+            <p className="font-mono text-xs tracking-widest text-ink-muted uppercase">404</p>
+            <h1 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
+              We could not find that page
+            </h1>
+            <p className="mt-4 text-lg text-ink-muted">
+              It may have been moved, or the link that brought you here may be out of date.
+            </p>
+            <p className="mt-10">
+              <a
+                href="/"
+                className="rounded-full border border-line px-5 py-2.5 text-sm text-ink hover:text-accent"
+              >
+                Back to the front page
+              </a>
+            </p>
+          </main>
+        </PreviewableNotFound>
       </div>
       <Footer content={chrome.footer} />
     </>
