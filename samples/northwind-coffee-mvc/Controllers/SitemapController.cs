@@ -50,10 +50,38 @@ public sealed class SitemapController : Controller
         {
             Origin = _site.Origin,
 
-            // The site carries the locale in its own addresses, so every alternate URL is already the
-            // one the server serves. Returning the path unchanged is what turns hreflang on without
-            // this app composing a single address itself.
-            LocaleUrl = (localePath, _, _) => localePath,
+            // Supplying LocaleUrl at all is what makes the sitemap carry hreflang. It composes
+            // nothing: the site is `pathPrefix` in Content, so every path this response carries is
+            // already in the site's own URL space — prefixing again would give /fr/fr/…. What is
+            // left is the *decision*, and the interesting half is the refusal.
+            //
+            // GetSitemapAsync reports a French slot for EVERY page, because a locale slot
+            // materializes for every node the moment any node carries a localized slug (a slug
+            // resolves override-else-default). Those URLs are real and they work — they serve the
+            // French locale, falling back to English copy where nobody has translated it.
+            // Advertising them as hreflang="fr" would tell a crawler a French reader finds French
+            // there, which for most of this site is false, and a wrong claim earns a worse result
+            // than no claim.
+            //
+            // The CMS cannot answer this and deliberately does not try: a page is routinely
+            // translated while keeping its slug, so slug ownership was never a translation signal.
+            // Only this app knows, so only this app can say. Keyed on the NODE'S OWN default path
+            // rather than the per-locale one — the first argument arrives as /fr/cafes for the
+            // French call, and keying on that would drop exactly the pages translated enough to
+            // have earned a French address.
+            LocaleUrl = (localePath, locale, node) =>
+            {
+                if (!SiteLocales.Codes.Contains(locale))
+                {
+                    // A slot this site has no UI for. The CMS's locale tree is free to grow ahead
+                    // of this app.
+                    return null;
+                }
+
+                return locale == SiteLocales.Default || SiteLocales.TranslatedPaths.Contains(node.Path)
+                    ? localePath
+                    : null;
+            },
         });
 
         var document = documents.FirstOrDefault(candidate => candidate.Path == path);
