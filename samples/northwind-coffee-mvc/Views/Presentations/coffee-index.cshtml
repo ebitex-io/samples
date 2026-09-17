@@ -1,0 +1,130 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var heading = content.Text("heading");
+
+    // The catalogue itself was read by the controller, because it is a second query rather than part
+    // of this page's document — the page says "a catalogue goes here", and the stream says what is in
+    // it.
+    var catalogue = ViewData["Catalogue"] as CataloguePage ?? CataloguePage.Empty;
+    var filters = ViewData["CatalogueFilters"] as CatalogueFilters ?? new CatalogueFilters();
+    var path = Context.Request.Path.ToString();
+}
+
+<section class="mx-auto max-w-6xl px-6 py-12">
+    <h1 class="font-display text-3xl text-ink">@heading</h1>
+
+    <div class="mt-4 [&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline">
+        @await Html.RichTextAsync(content.Field("intro"))
+    </div>
+
+    @* A GET form, so a search lands on a real, shareable, bookmarkable URL — and the hidden fields
+       carry the active facets, since a form submission replaces the whole query string. *@
+    <form class="mt-8 flex flex-wrap items-center gap-3" method="get" action="@path">
+        @if (filters.Roast is { Length: > 0 } roastValue)
+        {
+            <input type="hidden" name="@CatalogueReader.RoastKey" value="@roastValue" />
+        }
+        @if (filters.Origin is { Length: > 0 } originValue)
+        {
+            <input type="hidden" name="@CatalogueReader.OriginKey" value="@originValue" />
+        }
+
+        <label class="sr-only" for="catalogue-search">Search coffees</label>
+        <input class="min-w-56 flex-1 rounded-full border border-line bg-raised px-4 py-2 text-ink"
+               id="catalogue-search"
+               type="search"
+               name="@CatalogueReader.SearchKey"
+               value="@filters.Search"
+               placeholder="Search coffees" />
+
+        <button class="rounded-full bg-accent px-5 py-2 font-medium text-accent-ink" type="submit">Search</button>
+
+        @if (CatalogueReader.HasAnyFilter(filters))
+        {
+            <a class="text-sm text-ink-muted underline" href="@path">Clear filters</a>
+        }
+    </form>
+
+    @foreach (var (label, key, values, active) in new[]
+    {
+        ("Roast", CatalogueReader.RoastKey, catalogue.RoastFacet, filters.Roast),
+        ("Origin", CatalogueReader.OriginKey, catalogue.OriginFacet, filters.Origin),
+    })
+    {
+        if (values.Count > 0)
+        {
+            <div class="mt-6">
+                <h2 class="text-sm uppercase tracking-wide text-ink-muted">@label</h2>
+                <ul class="mt-2 flex flex-wrap gap-2">
+                    @foreach (var value in values)
+                    {
+                        var selected = active == value.Value;
+                        @* Clicking the selected value clears it — a chip is a toggle, and with no
+                           JavaScript the toggle is just a different href. *@
+                        var href = path + CatalogueReader.LinkFor(filters, key, selected ? null : value.Value);
+
+                        <li>
+                            <a class="@(selected ? "rounded-full border border-accent bg-accent px-3 py-1 text-sm text-accent-ink" : "rounded-full border border-line px-3 py-1 text-sm text-ink-muted hover:text-ink")"
+                               href="@href"
+                               aria-pressed="@(selected ? "true" : "false")">
+                                @(value.Label ?? value.Value) <span class="opacity-70">@value.Count</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+
+    @if (catalogue.Items.Count == 0)
+    {
+        <p class="mt-10 text-ink-muted">
+            No coffees match that.
+            @if (CatalogueReader.HasAnyFilter(filters))
+            {
+                <a class="text-accent underline" href="@path">Clear the filters</a>
+                @:and start again.
+            }
+        </p>
+    }
+    else
+    {
+        <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach (var item in catalogue.Items)
+            {
+                var fields = item.IsResolved ? item.Content : null;
+                var href = item.PathFor();
+                var name = fields.Text("name");
+                var price = fields.Number("price");
+
+                @* A coffee with no published page is not a card: it would be a tile that goes nowhere. *@
+                if (href is { Length: > 0 })
+                {
+                    <li class="overflow-hidden rounded-lg border border-line bg-raised">
+                        <a class="block" href="@href">
+                            @Html.CmsImage(fields.Component("image"), "aspect-square w-full object-cover")
+                            <div class="p-4">
+                                <h3 class="font-display text-lg text-ink">@name</h3>
+                                @if (price is { } amount)
+                                {
+                                    <p class="mt-1 text-ink-muted">@Format.Price(amount)</p>
+                                }
+                            </div>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+
+        @if (catalogue.NextCursor is { Length: > 0 } next)
+        {
+            @* "More" is a link to the next page rather than an append, because appending needs script.
+               The cursor is replayed exactly as the server issued it. *@
+            <p class="mt-10 text-center">
+                <a class="inline-block rounded-full border border-line px-6 py-3 text-ink hover:bg-raised"
+                   href="@(path + CatalogueReader.NextPageLink(filters, next))">More coffees</a>
+            </p>
+        }
+    }
+</section>

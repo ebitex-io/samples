@@ -4,13 +4,16 @@
     var canonical = ViewData["Canonical"] as string;
     var description = ViewData["Description"] as string;
     var jsonLd = ViewData["JsonLd"] as string;
+    var chrome = ViewData["Chrome"] as SiteChrome ?? SiteChrome.Empty;
+    var image = ViewData["Image"] as string;
+    var pageTitle = ViewData["Title"] is string t && t.Length > 0 ? $"{t} — Northwind Coffee" : "Northwind Coffee";
 }
 <!DOCTYPE html>
 <html lang="@locale">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(ViewData["Title"] is string title && title.Length > 0 ? $"{title} — Northwind Coffee" : "Northwind Coffee")</title>
+    <title>@pageTitle</title>
     @if (description is { Length: > 0 })
     {
         <meta name="description" content="@description" />
@@ -18,6 +21,24 @@
     @if (canonical is { Length: > 0 })
     {
         <link rel="canonical" href="@canonical" />
+    }
+
+    @* Open Graph, from the same values rather than a second set of fields: a share card that disagrees
+       with the page it links to is worse than none. *@
+    <meta property="og:site_name" content="Northwind Coffee" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:type" content="website" />
+    @if (description is { Length: > 0 })
+    {
+        <meta property="og:description" content="@description" />
+    }
+    @if (canonical is { Length: > 0 })
+    {
+        <meta property="og:url" content="@canonical" />
+    }
+    @if (image is { Length: > 0 })
+    {
+        <meta property="og:image" content="@image" />
     }
     <link rel="stylesheet" href="~/css/site.css" />
     @if (jsonLd is { Length: > 0 })
@@ -27,8 +48,8 @@
     }
 </head>
 <body class="bg-surface text-ink">
-    @await RenderSectionAsync("Header", required: false)
+    @await Html.PartialAsync("_Header", chrome.Header)
     @RenderBody()
-    @await RenderSectionAsync("Footer", required: false)
+    @await Html.PartialAsync("_Footer", chrome.Footer)
 </body>
 </html>

@@ -1,0 +1,16 @@
+@model PresentationEnvelope
+@{
+    // Reached from inside prose: the server splits an embed out of the surrounding markdown into its
+    // own fragment, so this partial is dispatched exactly like any other Presentation rather than by
+    // anything here parsing a token.
+    var image = Model.Component;
+    var caption = Model.Content().Text("alt");
+}
+
+<figure class="my-8">
+    @Html.CmsImage(image, "w-full rounded-lg border border-line")
+    @if (caption is { Length: > 0 })
+    {
+        <figcaption class="mt-2 text-sm text-ink-muted">@caption</figcaption>
+    }
+</figure>

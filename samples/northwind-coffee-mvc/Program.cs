@@ -18,6 +18,9 @@ if (site.IsConfigured)
         options.SiteId = site.SiteId;
         options.BaseUrl = site.ApiBaseUrl;
     });
+
+    builder.Services.AddScoped<SiteChromeReader>();
+    builder.Services.AddScoped<CatalogueReader>();
 }
 
 var app = builder.Build();
@@ -40,6 +43,11 @@ app.Use(async (context, next) =>
 });
 
 app.UseStaticFiles();
+
+// Before routing, so the one-time token is spent and redirected away before any page read happens.
+// On a request carrying neither a token nor the cookie it does nothing at all.
+app.UseMiddleware<NorthwindCoffee.Mvc.Preview.PreviewSessionMiddleware>();
+
 app.UseRouting();
 
 // Order matters: the page route is a catch-all, so everything with a fixed address is mapped first.

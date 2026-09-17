@@ -1,0 +1,68 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var heading = content.Text("heading");
+
+    // The stores are inline components, not references: each one exists only as part of this list, so
+    // it has no address of its own and nothing else can bind it. Inline is the right shape for that,
+    // and it is why these are read straight out of this document rather than expanded from elsewhere.
+    var stores = content.Components("stores");
+}
+
+<section class="mx-auto max-w-4xl px-6 py-12">
+    @if (heading is { Length: > 0 })
+    {
+        <h1 class="font-display text-3xl text-ink">@heading</h1>
+    }
+
+    <div class="mt-4 [&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline">
+        @await Html.RichTextAsync(content.Field("intro"))
+    </div>
+
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2">
+        @foreach (var store in stores)
+        {
+            var fields = store.IsResolved ? store.Content : null;
+            var name = fields.Text("name");
+            var address = fields.Texts("address");
+            var hours = fields.Texts("hours");
+            var phone = fields.Text("phone");
+            var map = fields.Link("map");
+
+            <li class="rounded-lg border border-line bg-raised p-5">
+                <h2 class="font-display text-lg text-ink">@name</h2>
+
+                @if (address.Count > 0)
+                {
+                    <address class="mt-2 not-italic text-sm text-ink-muted">
+                        @foreach (var line in address)
+                        {
+                            <span class="block">@line</span>
+                        }
+                    </address>
+                }
+
+                @if (hours.Count > 0)
+                {
+                    <ul class="mt-3 text-sm text-ink-muted">
+                        @foreach (var line in hours)
+                        {
+                            <li>@line</li>
+                        }
+                    </ul>
+                }
+
+                <p class="mt-3 text-sm">
+                    @if (phone is { Length: > 0 })
+                    {
+                        <a class="text-accent underline" href="tel:@phone.Replace(" ", "")">@phone</a>
+                    }
+                    @if (map?.Url is { Length: > 0 } mapUrl)
+                    {
+                        <a class="ml-4 text-accent underline" href="@mapUrl">Map</a>
+                    }
+                </p>
+            </li>
+        }
+    </ul>
+</section>

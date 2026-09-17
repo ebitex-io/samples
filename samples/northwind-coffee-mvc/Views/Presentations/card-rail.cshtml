@@ -1,0 +1,20 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var heading = content.Text("heading");
+
+    // Each entry is itself a Presentation, so the rail never knows what a card is — it lays out
+    // whatever Templates the author bound, and the dispatcher renders each one.
+    var cards = content.Presentations("cards");
+}
+
+<section class="mx-auto max-w-6xl px-6 py-12">
+    @if (heading is { Length: > 0 })
+    {
+        <h2 class="font-display text-2xl text-ink">@heading</h2>
+    }
+
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        @await Html.PresentationsAsync(cards)
+    </div>
+</section>

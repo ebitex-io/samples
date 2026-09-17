@@ -1,0 +1,94 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var name = content.Text("name");
+    var producer = content.Text("producer");
+    var image = content.Component("image");
+    var notes = content.Texts("tasting-notes");
+    var price = content.Number("price");
+    var weight = content.Number("weight-grams");
+
+    // Two taxonomy fields and one reference. The categories carry their own labels because delivery
+    // resolves them per request; the origin arrives already expanded, at this page's resolve depth.
+    var roast = content.Category("roast").Label();
+    var process = content.Category("process").Label();
+    var origin = content.Component("origin");
+    var originFields = origin is { IsResolved: true } ? origin.Content : null;
+    var originPath = origin.PathFor();
+}
+
+<article class="mx-auto max-w-5xl px-6 py-12">
+    <div class="grid gap-10 md:grid-cols-2">
+        <div>
+            @Html.CmsImage(image, "w-full rounded-lg border border-line", eager: true)
+        </div>
+
+        <div>
+            <h1 class="font-display text-3xl text-ink">@name</h1>
+
+            @if (producer is { Length: > 0 })
+            {
+                <p class="mt-2 text-ink-muted">@producer</p>
+            }
+
+            @if (roast is { Length: > 0 } || process is { Length: > 0 })
+            {
+                <ul class="mt-4 flex flex-wrap gap-2">
+                    @foreach (var tag in new[] { roast, process })
+                    {
+                        if (tag is { Length: > 0 })
+                        {
+                            <li class="rounded-full border border-line px-3 py-1 text-sm text-ink-muted">@tag</li>
+                        }
+                    }
+                </ul>
+            }
+
+            @if (notes.Count > 0)
+            {
+                <ul class="mt-4 flex flex-wrap gap-2">
+                    @foreach (var note in notes)
+                    {
+                        <li class="rounded-full bg-sunken px-3 py-1 text-sm text-ink">@note</li>
+                    }
+                </ul>
+            }
+
+            @if (price is { } amount)
+            {
+                <p class="mt-6 text-2xl text-ink">
+                    @Format.Price(amount)
+                    @if (weight is { } grams)
+                    {
+                        <span class="ml-2 text-base text-ink-muted">@Format.Weight(grams)</span>
+                    }
+                </p>
+            }
+
+            <div class="mt-6 [&_p]:mt-4 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink">
+                @await Html.RichTextAsync(content.Field("description"))
+            </div>
+        </div>
+    </div>
+
+    @if (originFields is not null)
+    {
+        <aside class="mt-12 rounded-lg border border-line bg-raised p-6">
+            <p class="text-sm uppercase tracking-wide text-ink-muted">Origin</p>
+            <h2 class="mt-1 font-display text-xl text-ink">
+                @if (originPath is { Length: > 0 })
+                {
+                    <a class="underline decoration-line underline-offset-4" href="@originPath">@originFields.Text("name")</a>
+                }
+                else
+                {
+                    @originFields.Text("name")
+                }
+            </h2>
+            @if (originFields.Text("country") is { Length: > 0 } originCountry)
+            {
+                <p class="mt-1 text-sm text-ink-muted">@originCountry</p>
+            }
+        </aside>
+    }
+</article>

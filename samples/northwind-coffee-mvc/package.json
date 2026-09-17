@@ -1,0 +1,13 @@
+{
+  "name": "northwind-coffee-mvc-styles",
+  "private": true,
+  "description": "Build-time only. Running this sample needs `dotnet run` and nothing else — wwwroot/css/site.css is committed. This manifest exists solely so the stylesheet can be REGENERATED after editing a view, which is optional.",
+  "scripts": {
+    "css": "tailwindcss -i Styles/site.css -o wwwroot/css/site.css --minify",
+    "css:watch": "tailwindcss -i Styles/site.css -o wwwroot/css/site.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

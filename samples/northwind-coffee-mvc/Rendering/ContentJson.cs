@@ -92,4 +92,18 @@ public static class ContentJson
     /// </summary>
     public static string? PathFor(this ComponentValue? component) =>
         component?.Paths is { Count: > 0 } paths ? paths[0].Path : null;
+
+    /// <summary>
+    /// A category's own label. Definitions are read live at delivery, so an unresolved descriptor is a
+    /// real state — a category deleted since this page was published — and the honest answer is to
+    /// render nothing rather than a raw key.
+    /// </summary>
+    public static string? Label(this CategoryDescriptor? category) =>
+        category switch
+        {
+            null or { Resolved: false } => null,
+            { Value: { ValueKind: JsonValueKind.String } value } => value.GetString(),
+            { Path: { Length: > 0 } path } => path[(path.LastIndexOf('/') + 1)..],
+            _ => null,
+        };
 }

@@ -1,0 +1,51 @@
+@model ComponentValue
+@{
+    var content = Model is { IsResolved: true } ? Model.Content : null;
+    var tagline = content.Text("tagline");
+    var links = content.Components("links");
+    var buyerType = RequestContext.BuyerTypeFrom(Context.Request);
+}
+
+<footer class="mt-16 border-t border-line bg-sunken">
+    <div class="mx-auto max-w-6xl px-6 py-10">
+        @if (tagline is { Length: > 0 })
+        {
+            <p class="font-display text-lg text-ink">@tagline</p>
+        }
+
+        @if (links.Count > 0)
+        {
+            <nav aria-label="Footer">
+                <ul class="mt-4 flex flex-wrap gap-5 text-sm">
+                    @foreach (var entry in links)
+                    {
+                        var fields = entry.IsResolved ? entry.Content : null;
+                        var label = fields.Text("label");
+
+                        if (label is { Length: > 0 } && fields.Link("link")?.Url is { Length: > 0 } href)
+                        {
+                            <li><a class="text-ink-muted hover:text-ink" href="@href">@label</a></li>
+                        }
+                    }
+                </ul>
+            </nav>
+        }
+
+        @* The buyer switcher: a plain form, posting to a route that sets a cookie and redirects back.
+           Personalization is decided on the server from the request, so switching is a request — there
+           is nothing in the browser here to change a value and re-render. *@
+        <form class="mt-8 flex items-center gap-3 text-sm" method="post" action="/buyer-type">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnTo" value="@(Context.Request.Path + Context.Request.QueryString)" />
+            <span class="text-ink-muted">Showing</span>
+            <span class="text-ink">@(buyerType == RequestContext.Trade ? "trade" : "retail")</span>
+            <span class="text-ink-muted">prices.</span>
+            <button class="rounded-full border border-line px-3 py-1 text-ink hover:bg-raised"
+                    type="submit"
+                    name="buyerType"
+                    value="@(buyerType == RequestContext.Trade ? RequestContext.Retail : RequestContext.Trade)">
+                Switch to @(buyerType == RequestContext.Trade ? "retail" : "trade")
+            </button>
+        </form>
+    </div>
+</footer>
