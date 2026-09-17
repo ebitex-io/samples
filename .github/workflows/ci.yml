@@ -41,6 +41,7 @@ jobs:
     outputs:
       northwind-coffee: ${{ steps.filter.outputs.northwind-coffee }}
       northwind-coffee-ssr: ${{ steps.filter.outputs.northwind-coffee-ssr }}
+      northwind-coffee-mvc: ${{ steps.filter.outputs.northwind-coffee-mvc }}
       unclassified: ${{ steps.unclassified-filter.outputs.unclassified }}
     steps:
       - uses: actions/checkout@v4
@@ -58,6 +59,9 @@ jobs:
               - '.github/workflows/ci.yml'
             northwind-coffee-ssr:
               - 'samples/northwind-coffee-ssr/**'
+              - '.github/workflows/ci.yml'
+            northwind-coffee-mvc:
+              - 'samples/northwind-coffee-mvc/**'
               - '.github/workflows/ci.yml'
 
       - uses: dorny/paths-filter@v3
@@ -96,24 +100,49 @@ jobs:
           echo "OK — no committed .env files."
 
       # Every sample must be recognisable as a standalone project, which is what makes it copyable
-      # (samples/README.md). A directory missing either file is a half-added sample.
+      # (samples/README.md). A directory missing either is a half-added sample.
+      #
+      # "A manifest" rather than "package.json": this rule was written when every sample was a Node
+      # project, and northwind-coffee-mvc is a .NET one whose manifest is a .csproj. The rule being
+      # enforced is that the directory stands alone and declares its own dependencies — which a csproj
+      # does exactly as well. Requiring a package.json would have made a .NET sample carry one for the
+      # check's benefit rather than its own, which is the wrong way round.
       - name: Every sample is a standalone project with a README
         run: |
           status=0
           shopt -s nullglob
           for dir in samples/*/; do
             name=$(basename "$dir")
-            for required in README.md package.json; do
-              if [ ! -f "$dir$required" ]; then
-                echo "::error::samples/$name is missing $required (see CONTRIBUTING.md)"
-                status=1
-              fi
-            done
+
+            if [ ! -f "$dir/README.md" ]; then
+              echo "::error::samples/$name is missing README.md (see CONTRIBUTING.md)"
+              status=1
+            fi
+
+            manifests=("$dir"package.json "$dir"*.csproj)
+            if [ ${#manifests[@]} -eq 0 ]; then
+              echo "::error::samples/$name has no project manifest — expected package.json or a .csproj (see CONTRIBUTING.md)"
+              status=1
+            fi
           done
           if [ "$status" -eq 0 ]; then
             echo "OK — every sample directory is well-formed (or there are none yet)."
           fi
           exit $status
+
+      # The .env rule above catches a key committed in the file that is *meant* to hold one. This one
+      # catches a key committed anywhere else — pasted into an appsettings.json, a README, a test
+      # fixture. A key is `frm_live_` plus 56 characters from [A-Za-z0-9], which no placeholder or
+      # prose can match by accident.
+      - name: No API key is committed
+        run: |
+          found=$(git grep -nE 'frm_live_[A-Za-z0-9]{56}' -- . || true)
+          if [ -n "$found" ]; then
+            echo "::error::An API key appears to be committed. Rotate it immediately, then remove it:"
+            echo "$found"
+            exit 1
+          fi
+          echo "OK — no key-shaped string is committed."
 
   # The sample is a standalone project with its own lockfile and its own build -- there is no root
   # install and nothing hoisted, which is the point (samples/README.md). `npm ci` therefore runs
@@ -173,3 +202,36 @@ jobs:
       # No delivery key here, and that is the point of the check rather than a gap in it: a sample
       # must build without credentials, showing its "not configured yet" page instead of failing.
       - run: npm run build
+
+  # The third build of the same site: ASP.NET Core MVC, Razor, and no client-side framework. Same
+  # rules as its two siblings — its own manifest, its own restore, run inside the sample directory —
+  # so a green job is evidence that a reader who copies this one directory out gets something that
+  # restores from nuget.org and builds.
+  #
+  # No npm step, deliberately. The sample has a package.json, but it is build-time only: it exists so
+  # the stylesheet can be regenerated after editing a view. wwwroot/css/site.css is committed, and
+  # running the sample needs `dotnet run` and nothing else.
+  northwind-coffee-mvc:
+    needs: changes
+    if: needs.changes.outputs.northwind-coffee-mvc == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/northwind-coffee-mvc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - run: dotnet restore
+
+      # Also with no delivery key, for the same reason as the SSR job above.
+      - run: dotnet build --no-restore --configuration Release
+
+      # The test project is named explicitly, and there is deliberately no solution file. A solution at
+      # the sample root would make `dotnet run` — the first command this sample's README gives a reader
+      # — fail with MSB1011, because the folder would then hold both a project and a solution. Naming
+      # the test project here costs one path; the alternative costs every reader their first command.
+      - run: dotnet test tests/NorthwindCoffee.Mvc.Tests --configuration Release

@@ -12,4 +12,18 @@
     <PackageReference Include="Markdig" Version="1.3.2" />
   </ItemGroup>
 
+  <!--
+    The test project lives under tests/, inside this project's own directory, and the SDK's default
+    globs are recursive - so without this the web project compiles the test project's sources into
+    itself. It fails in a thoroughly misleading way: the first error is "the type or namespace name
+    'Xunit' could not be found", reported against THIS project, which has no business knowing what
+    xunit is.
+  -->
+  <ItemGroup>
+    <Compile Remove="tests/**" />
+    <Content Remove="tests/**" />
+    <None Remove="tests/**" />
+    <EmbeddedResource Remove="tests/**" />
+  </ItemGroup>
+
 </Project>
