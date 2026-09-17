@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Not configured yet";
+    Layout = "_Layout";
+}
+
+<main class="mx-auto max-w-2xl px-6 py-24">
+    <h1 class="font-display text-3xl text-ink">This sample is not configured yet</h1>
+
+    <p class="mt-4 text-ink-muted">
+        It needs an ebitex organization of your own, with Northwind Coffee's content imported into it,
+        and a <strong class="text-ink">server-side</strong> delivery key. Nothing here is shared: the
+        content and the key are yours, which is what makes this sample something you can change rather
+        than only run.
+    </p>
+
+    <h2 class="mt-10 font-display text-xl text-ink">What to set</h2>
+
+    <pre class="mt-4 overflow-x-auto rounded-lg bg-sunken p-4 text-sm text-ink"><code>dotnet user-secrets set "Content:DeliveryKey" "frm_live_..."
+dotnet user-secrets set "Content:SiteId"      "00000000-0000-0000-0000-000000000000"
+dotnet user-secrets set "Content:ApiBaseUrl"  "https://api.ebitex.io"</code></pre>
+
+    <p class="mt-4 text-ink-muted">
+        The key comes from Content &rsaquo; Configure &rsaquo; Delivery in your own organization. Mark it
+        <strong class="text-ink">Allow draft preview</strong> if you want live preview to work — this
+        sample renders on its server and never hydrates, so preview reaches it as a session rather than
+        through the browser bridge.
+    </p>
+
+    <p class="mt-4 text-ink-muted">
+        The README has the full walkthrough, starting with which seed bundle to import.
+    </p>
+</main>

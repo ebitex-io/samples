@@ -1,0 +1,32 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var title = content.Text("title");
+    var description = content.Text("description");
+    var sections = content.Presentations("sections");
+}
+
+<article>
+    @* A page built entirely of sections lets its first section carry the heading — otherwise the page
+       would announce itself twice, once here and once in the hero. A page with no sections is prose,
+       and needs its own. *@
+    @if (sections.Count == 0)
+    {
+        <header class="mx-auto max-w-3xl px-6 pt-16">
+            @if (title is { Length: > 0 })
+            {
+                <h1 class="font-display text-4xl text-ink">@title</h1>
+            }
+            @if (description is { Length: > 0 })
+            {
+                <p class="mt-3 text-lg text-ink-muted">@description</p>
+            }
+        </header>
+    }
+
+    <div class="mx-auto max-w-3xl px-6 py-10 [&_p]:mt-4 [&_p]:text-ink-muted [&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink [&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-xl [&_h3]:text-ink [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:text-ink-muted [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink [&_table]:mt-6 [&_table]:w-full [&_table]:border-collapse [&_th]:border-b [&_th]:border-line [&_th]:py-2 [&_th]:text-left [&_th]:text-ink [&_td]:border-b [&_td]:border-line [&_td]:py-2 [&_td]:text-ink-muted">
+        @await Html.RichTextAsync(content.Field("body"))
+    </div>
+
+    @await Html.PresentationsAsync(sections)
+</article>

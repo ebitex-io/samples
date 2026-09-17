@@ -1,0 +1,7 @@
+@model PathResult.Presentation
+@{
+    // Title, locale and canonical were set by the controller, which is where the resolve result lives.
+    // This view's whole job is to hand the envelope to the dispatcher.
+}
+
+@await Html.PresentationAsync(Model.Envelope)

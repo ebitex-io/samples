@@ -1,0 +1,34 @@
+@{
+    // The locale comes from the resolve result, never from anything this app parses out of the path.
+    var locale = ViewData["Locale"] as string ?? "en";
+    var canonical = ViewData["Canonical"] as string;
+    var description = ViewData["Description"] as string;
+    var jsonLd = ViewData["JsonLd"] as string;
+}
+<!DOCTYPE html>
+<html lang="@locale">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] is string title && title.Length > 0 ? $"{title} — Northwind Coffee" : "Northwind Coffee")</title>
+    @if (description is { Length: > 0 })
+    {
+        <meta name="description" content="@description" />
+    }
+    @if (canonical is { Length: > 0 })
+    {
+        <link rel="canonical" href="@canonical" />
+    }
+    <link rel="stylesheet" href="~/css/site.css" />
+    @if (jsonLd is { Length: > 0 })
+    {
+        @* Serialized upstream, with < escaped, so it cannot close this script element early. *@
+        <script type="application/ld+json">@Html.Raw(jsonLd)</script>
+    }
+</head>
+<body class="bg-surface text-ink">
+    @await RenderSectionAsync("Header", required: false)
+    @RenderBody()
+    @await RenderSectionAsync("Footer", required: false)
+</body>
+</html>

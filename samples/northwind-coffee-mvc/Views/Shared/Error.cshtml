@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Something went wrong";
+    Layout = "_Layout";
+
+    // Two different references, and they are not interchangeable. The first is this request in this
+    // app's own logs; the second — present only when the failure came from the Delivery API — is the
+    // reference ebitex support can find, taken from ContentDeliveryException.RequestId.
+    var localTrace = Context.TraceIdentifier;
+    var contentRequestId = ViewData["ContentRequestId"] as string;
+}
+
+<main class="mx-auto max-w-2xl px-6 py-24">
+    <h1 class="font-display text-3xl text-ink">Something went wrong</h1>
+
+    <p class="mt-4 text-ink-muted">
+        This page could not be rendered. The site itself is fine — reload, or try another page.
+    </p>
+
+    <dl class="mt-8 grid gap-2 text-sm">
+        <div class="flex gap-3">
+            <dt class="text-ink-muted">This request</dt>
+            <dd><code class="text-ink">@localTrace</code></dd>
+        </div>
+        @if (contentRequestId is { Length: > 0 })
+        {
+            <div class="flex gap-3">
+                <dt class="text-ink-muted">Content API request</dt>
+                <dd><code class="text-ink">@contentRequestId</code></dd>
+            </div>
+        }
+    </dl>
+
+    <p class="mt-8 text-ink-muted">
+        <a class="text-accent underline" href="/">Back to the shop</a>
+    </p>
+</main>
