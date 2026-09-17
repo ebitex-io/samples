@@ -37,3 +37,12 @@ npm-debug.log*
 
 # TypeScript incremental build state. A build artifact, and machine-specific.
 *.tsbuildinfo
+
+# .NET build output. Same reasoning as .next/ above, one stack along: obj/ and bin/ are not merely
+# artifacts — a build copies appsettings.json into bin/, so a reader who puts a real delivery key in
+# that file (rather than in dotnet user-secrets, which is what the README tells them to do) would have
+# it committed from a directory nobody thinks to look in, and `repo-checks` greps for .env *filenames*,
+# so it would not catch it.
+bin/
+obj/
+*.user
