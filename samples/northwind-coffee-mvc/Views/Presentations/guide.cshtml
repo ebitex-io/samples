@@ -1,0 +1,71 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var heading = content.Text("heading");
+    var summary = content.Text("summary");
+    var equipment = content.Texts("equipment");
+    var totalTime = content.Number("total-time");
+
+    // Each step is a component in its own right. Server-side they arrive already expanded at this
+    // page's resolve depth, so there is nothing to resolve here — the React twin's <Resolve> wrapper
+    // collapses to an ordinary null check.
+    var steps = content.Components("steps");
+}
+
+<article class="mx-auto max-w-3xl px-6 py-12">
+    <h1 class="font-display text-3xl text-ink">@heading</h1>
+
+    @if (summary is { Length: > 0 })
+    {
+        <p class="mt-3 text-lg text-ink-muted">@summary</p>
+    }
+
+    @if (equipment.Count > 0 || totalTime is not null)
+    {
+        <dl class="mt-6 grid gap-3 rounded-lg border border-line bg-raised p-5 text-sm sm:grid-cols-2">
+            @if (totalTime is { } minutes)
+            {
+                <div>
+                    <dt class="text-ink-muted">Total time</dt>
+                    <dd class="mt-1 text-ink">@($"{minutes:0.##} min")</dd>
+                </div>
+            }
+            @if (equipment.Count > 0)
+            {
+                <div>
+                    <dt class="text-ink-muted">Equipment</dt>
+                    <dd class="mt-1 text-ink">
+                        <ul class="list-disc pl-5">
+                            @foreach (var item in equipment)
+                            {
+                                <li>@item</li>
+                            }
+                        </ul>
+                    </dd>
+                </div>
+            }
+        </dl>
+    }
+
+    <ol class="mt-10 space-y-8">
+        @{ var number = 0; }
+        @foreach (var step in steps)
+        {
+            number++;
+            var fields = step.IsResolved ? step.Content : null;
+
+            <li class="flex gap-5">
+                <span aria-hidden="true" class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-accent font-display text-accent-ink">@number</span>
+                <div class="min-w-0">
+                    @if (fields.Text("heading") is { Length: > 0 } stepHeading)
+                    {
+                        <h2 class="font-display text-xl text-ink">@stepHeading</h2>
+                    }
+                    <div class="[&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink [&_code]:rounded [&_code]:bg-sunken [&_code]:px-1">
+                        @await Html.RichTextAsync(fields.Field("body"))
+                    </div>
+                </div>
+            </li>
+        }
+    </ol>
+</article>

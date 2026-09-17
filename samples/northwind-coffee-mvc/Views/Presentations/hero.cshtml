@@ -1,0 +1,41 @@
+@model PresentationEnvelope
+@{
+    // The `statement` Contract, bound to the `hero` Template: the same content the `prose` Template
+    // renders quietly. One Contract, two Templates, two treatments — which is the distinction the
+    // Template/Contract split exists to make, and the reason these two partials are not one.
+    var content = Model.Content();
+    var heading = content.Text("heading");
+    var standfirst = content.Text("standfirst");
+    var cta = content.Link("cta");
+    var ctaLabel = content.Text("cta-label");
+}
+
+<section class="border-b border-line bg-sunken">
+    <div class="mx-auto max-w-3xl px-6 py-20 text-center">
+        @if (heading is { Length: > 0 })
+        {
+            <h1 class="font-display text-4xl text-ink sm:text-5xl">@heading</h1>
+        }
+
+        @if (standfirst is { Length: > 0 })
+        {
+            <p class="mt-4 text-lg text-ink-muted">@standfirst</p>
+        }
+
+        <div class="mt-6 [&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink">
+            @await Html.RichTextAsync(content.Field("body"))
+        </div>
+
+        @* A link whose target is unpublished has a null url. Rendering the label as plain text says
+           the same thing honestly, where a dead href would look like a working link. *@
+        @if (ctaLabel is { Length: > 0 })
+        {
+            if (cta?.Url is { Length: > 0 } href)
+            {
+                <p class="mt-8">
+                    <a class="inline-block rounded-full bg-accent px-6 py-3 font-medium text-accent-ink" href="@href">@ctaLabel</a>
+                </p>
+            }
+        }
+    </div>
+</section>

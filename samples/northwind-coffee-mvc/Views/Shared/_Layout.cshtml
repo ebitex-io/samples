@@ -1,0 +1,55 @@
+@{
+    // The locale comes from the resolve result, never from anything this app parses out of the path.
+    var locale = ViewData["Locale"] as string ?? "en";
+    var canonical = ViewData["Canonical"] as string;
+    var description = ViewData["Description"] as string;
+    var jsonLd = ViewData["JsonLd"] as string;
+    var chrome = ViewData["Chrome"] as SiteChrome ?? SiteChrome.Empty;
+    var image = ViewData["Image"] as string;
+    var pageTitle = ViewData["Title"] is string t && t.Length > 0 ? $"{t} — Northwind Coffee" : "Northwind Coffee";
+}
+<!DOCTYPE html>
+<html lang="@locale">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle</title>
+    @if (description is { Length: > 0 })
+    {
+        <meta name="description" content="@description" />
+    }
+    @if (canonical is { Length: > 0 })
+    {
+        <link rel="canonical" href="@canonical" />
+    }
+
+    @* Open Graph, from the same values rather than a second set of fields: a share card that disagrees
+       with the page it links to is worse than none. *@
+    <meta property="og:site_name" content="Northwind Coffee" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:type" content="website" />
+    @if (description is { Length: > 0 })
+    {
+        <meta property="og:description" content="@description" />
+    }
+    @if (canonical is { Length: > 0 })
+    {
+        <meta property="og:url" content="@canonical" />
+    }
+    @if (image is { Length: > 0 })
+    {
+        <meta property="og:image" content="@image" />
+    }
+    <link rel="stylesheet" href="~/css/site.css" />
+    @if (jsonLd is { Length: > 0 })
+    {
+        @* Serialized upstream, with < escaped, so it cannot close this script element early. *@
+        <script type="application/ld+json">@Html.Raw(jsonLd)</script>
+    }
+</head>
+<body class="bg-surface text-ink">
+    @await Html.PartialAsync("_Header", chrome.Header)
+    @RenderBody()
+    @await Html.PartialAsync("_Footer", chrome.Footer)
+</body>
+</html>

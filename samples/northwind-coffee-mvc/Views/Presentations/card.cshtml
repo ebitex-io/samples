@@ -1,0 +1,39 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var heading = content.Text("heading");
+    var standfirst = content.Text("standfirst");
+    var image = content.Component("image");
+
+    // The card's address is the bound component's own, delivered beside it because the page was
+    // resolved with referencePaths. A card with no published address is not a link — it still shows
+    // its content, but it must not pretend to go anywhere.
+    var href = Model.Component.PathFor();
+}
+
+<article class="overflow-hidden rounded-lg border border-line bg-raised">
+    @if (href is { Length: > 0 })
+    {
+        <a class="block" href="@href">
+            @Html.CmsImage(image, "aspect-[4/3] w-full object-cover")
+            <div class="p-5">
+                <h3 class="font-display text-lg text-ink">@heading</h3>
+                @if (standfirst is { Length: > 0 })
+                {
+                    <p class="mt-2 text-sm text-ink-muted">@standfirst</p>
+                }
+            </div>
+        </a>
+    }
+    else
+    {
+        @Html.CmsImage(image, "aspect-[4/3] w-full object-cover")
+        <div class="p-5">
+            <h3 class="font-display text-lg text-ink">@heading</h3>
+            @if (standfirst is { Length: > 0 })
+            {
+                <p class="mt-2 text-sm text-ink-muted">@standfirst</p>
+            }
+        </div>
+    }
+</article>

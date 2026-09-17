@@ -1,0 +1,38 @@
+@model PresentationEnvelope
+@inject ContentSite Site
+@{
+    var content = Model.Content();
+    var form = content.Text("form");
+    var title = content.Text("title");
+
+    var src = form is { Length: > 0 }
+        ? $"{Site.FormsBaseUrl.TrimEnd('/')}/public/form/{Uri.EscapeDataString(Site.FormsOrgSlug)}/{Uri.EscapeDataString(form)}?embed=1"
+        : null;
+}
+
+@* The one script on this site, and it is deliberate. This is the embed any Forms customer pastes into
+   their own page: an iframe plus Forms' own embed.js, which does nothing but resize the frame. Writing
+   a bespoke renderer here would teach the wrong thing — and the iframe still works without the script,
+   at a fixed height. *@
+
+<section class="mx-auto max-w-3xl px-6 py-12">
+    @if (title is { Length: > 0 })
+    {
+        <h2 class="font-display text-2xl text-ink">@title</h2>
+    }
+
+    @if (src is { Length: > 0 })
+    {
+        <iframe class="mt-6 w-full rounded-lg border border-line"
+                style="height: 640px"
+                src="@src"
+                title="@(title ?? "Form")"
+                loading="lazy"></iframe>
+
+        <script src="@($"{Site.FormsBaseUrl.TrimEnd('/')}/embed.js")" async></script>
+    }
+    else
+    {
+        <p class="mt-4 text-ink-muted">This section names no form.</p>
+    }
+</section>

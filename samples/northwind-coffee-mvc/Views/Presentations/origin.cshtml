@@ -1,0 +1,44 @@
+@model PresentationEnvelope
+@{
+    var content = Model.Content();
+    var name = content.Text("name");
+    var country = content.Text("country");
+    var altitude = content.Text("altitude");
+    var image = content.Component("image");
+
+    // `note` is contextual: the value belongs to this *usage* of the origin, not to the origin itself,
+    // so the same place reads differently depending on which page is showing it. That is the whole
+    // point of the isContextual modifier, and it arrives here as an ordinary field.
+    var note = content.Text("note");
+}
+
+<section class="mx-auto max-w-4xl px-6 py-12">
+    <p class="text-sm uppercase tracking-wide text-ink-muted">Origin</p>
+
+    <h1 class="mt-2 font-display text-3xl text-ink">@name</h1>
+
+    @if (country is { Length: > 0 } || altitude is { Length: > 0 })
+    {
+        <dl class="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+            @if (country is { Length: > 0 })
+            {
+                <div class="flex gap-2"><dt class="text-ink-muted">Country</dt><dd class="text-ink">@country</dd></div>
+            }
+            @if (altitude is { Length: > 0 })
+            {
+                <div class="flex gap-2"><dt class="text-ink-muted">Altitude</dt><dd class="text-ink">@altitude</dd></div>
+            }
+        </dl>
+    }
+
+    @if (note is { Length: > 0 })
+    {
+        <p class="mt-6 border-l-2 border-accent pl-4 text-ink-muted">@note</p>
+    }
+
+    @Html.CmsImage(image, "mt-8 w-full rounded-lg border border-line", eager: true)
+
+    <div class="mt-8 [&_p]:mt-4 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink">
+        @await Html.RichTextAsync(content.Field("summary"))
+    </div>
+</section>
