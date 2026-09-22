@@ -1,4 +1,12 @@
+@using NorthwindCoffee.Mvc.Preview
+@inject PreviewAnnotations annotations
+@inject NorthwindCoffee.Mvc.Content.ContentSite contentSite
 @{
+    // Live preview (spec 728): the script is served by Composer itself, at the origin this site is
+    // framed by — so a customer installs nothing and builds nothing. Configured, never guessed: the
+    // origin is also the only one the script will accept messages from.
+    var composerOrigin = contentSite.ComposerOrigin.TrimEnd('/');
+
     // The locale comes from the resolve result, never from anything this app parses out of the path.
     var locale = ViewData["Locale"] as string ?? "en";
     var canonical = ViewData["Canonical"] as string;
@@ -51,5 +59,23 @@
     @await Html.PartialAsync("_Header", chrome.Header)
     @RenderBody()
     @await Html.PartialAsync("_Footer", chrome.Footer)
+
+    @*
+        Live preview (spec 728): the boundary registry, then the script that reads it.
+
+        Both go *after* the body, because ids are assigned while the page renders — the registry does
+        not exist until everything above has run. Emitted only inside Composer's frame: on an ordinary
+        visit `IsPreviewing` is false, nothing below is written, and the page is byte-identical to one
+        served by a build with no preview support.
+
+        A real site would include the script tag unconditionally instead — it is inert unless the page
+        is genuinely being previewed, and one cached request is cheaper than the conditional. This
+        sample keeps it conditional to make the "nothing changes for a visitor" property obvious.
+    *@
+    @if (annotations.IsPreviewing)
+    {
+        <script type="application/json" data-ebitex-preview-sources>@Html.Raw(annotations.ToJson())</script>
+        <script src="@composerOrigin/preview.js" data-ebitex-preview-origins="@composerOrigin"></script>
+    }
 </body>
 </html>

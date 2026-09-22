@@ -14,15 +14,15 @@
     <div class="mx-auto max-w-3xl px-6 py-20 text-center">
         @if (heading is { Length: > 0 })
         {
-            <h1 class="font-display text-4xl text-ink sm:text-5xl">@heading</h1>
+            <h1 class="font-display text-4xl text-ink sm:text-5xl"@Html.PreviewField("heading")>@heading</h1>
         }
 
         @if (standfirst is { Length: > 0 })
         {
-            <p class="mt-4 text-lg text-ink-muted">@standfirst</p>
+            <p class="mt-4 text-lg text-ink-muted"@Html.PreviewField("standfirst")>@standfirst</p>
         }
 
-        <div class="mt-6 [&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink">
+        <div @Html.PreviewField("body") class="mt-6 [&_p]:mt-3 [&_p]:text-ink-muted [&_a]:text-accent [&_a]:underline [&_strong]:text-ink">
             @await Html.RichTextAsync(content.Field("body"))
         </div>
 

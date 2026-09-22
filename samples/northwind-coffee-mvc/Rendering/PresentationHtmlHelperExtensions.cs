@@ -57,7 +57,43 @@ public static partial class PresentationHtmlHelperExtensions
             return Notice(helper, $"no partial for Template '{externalId}' — add Views/Presentations/{externalId}.cshtml");
         }
 
-        return await helper.PartialAsync(viewPath, envelope);
+        var rendered = await helper.PartialAsync(viewPath, envelope);
+
+        // Live preview (spec 728): one boundary mark per Presentation, emitted here because this is
+        // the single place any Presentation renders — so nested ones and RichText embeds are marked
+        // by the same rule, without a partial having to remember. `display: contents` so the wrapper
+        // has no box of its own and cannot change a single pixel of the layout; the script measures
+        // the children instead, exactly as it does for the React boundary.
+        var annotations = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<Preview.PreviewAnnotations>();
+        if (annotations.Register(envelope) is not { } boundaryId)
+        {
+            return rendered;
+        }
+
+        return new HtmlContentBuilder()
+            .AppendHtml($"""<span style="display:contents" data-ebitex-source="{HtmlEncoder.Default.Encode(boundaryId)}">""")
+            .AppendHtml(rendered)
+            .AppendHtml("</span>");
+    }
+
+    /// <summary>
+    /// Marks one element as the rendering of one field: <c>&lt;h1 @Html.PreviewField("headline")&gt;</c>.
+    /// Returns nothing outside a preview, so published markup is untouched.
+    ///
+    /// <para>
+    /// The key is the field's own key in the Component's content — the same string the annotation
+    /// lists under <c>fields</c>, which is how a click on the heading opens that field and not the
+    /// whole Component.
+    /// </para>
+    /// </summary>
+    public static IHtmlContent PreviewField(this IHtmlHelper helper, string fieldKey)
+    {
+        ArgumentNullException.ThrowIfNull(helper);
+
+        var annotations = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<Preview.PreviewAnnotations>();
+        return annotations.IsPreviewing
+            ? new HtmlString($""" data-ebitex-field="{HtmlEncoder.Default.Encode(fieldKey)}" """)
+            : HtmlString.Empty;
     }
 
     /// <summary>
