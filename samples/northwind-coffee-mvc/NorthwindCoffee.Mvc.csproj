@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ebitex.Content.Delivery" Version="0.3.0" />
+    <PackageReference Include="Ebitex.Content.Delivery" Version="0.3.6" />
     <PackageReference Include="Markdig" Version="1.3.2" />
   </ItemGroup>
 
