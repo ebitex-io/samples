@@ -7,6 +7,10 @@ builder.Services.AddControllersWithViews();
 var site = ContentSite.FromConfiguration(builder.Configuration);
 builder.Services.AddSingleton(site);
 
+// One per request, and harmless on an ordinary visit: it stays inert unless the page read came back
+// annotated, which only happens inside Composer's frame.
+builder.Services.AddScoped<NorthwindCoffee.Mvc.Preview.PreviewAnnotations>();
+
 // The client is registered only when there is a key to give it. ContentDeliveryOptions validates at
 // construction, so registering a keyless client would turn "not configured yet" — a state this
 // sample renders an explanation for — into a startup crash.

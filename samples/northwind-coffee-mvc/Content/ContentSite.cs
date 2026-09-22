@@ -26,6 +26,13 @@ public sealed class ContentSite
     /// Composer cannot frame cannot be previewed.</summary>
     public string FrameAncestors { get; init; } = "https://content.ebitex.io";
 
+    /// <summary>
+    /// The one Composer origin this site loads <c>preview.js</c> from, and the only origin that
+    /// script will accept messages from (spec 728). Separate from <see cref="FrameAncestors"/>, which
+    /// may legitimately list several: a script has exactly one source.
+    /// </summary>
+    public string ComposerOrigin { get; init; } = "https://content.ebitex.io";
+
     /// <summary>This deployment's own origin, used for absolute URLs in the sitemap. Never derived
     /// from a request: which forwarded-host header to trust is a deployment fact, not a library's
     /// guess (see <c>docs/content-sdk-dotnet.md</c>).</summary>
@@ -51,6 +58,7 @@ public sealed class ContentSite
                 ? baseUrl
                 : new Uri("https://api.ebitex.io"),
             FrameAncestors = Trimmed(section["FrameAncestors"]) ?? "https://content.ebitex.io",
+            ComposerOrigin = Trimmed(section["ComposerOrigin"]) ?? "https://content.ebitex.io",
             Origin = Trimmed(section["Origin"]) ?? "http://localhost:5181",
             FormsBaseUrl = Trimmed(section["FormsBaseUrl"]) ?? "https://forms.ebitex.io",
             FormsOrgSlug = Trimmed(section["FormsOrgSlug"]) ?? "",

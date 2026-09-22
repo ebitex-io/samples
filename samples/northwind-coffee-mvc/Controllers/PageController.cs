@@ -97,11 +97,25 @@ public sealed class PageController : Controller
                 // Present only inside Composer's frame. The client sends it on this endpoint and no
                 // other, exactly as the API would accept it.
                 PreviewSession = previewSession,
+
+                // Spec 728: ask for the element-to-field annotation whenever this is a preview, so the
+                // page can emit the marks preview.js turns into pins. Only a read actually answered as
+                // a draft carries one — on any other path the parameter is ignored, not refused, which
+                // is why it can simply ride along with the session rather than needing its own rule.
+                Annotate = previewSession is { Length: > 0 },
             },
             cancellationToken);
 
     private async Task<IActionResult> RenderAsync(PathResult.Presentation page, CancellationToken cancellationToken)
     {
+        // Spec 728: the *answer* decides whether this is a preview, not the request. A page read with
+        // a session that turned out to be published (browsing away from the previewed page) carries no
+        // annotation, and must render exactly as it does for a visitor.
+        if (page.Envelope?.Preview is not null)
+        {
+            HttpContext.RequestServices.GetRequiredService<PreviewAnnotations>().Activate();
+        }
+
         // The title is the one the CMS froze at publish, not one this app composed from a field it
         // guessed at: Contract.TitleFieldPath decided it, and it is the same title every other surface
         // of the platform reports for this page.
