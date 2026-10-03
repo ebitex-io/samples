@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import { content } from '@/lib/content'
 import { useLocale } from '@/lib/locale'
 import type { Coffee } from '@/types/content'
@@ -226,9 +226,8 @@ function CoffeeCard({ item }: { item: ComponentListItem }) {
       <Link to={path} className="block">
         <div className="overflow-hidden rounded-2xl border border-line bg-sunken">
           {content.image?.content ? (
-            <CmsImage
-              file={content.image.content.file}
-              alt={content.image.content.alt}
+            <CmsMedia
+              value={content.image}
               className="aspect-4/3 w-full object-cover"
             />
           ) : (

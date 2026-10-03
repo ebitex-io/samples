@@ -1,7 +1,7 @@
 import { RichText, Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import type { Image, Origin } from '@/types/content'
 import { useDocumentMeta } from '@/lib/meta'
 
@@ -35,10 +35,9 @@ const OriginPage: PresentationRenderer<Origin> = ({ component }) => {
           </div>
         ) : null}
         <Resolve value={image}>
-          {(content: Image) => (
-            <CmsImage
-              file={content.file}
-              alt={content.alt}
+          {(_content: Image, value) => (
+            <CmsMedia
+              value={value}
               className="w-full rounded-2xl border border-line"
             />
           )}

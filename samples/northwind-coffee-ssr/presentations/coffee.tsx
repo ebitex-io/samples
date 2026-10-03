@@ -2,7 +2,7 @@ import { RichText, Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
 import { CategoryTags } from '@/components/CategoryTags'
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import { OriginCard } from '@/components/OriginCard'
 import type { Coffee, Image } from '@/types/content'
 import { formatPrice, formatWeight } from '@/lib/format'
@@ -38,10 +38,9 @@ const CoffeePage: PresentationRenderer<Coffee> = ({ component }) => {
     <article className="mx-auto grid max-w-5xl gap-12 px-6 py-16 md:grid-cols-2">
       <div className="self-start overflow-hidden rounded-2xl border border-line bg-sunken">
         <Resolve value={image}>
-          {(content: Image) => (
-            <CmsImage
-              file={content.file}
-              alt={content.alt}
+          {(_content: Image, value) => (
+            <CmsMedia
+              value={value}
               loading="eager"
               className="aspect-4/3 w-full object-cover"
             />

@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { Resolve } from '@ebitex/content-sdk/react'
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import { useLocale } from '@/lib/locale'
 import { loadPublishedPaths } from '@/lib/publishedPaths'
 import type { Card, Image } from '@/types/content'
@@ -47,10 +47,9 @@ const CardTile: PresentationRenderer<Card> = ({ component }) => {
   const body = (
     <>
       <Resolve value={image}>
-        {(content: Image) => (
-          <CmsImage
-            file={content.file}
-            alt={content.alt}
+        {(_content: Image, value) => (
+            <CmsMedia
+              value={value}
             className="aspect-[4/3] w-full rounded-xl border border-line object-cover"
           />
         )}

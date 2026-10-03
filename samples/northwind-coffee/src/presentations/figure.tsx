@@ -1,6 +1,6 @@
 import type { PresentationRenderer } from '@ebitex/content-sdk/react'
 
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import type { Image } from '@/types/content'
 
 /**
@@ -13,10 +13,9 @@ import type { Image } from '@/types/content'
  * anywhere in this app.
  */
 const Figure: PresentationRenderer<Image> = ({ component }) => {
-  const { file, alt } = component.content
   return (
     <figure className="my-6 overflow-hidden rounded-2xl border border-line bg-sunken">
-      <CmsImage file={file} alt={alt} className="w-full" />
+      <CmsMedia value={component} className="w-full" />
     </figure>
   )
 }
