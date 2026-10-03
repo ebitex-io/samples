@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { ComponentListItem, StreamFacetValue } from '@ebitex/content-sdk'
 
-import { CmsImage } from '@/components/CmsImage'
+import { CmsMedia } from '@/components/CmsMedia'
 import { useLocale } from '@/lib/localeContext'
 import { useCatalogueSeed } from '@/lib/catalogueSeed'
 import { PAGE_SIZE, catalogueSignature, type CatalogueFacets } from '@/lib/catalogue'
@@ -264,9 +264,8 @@ function CoffeeCard({ item }: { item: ComponentListItem }) {
       <Link href={path} className="block">
         <div className="overflow-hidden rounded-2xl border border-line bg-sunken">
           {content.image?.content ? (
-            <CmsImage
-              file={content.image.content.file}
-              alt={content.image.content.alt}
+            <CmsMedia
+              value={content.image}
               className="aspect-4/3 w-full object-cover"
             />
           ) : (
