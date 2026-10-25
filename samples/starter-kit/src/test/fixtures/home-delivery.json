@@ -8,7 +8,7 @@
     "settings": {},
     "template": {
       "id": "3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0",
-      "externalId": "kit-page",
+      "externalId": "ebitex-page",
       "version": 1
     },
     "component": {
@@ -23,7 +23,7 @@
         "hero": {
           "contract": {
             "id": "9adc13f6-7a96-4a52-998c-19662ba76b78",
-            "externalId": "kit-hero",
+            "externalId": "ebitex-hero",
             "version": 1
           },
           "content": {
@@ -43,7 +43,7 @@
             "primaryAction": {
               "contract": {
                 "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                "externalId": "kit-action",
+                "externalId": "ebitex-action",
                 "version": 1
               },
               "content": {
@@ -58,7 +58,7 @@
             "secondaryAction": {
               "contract": {
                 "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                "externalId": "kit-action",
+                "externalId": "ebitex-action",
                 "version": 1
               },
               "content": {
@@ -77,7 +77,7 @@
             "key": "f88c6d23-a839-4d72-aafa-391d8a47453e",
             "contract": {
               "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
-              "externalId": "kit-banner",
+              "externalId": "ebitex-banner",
               "version": 1
             },
             "provider": "core",
@@ -89,7 +89,7 @@
               "action": {
                 "contract": {
                   "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                  "externalId": "kit-action",
+                  "externalId": "ebitex-action",
                   "version": 1
                 },
                 "content": {
@@ -116,7 +116,7 @@
             "key": "b47b6617-de26-4684-ae3f-a470c91f73eb",
             "contract": {
               "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-              "externalId": "kit-rich-text",
+              "externalId": "ebitex-rich-text",
               "version": 1
             },
             "provider": "core",
@@ -137,7 +137,7 @@
             "key": "3131cb54-3f51-4f0e-bb00-f7b2a69c58ad",
             "contract": {
               "id": "bca8c031-6ea2-4061-a8de-566c8372a31f",
-              "externalId": "kit-media",
+              "externalId": "ebitex-media",
               "version": 1
             },
             "provider": "core",
@@ -162,7 +162,7 @@
             "key": "c5ded008-8124-4443-8fa5-f0a8a7ee14e0",
             "contract": {
               "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
-              "externalId": "kit-grid",
+              "externalId": "ebitex-grid",
               "version": 1
             },
             "provider": "core",
@@ -178,7 +178,7 @@
                   "key": "38ed965e-fc00-4af2-9eb7-37efc68177e1",
                   "contract": {
                     "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
-                    "externalId": "kit-feature",
+                    "externalId": "ebitex-feature",
                     "version": 1
                   },
                   "provider": "core",
@@ -192,7 +192,7 @@
                   "key": "7d5098a0-35fe-4f78-9844-32356db87872",
                   "contract": {
                     "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
-                    "externalId": "kit-feature",
+                    "externalId": "ebitex-feature",
                     "version": 1
                   },
                   "provider": "core",
@@ -206,7 +206,7 @@
                   "key": "4526e6de-739a-427b-84ea-863a97edde94",
                   "contract": {
                     "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
-                    "externalId": "kit-feature",
+                    "externalId": "ebitex-feature",
                     "version": 1
                   },
                   "provider": "core",
@@ -227,7 +227,7 @@
             "key": "0cb57108-54f3-4904-b6f2-25b34ccbb15b",
             "contract": {
               "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
-              "externalId": "kit-grid",
+              "externalId": "ebitex-grid",
               "version": 1
             },
             "provider": "core",
@@ -242,7 +242,7 @@
                   "key": "b4820cfa-1d3f-4c87-b63e-b2547707a7fd",
                   "contract": {
                     "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
-                    "externalId": "kit-card",
+                    "externalId": "ebitex-card",
                     "version": 1
                   },
                   "provider": "core",
@@ -260,7 +260,7 @@
                     "action": {
                       "contract": {
                         "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                        "externalId": "kit-action",
+                        "externalId": "ebitex-action",
                         "version": 1
                       },
                       "content": {
@@ -281,7 +281,7 @@
                   "key": "9ffbdb73-7a9f-4ac5-948b-9754aa7d7e22",
                   "contract": {
                     "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
-                    "externalId": "kit-card",
+                    "externalId": "ebitex-card",
                     "version": 1
                   },
                   "provider": "core",
@@ -293,7 +293,7 @@
                     "action": {
                       "contract": {
                         "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                        "externalId": "kit-action",
+                        "externalId": "ebitex-action",
                         "version": 1
                       },
                       "content": {
@@ -314,7 +314,7 @@
                   "key": "5eb2e0da-8697-446b-8a98-068055c18fef",
                   "contract": {
                     "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
-                    "externalId": "kit-card",
+                    "externalId": "ebitex-card",
                     "version": 1
                   },
                   "provider": "core",
@@ -326,7 +326,7 @@
                     "action": {
                       "contract": {
                         "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                        "externalId": "kit-action",
+                        "externalId": "ebitex-action",
                         "version": 1
                       },
                       "content": {
@@ -353,7 +353,7 @@
             "key": "db6346e3-0dbe-4ff9-b6cc-5ad03ec85ab2",
             "contract": {
               "id": "7240f5f7-c114-4222-b214-85c01d5a4a72",
-              "externalId": "kit-tabs",
+              "externalId": "ebitex-tabs",
               "version": 1
             },
             "provider": "core",
@@ -366,7 +366,7 @@
                   "key": "fb471b96-94dd-4a7a-918e-50569b85fe6e",
                   "contract": {
                     "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-                    "externalId": "kit-rich-text",
+                    "externalId": "ebitex-rich-text",
                     "version": 1
                   },
                   "provider": "core",
@@ -387,7 +387,7 @@
                   "key": "21035f87-99f0-4611-8102-67766fa94add",
                   "contract": {
                     "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-                    "externalId": "kit-rich-text",
+                    "externalId": "ebitex-rich-text",
                     "version": 1
                   },
                   "provider": "core",
@@ -412,7 +412,7 @@
             "key": "e23bf599-fff3-4794-9c79-cebf5a55cfd5",
             "contract": {
               "id": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
-              "externalId": "kit-accordion",
+              "externalId": "ebitex-accordion",
               "version": 1
             },
             "provider": "core",
@@ -426,7 +426,7 @@
                   "key": "fc03b834-b4bf-4470-86b0-cda7ca093fc6",
                   "contract": {
                     "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-                    "externalId": "kit-rich-text",
+                    "externalId": "ebitex-rich-text",
                     "version": 1
                   },
                   "provider": "core",
@@ -449,7 +449,7 @@
                   "key": "5e1bb17d-889e-4ff6-b23b-ad251343ecc3",
                   "contract": {
                     "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-                    "externalId": "kit-rich-text",
+                    "externalId": "ebitex-rich-text",
                     "version": 1
                   },
                   "provider": "core",
@@ -470,7 +470,7 @@
                   "key": "1958458e-9af4-4a89-99ea-37921f608cf1",
                   "contract": {
                     "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-                    "externalId": "kit-rich-text",
+                    "externalId": "ebitex-rich-text",
                     "version": 1
                   },
                   "provider": "core",
@@ -496,7 +496,7 @@
             "key": "f88c6d23-a839-4d72-aafa-391d8a47453e",
             "contract": {
               "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
-              "externalId": "kit-banner",
+              "externalId": "ebitex-banner",
               "version": 1
             },
             "provider": "core",
@@ -508,7 +508,7 @@
               "action": {
                 "contract": {
                   "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                  "externalId": "kit-action",
+                  "externalId": "ebitex-action",
                   "version": 1
                 },
                 "content": {
@@ -535,7 +535,7 @@
             "key": "b2dbe6da-964b-45c4-96f5-90321d925e9f",
             "contract": {
               "id": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
-              "externalId": "kit-cta",
+              "externalId": "ebitex-cta",
               "version": 1
             },
             "provider": "core",
@@ -548,7 +548,7 @@
               "primaryAction": {
                 "contract": {
                   "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                  "externalId": "kit-action",
+                  "externalId": "ebitex-action",
                   "version": 1
                 },
                 "content": {
@@ -563,7 +563,7 @@
               "secondaryAction": {
                 "contract": {
                   "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-                  "externalId": "kit-action",
+                  "externalId": "ebitex-action",
                   "version": 1
                 },
                 "content": {

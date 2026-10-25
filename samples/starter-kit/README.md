@@ -12,18 +12,18 @@ your own design and keep the content.
 
 | Kit Contract | Renderer | Reads |
 |---|---|---|
-| `kit-experience` (a page) | `src/presentations/kit-page.tsx` | SEO fields, an inline hero, a list of sections |
-| `kit-hero` | `Hero` in `src/kit/blocks.tsx` | heading, lead, media, two actions; `layout` = `split` puts the image beside the text |
-| `kit-rich-text` | `RichTextBlock` | body |
-| `kit-media` | `MediaBlock` | media, alt, caption; `aspect` |
-| `kit-card` | `Card` | title, summary, media, action; `emphasis` = `high` |
-| `kit-feature` | `Feature` | icon, title, body |
-| `kit-banner` | `Banner` | message, action; `tone` = `info`, `success`, `warning`, `danger` |
-| `kit-cta` | `Cta` | heading, body, two actions |
-| `kit-tabs`, `kit-accordion`, `kit-grid` | `src/kit/containers.tsx` | `items`; tab and accordion labels, `openByDefault`, grid `columns` and per-item `span` |
+| `ebitex-experience` (a page) | `src/presentations/ebitex-page.tsx` | SEO fields, an inline hero, a list of sections |
+| `ebitex-hero` | `Hero` in `src/kit/blocks.tsx` | heading, lead, media, two actions; `layout` = `split` puts the image beside the text |
+| `ebitex-rich-text` | `RichTextBlock` | body |
+| `ebitex-media` | `MediaBlock` | media, alt, caption; `aspect` |
+| `ebitex-card` | `Card` | title, summary, media, action; `emphasis` = `high` |
+| `ebitex-feature` | `Feature` | icon, title, body |
+| `ebitex-banner` | `Banner` | message, action; `tone` = `info`, `success`, `warning`, `danger` |
+| `ebitex-cta` | `Cta` | heading, body, two actions |
+| `ebitex-tabs`, `ebitex-accordion`, `ebitex-grid` | `src/kit/containers.tsx` | `items`; tab and accordion labels, `openByDefault`, grid `columns` and per-item `span` |
 
 A page's sections are Component **references**, not Template envelopes, so `src/kit/Section.tsx` dispatches on each
-section's Contract. A section the renderer does not know (a Contract of your own that inherits `kit-presentation`)
+section's Contract. A section the renderer does not know (a Contract of your own that inherits `ebitex-presentation`)
 draws nothing and leaves `data-kit-unknown` in the DOM, so a page never breaks on content a newer kit or you added.
 
 ### How a section is placed

@@ -10,8 +10,8 @@
   "items": {
     "contracts": [
       {
-        "id": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
-        "externalId": "kit-seo",
+        "id": "22613cb4-f7c6-48e5-974a-ba6e7965ab40",
+        "externalId": "ebitex-seo",
         "name": "SEO",
         "parentContractId": null,
         "isAbstract": true,
@@ -87,8 +87,8 @@
         ]
       },
       {
-        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
-        "externalId": "kit-action",
+        "id": "5b35684f-4fc4-433e-b027-1e37fbc90879",
+        "externalId": "ebitex-action",
         "name": "Action",
         "parentContractId": null,
         "isAbstract": false,
@@ -138,8 +138,8 @@
         ]
       },
       {
-        "id": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
-        "externalId": "kit-presentation",
+        "id": "8ed4738b-4358-4f87-973b-5481922da8cd",
+        "externalId": "ebitex-presentation",
         "name": "Presentation",
         "parentContractId": null,
         "isAbstract": true,
@@ -254,10 +254,10 @@
         ]
       },
       {
-        "id": "9adc13f6-7a96-4a52-998c-19662ba76b78",
-        "externalId": "kit-hero",
+        "id": "ea3ab328-a634-436b-9330-53ce961223e4",
+        "externalId": "ebitex-hero",
         "name": "Hero",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -312,7 +312,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           },
           {
@@ -325,16 +325,16 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           }
         ]
       },
       {
-        "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
-        "externalId": "kit-rich-text",
+        "id": "da089887-a8e0-4a45-a21d-be30a69b366d",
+        "externalId": "ebitex-rich-text",
         "name": "Rich text",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -356,10 +356,10 @@
         ]
       },
       {
-        "id": "bca8c031-6ea2-4061-a8de-566c8372a31f",
-        "externalId": "kit-media",
+        "id": "e7e1d4f0-ca3f-4b4e-8573-de95c411f800",
+        "externalId": "ebitex-media",
         "name": "Media",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -420,10 +420,10 @@
         ]
       },
       {
-        "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
-        "externalId": "kit-card",
+        "id": "e48698be-d321-41c3-bdb2-81a7d0580940",
+        "externalId": "ebitex-card",
         "name": "Card",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -478,7 +478,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           },
           {
@@ -497,10 +497,10 @@
         ]
       },
       {
-        "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
-        "externalId": "kit-feature",
+        "id": "ab148ee6-3ef8-4aed-9cb8-a4484df8ec6a",
+        "externalId": "ebitex-feature",
         "name": "Feature",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -548,10 +548,10 @@
         ]
       },
       {
-        "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
-        "externalId": "kit-banner",
+        "id": "f28fd14d-4409-4ea6-9a97-88068781dec4",
+        "externalId": "ebitex-banner",
         "name": "Banner",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -580,7 +580,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           },
           {
@@ -599,10 +599,10 @@
         ]
       },
       {
-        "id": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
-        "externalId": "kit-cta",
+        "id": "076aa6f0-3171-4e37-9596-4197c38af758",
+        "externalId": "ebitex-cta",
         "name": "Call to action",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -644,7 +644,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           },
           {
@@ -657,16 +657,16 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"5b35684f-4fc4-433e-b027-1e37fbc90879\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           }
         ]
       },
       {
-        "id": "7240f5f7-c114-4222-b214-85c01d5a4a72",
-        "externalId": "kit-tabs",
+        "id": "09242c2d-6954-4e7f-93a0-e01d75ff2ff0",
+        "externalId": "ebitex-tabs",
         "name": "Tabs",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -682,16 +682,16 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "settings": "{\"allowedContractIds\":[\"8ed4738b-4358-4f87-973b-5481922da8cd\"],\"allowedModes\":[\"reference\"]}",
             "defaultValue": null
           }
         ]
       },
       {
-        "id": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
-        "externalId": "kit-accordion",
+        "id": "aecb5a17-e3a8-46b4-b159-731401efed9b",
+        "externalId": "ebitex-accordion",
         "name": "Accordion",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -707,16 +707,16 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "settings": "{\"allowedContractIds\":[\"8ed4738b-4358-4f87-973b-5481922da8cd\"],\"allowedModes\":[\"reference\"]}",
             "defaultValue": null
           }
         ]
       },
       {
-        "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
-        "externalId": "kit-grid",
+        "id": "7832a73e-f712-40f3-90bc-6a41c3680d4a",
+        "externalId": "ebitex-grid",
         "name": "Grid",
-        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "parentContractId": "8ed4738b-4358-4f87-973b-5481922da8cd",
         "isAbstract": false,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -732,7 +732,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "settings": "{\"allowedContractIds\":[\"8ed4738b-4358-4f87-973b-5481922da8cd\"],\"allowedModes\":[\"reference\"]}",
             "defaultValue": null
           },
           {
@@ -751,10 +751,10 @@
         ]
       },
       {
-        "id": "4455e5fe-545d-4a10-91a9-d6da5e4a2fde",
-        "externalId": "kit-experience",
+        "id": "29c06cd8-e202-4b7c-9af7-42ba1d41b0d1",
+        "externalId": "ebitex-experience",
         "name": "Experience",
-        "parentContractId": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
+        "parentContractId": "22613cb4-f7c6-48e5-974a-ba6e7965ab40",
         "isAbstract": true,
         "isCategoryGroupMetadata": false,
         "titleFieldPath": null,
@@ -770,7 +770,7 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"9adc13f6-7a96-4a52-998c-19662ba76b78\"],\"allowedModes\":[\"inline\"]}",
+            "settings": "{\"allowedContractIds\":[\"ea3ab328-a634-436b-9330-53ce961223e4\"],\"allowedModes\":[\"inline\"]}",
             "defaultValue": null
           },
           {
@@ -783,14 +783,14 @@
             "isLocalizable": false,
             "isContextual": false,
             "isPersonalizable": false,
-            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "settings": "{\"allowedContractIds\":[\"8ed4738b-4358-4f87-973b-5481922da8cd\"],\"allowedModes\":[\"reference\"]}",
             "defaultValue": null
           }
         ]
       },
       {
-        "id": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
-        "externalId": "kit-page-settings",
+        "id": "06114a05-73b5-4320-ba08-977d4c17a349",
+        "externalId": "ebitex-page-settings",
         "name": "Page settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -800,8 +800,8 @@
         "fields": []
       },
       {
-        "id": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
-        "externalId": "kit-hero-template-settings",
+        "id": "d19b4998-17c6-4663-a978-d8b685d9a77e",
+        "externalId": "ebitex-hero-template-settings",
         "name": "Hero presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -811,8 +811,8 @@
         "fields": []
       },
       {
-        "id": "73d88957-5912-4dee-a582-37bcf9df38b5",
-        "externalId": "kit-rich-text-template-settings",
+        "id": "3c4ad296-41ee-4f1d-af6e-9594a240f111",
+        "externalId": "ebitex-rich-text-template-settings",
         "name": "Rich text presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -822,8 +822,8 @@
         "fields": []
       },
       {
-        "id": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
-        "externalId": "kit-media-template-settings",
+        "id": "23283a6e-4351-43d6-bb7e-edbbe48428fd",
+        "externalId": "ebitex-media-template-settings",
         "name": "Media presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -833,8 +833,8 @@
         "fields": []
       },
       {
-        "id": "ffe06452-f533-4608-9465-335ac7f5e69e",
-        "externalId": "kit-card-template-settings",
+        "id": "c211d269-77fe-4402-97e0-e5cfe27a7839",
+        "externalId": "ebitex-card-template-settings",
         "name": "Card presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -844,8 +844,8 @@
         "fields": []
       },
       {
-        "id": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
-        "externalId": "kit-feature-template-settings",
+        "id": "07652b2f-f1e9-4e53-ae59-d54ece52f87b",
+        "externalId": "ebitex-feature-template-settings",
         "name": "Feature presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -855,8 +855,8 @@
         "fields": []
       },
       {
-        "id": "897821c3-88f4-41b1-a736-7f4262441d68",
-        "externalId": "kit-banner-template-settings",
+        "id": "b42cd314-218a-4986-990d-63dddcc2ccab",
+        "externalId": "ebitex-banner-template-settings",
         "name": "Banner presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -866,8 +866,8 @@
         "fields": []
       },
       {
-        "id": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
-        "externalId": "kit-cta-template-settings",
+        "id": "615ce4e3-f7b5-4f6a-863c-58787f35464b",
+        "externalId": "ebitex-cta-template-settings",
         "name": "Call to action presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -877,8 +877,8 @@
         "fields": []
       },
       {
-        "id": "e987dc3d-a040-4589-8cb9-2eddf068681e",
-        "externalId": "kit-tabs-template-settings",
+        "id": "333a6036-d244-4b4f-ba73-609c43c4214d",
+        "externalId": "ebitex-tabs-template-settings",
         "name": "Tabs presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -888,8 +888,8 @@
         "fields": []
       },
       {
-        "id": "00cba676-f56a-41a8-a0ab-0831d843ab55",
-        "externalId": "kit-accordion-template-settings",
+        "id": "cd5437cc-a361-48e5-8084-df282381af89",
+        "externalId": "ebitex-accordion-template-settings",
         "name": "Accordion presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -899,8 +899,8 @@
         "fields": []
       },
       {
-        "id": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
-        "externalId": "kit-grid-template-settings",
+        "id": "dcce00b5-3d86-4fb5-9463-1f6e578dd15d",
+        "externalId": "ebitex-grid-template-settings",
         "name": "Grid presentation settings",
         "parentContractId": null,
         "isAbstract": false,
@@ -912,112 +912,112 @@
     ],
     "templates": [
       {
-        "id": "3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0",
-        "externalId": "kit-page",
+        "id": "45b16d8f-b250-4f17-815b-0b78d669f098",
+        "externalId": "ebitex-page",
         "name": "Page",
-        "settingsContractId": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
+        "settingsContractId": "06114a05-73b5-4320-ba08-977d4c17a349",
         "supportedContractIds": [
-          "4455e5fe-545d-4a10-91a9-d6da5e4a2fde"
+          "29c06cd8-e202-4b7c-9af7-42ba1d41b0d1"
         ],
         "isRoot": true
       },
       {
-        "id": "3497a390-d295-4300-afb5-6609bab3afeb",
-        "externalId": "kit-hero-template",
+        "id": "05877e6f-2a98-426e-bd73-e2619128c514",
+        "externalId": "ebitex-hero-template",
         "name": "Hero presentation",
-        "settingsContractId": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
+        "settingsContractId": "d19b4998-17c6-4663-a978-d8b685d9a77e",
         "supportedContractIds": [
-          "9adc13f6-7a96-4a52-998c-19662ba76b78"
+          "ea3ab328-a634-436b-9330-53ce961223e4"
         ],
         "isRoot": true
       },
       {
-        "id": "cb1f1f65-cf30-4dca-9059-1cc99a9f9857",
-        "externalId": "kit-rich-text-template",
+        "id": "4c6c4f69-b064-4412-a071-39de2fe47c1c",
+        "externalId": "ebitex-rich-text-template",
         "name": "Rich text presentation",
-        "settingsContractId": "73d88957-5912-4dee-a582-37bcf9df38b5",
+        "settingsContractId": "3c4ad296-41ee-4f1d-af6e-9594a240f111",
         "supportedContractIds": [
-          "c1d4d1b7-20c9-4af5-b2b5-8168540216ac"
+          "da089887-a8e0-4a45-a21d-be30a69b366d"
         ],
         "isRoot": true
       },
       {
-        "id": "62ecb608-09be-49d1-982a-d29bbde93d3d",
-        "externalId": "kit-media-template",
+        "id": "85d492a0-b481-4cab-bdb9-16988a55904f",
+        "externalId": "ebitex-media-template",
         "name": "Media presentation",
-        "settingsContractId": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
+        "settingsContractId": "23283a6e-4351-43d6-bb7e-edbbe48428fd",
         "supportedContractIds": [
-          "bca8c031-6ea2-4061-a8de-566c8372a31f"
+          "e7e1d4f0-ca3f-4b4e-8573-de95c411f800"
         ],
         "isRoot": true
       },
       {
-        "id": "c655a76d-ac6a-4d01-9c2c-fa70c4e118b3",
-        "externalId": "kit-card-template",
+        "id": "225e4da2-9b18-4d77-aa88-c47377aba44a",
+        "externalId": "ebitex-card-template",
         "name": "Card presentation",
-        "settingsContractId": "ffe06452-f533-4608-9465-335ac7f5e69e",
+        "settingsContractId": "c211d269-77fe-4402-97e0-e5cfe27a7839",
         "supportedContractIds": [
-          "a2595de9-6cfa-408f-baa7-df6541a4a588"
+          "e48698be-d321-41c3-bdb2-81a7d0580940"
         ],
         "isRoot": true
       },
       {
-        "id": "a8b8d716-61f1-4cb1-90b5-9e105bce9133",
-        "externalId": "kit-feature-template",
+        "id": "2662594a-41f8-4d01-bfb9-666de8ed2e44",
+        "externalId": "ebitex-feature-template",
         "name": "Feature presentation",
-        "settingsContractId": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
+        "settingsContractId": "07652b2f-f1e9-4e53-ae59-d54ece52f87b",
         "supportedContractIds": [
-          "3e7d729e-49ad-420a-9952-89ff695146d7"
+          "ab148ee6-3ef8-4aed-9cb8-a4484df8ec6a"
         ],
         "isRoot": true
       },
       {
-        "id": "cb5863dc-d20c-4b10-82b5-82b111559cf1",
-        "externalId": "kit-banner-template",
+        "id": "e6be2f18-f6c7-49a4-aaec-3853325a6a97",
+        "externalId": "ebitex-banner-template",
         "name": "Banner presentation",
-        "settingsContractId": "897821c3-88f4-41b1-a736-7f4262441d68",
+        "settingsContractId": "b42cd314-218a-4986-990d-63dddcc2ccab",
         "supportedContractIds": [
-          "bdff1b39-be08-4ca2-85cf-bfd001b57a1e"
+          "f28fd14d-4409-4ea6-9a97-88068781dec4"
         ],
         "isRoot": true
       },
       {
-        "id": "cf720497-e1a3-4e3a-bc9e-726a724c068b",
-        "externalId": "kit-cta-template",
+        "id": "ea6ea445-0b40-4fa7-b558-ece5623dfc93",
+        "externalId": "ebitex-cta-template",
         "name": "Call to action presentation",
-        "settingsContractId": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
+        "settingsContractId": "615ce4e3-f7b5-4f6a-863c-58787f35464b",
         "supportedContractIds": [
-          "249d9651-5b4b-4d4d-a118-c49bbb50f899"
+          "076aa6f0-3171-4e37-9596-4197c38af758"
         ],
         "isRoot": true
       },
       {
-        "id": "828cd823-64c2-4456-a8c3-e2a9bab44092",
-        "externalId": "kit-tabs-template",
+        "id": "d8f24f4e-3c2b-46cf-836e-9d2e98b7ac3e",
+        "externalId": "ebitex-tabs-template",
         "name": "Tabs presentation",
-        "settingsContractId": "e987dc3d-a040-4589-8cb9-2eddf068681e",
+        "settingsContractId": "333a6036-d244-4b4f-ba73-609c43c4214d",
         "supportedContractIds": [
-          "7240f5f7-c114-4222-b214-85c01d5a4a72"
+          "09242c2d-6954-4e7f-93a0-e01d75ff2ff0"
         ],
         "isRoot": true
       },
       {
-        "id": "41850f16-56bf-4459-969a-f42ea0afe2cf",
-        "externalId": "kit-accordion-template",
+        "id": "f56572d5-3593-482e-bd6d-b8260bf14c9f",
+        "externalId": "ebitex-accordion-template",
         "name": "Accordion presentation",
-        "settingsContractId": "00cba676-f56a-41a8-a0ab-0831d843ab55",
+        "settingsContractId": "cd5437cc-a361-48e5-8084-df282381af89",
         "supportedContractIds": [
-          "ff20be2d-af79-409d-831d-a8a8e27dbeba"
+          "aecb5a17-e3a8-46b4-b159-731401efed9b"
         ],
         "isRoot": true
       },
       {
-        "id": "06979654-b690-4a16-9d1a-369fecbd2802",
-        "externalId": "kit-grid-template",
+        "id": "0de1206d-4dcc-4b5d-a082-4f94d552254a",
+        "externalId": "ebitex-grid-template",
         "name": "Grid presentation",
-        "settingsContractId": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
+        "settingsContractId": "dcce00b5-3d86-4fb5-9463-1f6e578dd15d",
         "supportedContractIds": [
-          "ac0bef84-1fdc-4b85-ae61-742c4427a99e"
+          "7832a73e-f712-40f3-90bc-6a41c3680d4a"
         ],
         "isRoot": true
       }

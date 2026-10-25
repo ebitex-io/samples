@@ -3,7 +3,7 @@ import type { LinkValue } from '@ebitex/content-sdk'
 
 import { ACTION_STYLES, pick, text, type ActionStyle } from '@/lib/vocab'
 
-/** What the `kit-action` Contract delivers inline. */
+/** What the `ebitex-action` Contract delivers inline. */
 export interface ActionContent {
   label?: string
   href?: LinkValue
@@ -24,7 +24,7 @@ const STYLES: Record<ActionStyle, string> = {
 }
 
 /**
- * One `kit-action` value. `fallbackStyle` is what the placing section wants when the author left the
+ * One `ebitex-action` value. `fallbackStyle` is what the placing section wants when the author left the
  * style empty (a hero's second button reads as secondary without anyone saying so).
  */
 export function Action({ action, fallbackStyle = 'primary' }: { action: { content: ActionContent } | undefined; fallbackStyle?: ActionStyle }) {

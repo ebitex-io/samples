@@ -10,7 +10,7 @@ import { BACKGROUNDS, pick, text, WIDTH_CLASS, WIDTHS } from '@/lib/vocab'
  *
  * A page's sections are Component *references*, so the value says which Contract it is (`contract.externalId`)
  * and the Template is not part of it: this switch is the dispatch. A section the kit does not know
- * (an author's own Contract inheriting `kit-presentation`) renders nothing and says so in the DOM, so
+ * (an author's own Contract inheriting `ebitex-presentation`) renders nothing and says so in the DOM, so
  * a page never breaks on content a newer kit or a tenant added.
  *
  * `useResolvedComponent` is the SDK's gate for a value that may still be a bare reference: a page
@@ -37,25 +37,25 @@ export function Section({ value, nested = false }: { value: ComponentValue | nul
 
 function renderBody(contract: string, content: Record<string, unknown>) {
   switch (contract) {
-    case 'kit-hero':
+    case 'ebitex-hero':
       return <Hero content={content as never} />
-    case 'kit-rich-text':
+    case 'ebitex-rich-text':
       return <RichTextBlock content={content as never} />
-    case 'kit-media':
+    case 'ebitex-media':
       return <MediaBlock content={content as never} />
-    case 'kit-card':
+    case 'ebitex-card':
       return <Card content={content as never} />
-    case 'kit-feature':
+    case 'ebitex-feature':
       return <Feature content={content as never} />
-    case 'kit-banner':
+    case 'ebitex-banner':
       return <Banner content={content as never} />
-    case 'kit-cta':
+    case 'ebitex-cta':
       return <Cta content={content as never} />
-    case 'kit-tabs':
+    case 'ebitex-tabs':
       return <Tabs content={content as unknown as ContainerContent} />
-    case 'kit-accordion':
+    case 'ebitex-accordion':
       return <Accordion content={content as unknown as ContainerContent} />
-    case 'kit-grid':
+    case 'ebitex-grid':
       return <Grid content={content as unknown as ContainerContent} />
     default:
       return null

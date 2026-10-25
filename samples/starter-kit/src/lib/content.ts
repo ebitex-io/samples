@@ -19,8 +19,8 @@ export const content: ContentClient | null = deliveryKey
   : null
 
 /**
- * Only the page is a registered Template renderer (`presentations/kit-page.tsx` renders the Template
- * `kit-page`). A page's sections are Component references, not Presentation envelopes, so they are
+ * Only the page is a registered Template renderer (`presentations/ebitex-page.tsx` renders the Template
+ * `ebitex-page`). A page's sections are Component references, not Presentation envelopes, so they are
  * dispatched by their Contract in `kit/Section.tsx` instead.
  */
 export const renderers = renderersFromGlob(import.meta.glob(['../presentations/*.tsx', '!../presentations/*.test.tsx']))

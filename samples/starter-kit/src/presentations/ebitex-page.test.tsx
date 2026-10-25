@@ -6,7 +6,7 @@ import type { ExperienceResult } from '@ebitex/content-sdk'
 import { describe, expect, it } from 'vitest'
 
 import { Markdown } from '@/components/Markdown'
-import KitPage from '@/presentations/kit-page'
+import KitPage from '@/presentations/ebitex-page'
 import delivery from '@/test/fixtures/home-delivery.json'
 
 /**
@@ -19,7 +19,7 @@ import delivery from '@/test/fixtures/home-delivery.json'
 function renderHome(result: unknown = delivery) {
   return render(
     <MemoryRouter>
-      <ContentProvider renderers={{ 'kit-page': KitPage }} markdown={Markdown}>
+      <ContentProvider renderers={{ 'ebitex-page': KitPage }} markdown={Markdown}>
         <Experience result={result as ExperienceResult} />
       </ContentProvider>
     </MemoryRouter>,

@@ -6,7 +6,7 @@ import type { HeroContent } from '@/kit/blocks'
 import { Frame, Section } from '@/kit/Section'
 import { text } from '@/lib/vocab'
 
-/** What the `kit-experience` Contract delivers for a page: the `kit-seo` fields, an inline hero and the sections. */
+/** What the `ebitex-experience` Contract delivers for a page: the `ebitex-seo` fields, an inline hero and the sections. */
 interface PageContent {
   metaTitle?: string
   metaDescription?: string
@@ -16,7 +16,7 @@ interface PageContent {
 }
 
 /**
- * The `kit-page` Template, over any Contract that inherits `kit-experience`.
+ * The `ebitex-page` Template, over any Contract that inherits `ebitex-experience`.
  *
  * The hero is an *inline* value, so it is part of this page and arrives ready; the sections are
  * references, each dispatched by its Contract in `<Section>`. Adding a section kind to the kit is a
@@ -40,7 +40,7 @@ const KitPage: PresentationRenderer<PageContent> = ({ component }) => {
   )
 }
 
-/** The `kit-seo` fields written to the document, for a crawler that runs JavaScript. */
+/** The `ebitex-seo` fields written to the document, for a crawler that runs JavaScript. */
 function useDocumentMeta(title: string | undefined, description: string | undefined, noIndex: boolean) {
   useEffect(() => {
     if (title) document.title = title
