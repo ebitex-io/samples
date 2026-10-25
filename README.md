@@ -14,6 +14,7 @@ repository contains no credentials of any kind.
 | `northwind-coffee` | Static site — Vite, React, TypeScript, `@ebitex/content-sdk` | Complete — twenty steps, `step-01` … `step-20` |
 | `northwind-coffee-ssr` | Server-rendered — Next.js App Router, `@ebitex/content-sdk` | The same site with a server in front of it |
 | `northwind-coffee-mvc` | Server-rendered — ASP.NET Core MVC, Razor, `Ebitex.Content.Delivery` | The same site again, with no client-side framework at all |
+| `starter-kit` | Static site — Vite, React, Tailwind CSS 4, `@ebitex/content-sdk` | A reference renderer for the ebitex starter kit, in a light and a dark theme |
 
 The three Northwind samples are the same site, the same content model and the same seed bundles,
 built three ways. None is the better choice: a static build, a server that hydrates, and a server

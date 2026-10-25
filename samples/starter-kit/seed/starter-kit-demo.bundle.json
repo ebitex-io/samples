@@ -1,0 +1,1286 @@
+{
+  "formatVersion": 1,
+  "exportedAtUtc": "2026-01-01T00:00:00.000Z",
+  "source": {
+    "organizationId": "00000000-0000-0000-0000-000000000000",
+    "environmentId": "00000000-0000-0000-0000-000000000000",
+    "appVersion": "content-sdk/model"
+  },
+  "portable": false,
+  "items": {
+    "contracts": [
+      {
+        "id": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
+        "externalId": "kit-seo",
+        "name": "SEO",
+        "parentContractId": null,
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "metaTitle",
+            "name": "Meta title",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "metaDescription",
+            "name": "Meta description",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "ogImage",
+            "name": "Social image",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "canonical",
+            "name": "Canonical address",
+            "fieldTypeKey": "link",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "noIndex",
+            "name": "Keep out of search engines",
+            "fieldTypeKey": "boolean",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+        "externalId": "kit-action",
+        "name": "Action",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "label",
+            "name": "Label",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "href",
+            "name": "Address",
+            "fieldTypeKey": "link",
+            "order": 1,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "style",
+            "name": "Style",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "externalId": "kit-presentation",
+        "name": "Presentation",
+        "parentContractId": null,
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "internalName",
+            "name": "Internal name",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "layout",
+            "name": "Layout",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "width",
+            "name": "Width",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "background",
+            "name": "Background",
+            "fieldTypeKey": "shortText",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "anchor",
+            "name": "Anchor",
+            "fieldTypeKey": "shortText",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "itemLabel",
+            "name": "Item label",
+            "fieldTypeKey": "shortText",
+            "order": 5,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "openByDefault",
+            "name": "Open by default",
+            "fieldTypeKey": "boolean",
+            "order": 6,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "span",
+            "name": "Span",
+            "fieldTypeKey": "number",
+            "order": 7,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "9adc13f6-7a96-4a52-998c-19662ba76b78",
+        "externalId": "kit-hero",
+        "name": "Hero",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "heading",
+            "name": "Heading",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "lead",
+            "name": "Lead",
+            "fieldTypeKey": "richText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "primaryAction",
+            "name": "Primary action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "secondaryAction",
+            "name": "Secondary action",
+            "fieldTypeKey": "component",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "externalId": "kit-rich-text",
+        "name": "Rich text",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "richText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "bca8c031-6ea2-4061-a8de-566c8372a31f",
+        "externalId": "kit-media",
+        "name": "Media",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "alt",
+            "name": "Alternative text",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "caption",
+            "name": "Caption",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "aspect",
+            "name": "Aspect ratio",
+            "fieldTypeKey": "shortText",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+        "externalId": "kit-card",
+        "name": "Card",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "title",
+            "name": "Title",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "summary",
+            "name": "Summary",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "action",
+            "name": "Action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "emphasis",
+            "name": "Emphasis",
+            "fieldTypeKey": "shortText",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
+        "externalId": "kit-feature",
+        "name": "Feature",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "icon",
+            "name": "Icon",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "title",
+            "name": "Title",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "text",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
+        "externalId": "kit-banner",
+        "name": "Banner",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "message",
+            "name": "Message",
+            "fieldTypeKey": "richText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "action",
+            "name": "Action",
+            "fieldTypeKey": "component",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "tone",
+            "name": "Tone",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
+        "externalId": "kit-cta",
+        "name": "Call to action",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "heading",
+            "name": "Heading",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "primaryAction",
+            "name": "Primary action",
+            "fieldTypeKey": "component",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "secondaryAction",
+            "name": "Secondary action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "7240f5f7-c114-4222-b214-85c01d5a4a72",
+        "externalId": "kit-tabs",
+        "name": "Tabs",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
+        "externalId": "kit-accordion",
+        "name": "Accordion",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+        "externalId": "kit-grid",
+        "name": "Grid",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "columns",
+            "name": "Columns",
+            "fieldTypeKey": "number",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "4455e5fe-545d-4a10-91a9-d6da5e4a2fde",
+        "externalId": "kit-experience",
+        "name": "Experience",
+        "parentContractId": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "hero",
+            "name": "Hero",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"9adc13f6-7a96-4a52-998c-19662ba76b78\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "sections",
+            "name": "Sections",
+            "fieldTypeKey": "component",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
+        "externalId": "kit-page-settings",
+        "name": "Page settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
+        "externalId": "kit-hero-template-settings",
+        "name": "Hero presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "73d88957-5912-4dee-a582-37bcf9df38b5",
+        "externalId": "kit-rich-text-template-settings",
+        "name": "Rich text presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
+        "externalId": "kit-media-template-settings",
+        "name": "Media presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "ffe06452-f533-4608-9465-335ac7f5e69e",
+        "externalId": "kit-card-template-settings",
+        "name": "Card presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
+        "externalId": "kit-feature-template-settings",
+        "name": "Feature presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "897821c3-88f4-41b1-a736-7f4262441d68",
+        "externalId": "kit-banner-template-settings",
+        "name": "Banner presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
+        "externalId": "kit-cta-template-settings",
+        "name": "Call to action presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "e987dc3d-a040-4589-8cb9-2eddf068681e",
+        "externalId": "kit-tabs-template-settings",
+        "name": "Tabs presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "00cba676-f56a-41a8-a0ab-0831d843ab55",
+        "externalId": "kit-accordion-template-settings",
+        "name": "Accordion presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
+        "externalId": "kit-grid-template-settings",
+        "name": "Grid presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [],
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "3d60c96c-d9c7-4f16-996b-5b628b32ce43",
+        "externalId": "starter-demo-page",
+        "name": "Demo page",
+        "parentContractId": "4455e5fe-545d-4a10-91a9-d6da5e4a2fde",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      }
+    ],
+    "templates": [
+      {
+        "id": "3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0",
+        "externalId": "kit-page",
+        "name": "Page",
+        "settingsContractId": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
+        "supportedContractIds": [
+          "4455e5fe-545d-4a10-91a9-d6da5e4a2fde"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "3497a390-d295-4300-afb5-6609bab3afeb",
+        "externalId": "kit-hero-template",
+        "name": "Hero presentation",
+        "settingsContractId": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
+        "supportedContractIds": [
+          "9adc13f6-7a96-4a52-998c-19662ba76b78"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "cb1f1f65-cf30-4dca-9059-1cc99a9f9857",
+        "externalId": "kit-rich-text-template",
+        "name": "Rich text presentation",
+        "settingsContractId": "73d88957-5912-4dee-a582-37bcf9df38b5",
+        "supportedContractIds": [
+          "c1d4d1b7-20c9-4af5-b2b5-8168540216ac"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "62ecb608-09be-49d1-982a-d29bbde93d3d",
+        "externalId": "kit-media-template",
+        "name": "Media presentation",
+        "settingsContractId": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
+        "supportedContractIds": [
+          "bca8c031-6ea2-4061-a8de-566c8372a31f"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "c655a76d-ac6a-4d01-9c2c-fa70c4e118b3",
+        "externalId": "kit-card-template",
+        "name": "Card presentation",
+        "settingsContractId": "ffe06452-f533-4608-9465-335ac7f5e69e",
+        "supportedContractIds": [
+          "a2595de9-6cfa-408f-baa7-df6541a4a588"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "a8b8d716-61f1-4cb1-90b5-9e105bce9133",
+        "externalId": "kit-feature-template",
+        "name": "Feature presentation",
+        "settingsContractId": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
+        "supportedContractIds": [
+          "3e7d729e-49ad-420a-9952-89ff695146d7"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "cb5863dc-d20c-4b10-82b5-82b111559cf1",
+        "externalId": "kit-banner-template",
+        "name": "Banner presentation",
+        "settingsContractId": "897821c3-88f4-41b1-a736-7f4262441d68",
+        "supportedContractIds": [
+          "bdff1b39-be08-4ca2-85cf-bfd001b57a1e"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "cf720497-e1a3-4e3a-bc9e-726a724c068b",
+        "externalId": "kit-cta-template",
+        "name": "Call to action presentation",
+        "settingsContractId": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
+        "supportedContractIds": [
+          "249d9651-5b4b-4d4d-a118-c49bbb50f899"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "828cd823-64c2-4456-a8c3-e2a9bab44092",
+        "externalId": "kit-tabs-template",
+        "name": "Tabs presentation",
+        "settingsContractId": "e987dc3d-a040-4589-8cb9-2eddf068681e",
+        "supportedContractIds": [
+          "7240f5f7-c114-4222-b214-85c01d5a4a72"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "41850f16-56bf-4459-969a-f42ea0afe2cf",
+        "externalId": "kit-accordion-template",
+        "name": "Accordion presentation",
+        "settingsContractId": "00cba676-f56a-41a8-a0ab-0831d843ab55",
+        "supportedContractIds": [
+          "ff20be2d-af79-409d-831d-a8a8e27dbeba"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      },
+      {
+        "id": "06979654-b690-4a16-9d1a-369fecbd2802",
+        "externalId": "kit-grid-template",
+        "name": "Grid presentation",
+        "settingsContractId": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
+        "supportedContractIds": [
+          "ac0bef84-1fdc-4b85-ae61-742c4427a99e"
+        ],
+        "isRoot": true,
+        "realmKey": "platform-starter"
+      }
+    ],
+    "adapters": [],
+    "streams": [],
+    "categoryGroups": [],
+    "categories": [],
+    "folders": [],
+    "components": [
+      {
+        "id": "f88c6d23-a839-4d72-aafa-391d8a47453e",
+        "externalId": "banner-launch",
+        "name": "Launch banner",
+        "folderId": null,
+        "contractId": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
+        "document": "{\"message\":{\"default\":{\"markdown\":\"**The starter kit is here.** Build a page from the same pieces every ebitex site starts with.\"},\"locales\":{}},\"action\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"See how\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"},\"style\":\"link\"}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "38ed965e-fc00-4af2-9eb7-37efc68177e1",
+        "externalId": "feature-fast",
+        "name": "Feature: fast",
+        "folderId": null,
+        "contractId": "3e7d729e-49ad-420a-9952-89ff695146d7",
+        "document": "{\"icon\":\"⚡\",\"title\":{\"default\":\"Fast to start\",\"locales\":{}},\"body\":{\"default\":\"Every organization that opts in gets the same Contracts and Templates, ready to use.\",\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "7d5098a0-35fe-4f78-9844-32356db87872",
+        "externalId": "feature-flexible",
+        "name": "Feature: flexible",
+        "folderId": null,
+        "contractId": "3e7d729e-49ad-420a-9952-89ff695146d7",
+        "document": "{\"icon\":\"🧩\",\"title\":{\"default\":\"Flexible to extend\",\"locales\":{}},\"body\":{\"default\":\"Inherit a kit Contract or duplicate it into your own realm and change what you need.\",\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "4526e6de-739a-427b-84ea-863a97edde94",
+        "externalId": "feature-safe",
+        "name": "Feature: safe",
+        "folderId": null,
+        "contractId": "3e7d729e-49ad-420a-9952-89ff695146d7",
+        "document": "{\"icon\":\"🛡️\",\"title\":{\"default\":\"Safe to update\",\"locales\":{}},\"body\":{\"default\":\"A kit update that would break something you built is refused, with the reasons.\",\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "b4820cfa-1d3f-4c87-b63e-b2547707a7fd",
+        "externalId": "card-hero",
+        "name": "Card: pages",
+        "folderId": null,
+        "contractId": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+        "document": "{\"title\":{\"default\":\"Pages\",\"locales\":{}},\"summary\":{\"default\":\"A page is a hero and a list of sections, each one a presentation from the kit.\",\"locales\":{}},\"action\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Read more\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"},\"style\":\"link\"}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "9ffbdb73-7a9f-4ac5-948b-9754aa7d7e22",
+        "externalId": "card-sections",
+        "name": "Card: sections",
+        "folderId": null,
+        "contractId": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+        "document": "{\"title\":{\"default\":\"Sections\",\"locales\":{}},\"summary\":{\"default\":\"Hero, rich text, media, card, feature, banner, call to action, tabs, accordion and grid.\",\"locales\":{}},\"action\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Read more\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"},\"style\":\"link\"}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "5eb2e0da-8697-446b-8a98-068055c18fef",
+        "externalId": "card-themes",
+        "name": "Card: themes",
+        "folderId": null,
+        "contractId": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+        "document": "{\"title\":{\"default\":\"Themes\",\"locales\":{}},\"summary\":{\"default\":\"Colour tokens as CSS variables, with a light and a dark set that follow the reader.\",\"locales\":{}},\"action\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Read more\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"},\"style\":\"link\"}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "b47b6617-de26-4684-ae3f-a470c91f73eb",
+        "externalId": "rich-intro",
+        "name": "Introduction",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"## Built from reusable parts\\n\\nThe words live in Components. **How** a section looks is chosen where it is placed, so one Component can appear in many places in different ways.\\n\\n- Change a heading once and every page that uses it follows.\\n- Choose the width, the background and the layout per placement.\\n- Keep your own content in your own realm; the kit stays read-only.\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "fb471b96-94dd-4a7a-918e-50569b85fe6e",
+        "externalId": "tab-overview",
+        "name": "Tab: overview",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"The kit gives every site the same starting vocabulary. Pages, sections and actions are ordinary Contracts, so nothing here is special to the renderer.\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "21035f87-99f0-4611-8102-67766fa94add",
+        "externalId": "tab-details",
+        "name": "Tab: details",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"A renderer reads the Contract of each section and draws it. This sample draws all ten presentations in a light and a dark theme.\\n\\n| Presentation | Draws |\\n|---|---|\\n| Hero | a heading, a lead and up to two actions |\\n| Grid | its items in a chosen number of columns |\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "db6346e3-0dbe-4ff9-b6cc-5ad03ec85ab2",
+        "externalId": "tabs-main",
+        "name": "Tabs",
+        "folderId": null,
+        "contractId": "7240f5f7-c114-4222-b214-85c01d5a4a72",
+        "document": "{\"items\":[{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"fb471b96-94dd-4a7a-918e-50569b85fe6e\",\"contextualValues\":{\"itemLabel\":{\"default\":\"Overview\",\"locales\":{}}}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"21035f87-99f0-4611-8102-67766fa94add\",\"contextualValues\":{\"itemLabel\":{\"default\":\"Details\",\"locales\":{}}}}]}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "fc03b834-b4bf-4470-86b0-cda7ca093fc6",
+        "externalId": "faq-reuse",
+        "name": "FAQ: reuse",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"Yes. The same Component can be placed several times; each placement chooses its own width, background, tone or layout.\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "5e1bb17d-889e-4ff6-b23b-ad251343ecc3",
+        "externalId": "faq-fork",
+        "name": "FAQ: fork",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"Duplicate the item into your own realm. The copy is yours; the kit keeps changing without touching it.\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "1958458e-9af4-4a89-99ea-37921f608cf1",
+        "externalId": "faq-update",
+        "name": "FAQ: update",
+        "folderId": null,
+        "contractId": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "document": "{\"body\":{\"default\":{\"markdown\":\"Kit updates arrive for everyone who opted in. One that would break something you built is refused for you, with what it would have broken.\"},\"locales\":{}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "e23bf599-fff3-4794-9c79-cebf5a55cfd5",
+        "externalId": "accordion-faq",
+        "name": "FAQ",
+        "folderId": null,
+        "contractId": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
+        "document": "{\"items\":[{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"fc03b834-b4bf-4470-86b0-cda7ca093fc6\",\"contextualValues\":{\"itemLabel\":{\"default\":\"Can I reuse one section in many places?\",\"locales\":{}},\"openByDefault\":true}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"5e1bb17d-889e-4ff6-b23b-ad251343ecc3\",\"contextualValues\":{\"itemLabel\":{\"default\":\"How do I change something the kit provides?\",\"locales\":{}}}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"1958458e-9af4-4a89-99ea-37921f608cf1\",\"contextualValues\":{\"itemLabel\":{\"default\":\"What happens when the kit is updated?\",\"locales\":{}}}}]}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "c5ded008-8124-4443-8fa5-f0a8a7ee14e0",
+        "externalId": "grid-features",
+        "name": "Features grid",
+        "folderId": null,
+        "contractId": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+        "document": "{\"items\":[{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"38ed965e-fc00-4af2-9eb7-37efc68177e1\"},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"7d5098a0-35fe-4f78-9844-32356db87872\"},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"4526e6de-739a-427b-84ea-863a97edde94\"}]}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "0cb57108-54f3-4904-b6f2-25b34ccbb15b",
+        "externalId": "grid-cards",
+        "name": "Cards grid",
+        "folderId": null,
+        "contractId": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+        "document": "{\"items\":[{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"b4820cfa-1d3f-4c87-b63e-b2547707a7fd\",\"contextualValues\":{\"emphasis\":\"default\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"9ffbdb73-7a9f-4ac5-948b-9754aa7d7e22\",\"contextualValues\":{\"emphasis\":\"high\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"5eb2e0da-8697-446b-8a98-068055c18fef\",\"contextualValues\":{\"emphasis\":\"default\"}}]}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "b2dbe6da-964b-45c4-96f5-90321d925e9f",
+        "externalId": "cta-main",
+        "name": "Call to action",
+        "folderId": null,
+        "contractId": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
+        "document": "{\"heading\":{\"default\":\"Start from a good place\",\"locales\":{}},\"body\":{\"default\":\"Opt in to the starter kit and build your first page from it in minutes.\",\"locales\":{}},\"primaryAction\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Get started\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"}}},\"secondaryAction\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Talk to us\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"}}}}",
+        "categoryIds": [],
+        "isRoot": true
+      },
+      {
+        "id": "fe484308-2a81-4664-8897-d876c46c34e5",
+        "externalId": "demo-home",
+        "name": "Demo home",
+        "folderId": null,
+        "contractId": "3d60c96c-d9c7-4f16-996b-5b628b32ce43",
+        "document": "{\"metaTitle\":{\"default\":\"ebitex starter kit\",\"locales\":{}},\"metaDescription\":{\"default\":\"A reference site built only from the ebitex starter kit.\",\"locales\":{}},\"hero\":{\"mode\":\"inline\",\"contract\":\"9adc13f6-7a96-4a52-998c-19662ba76b78\",\"contractVersion\":1,\"document\":{\"heading\":{\"default\":\"Build a site from a kit that already works\",\"locales\":{}},\"lead\":{\"default\":{\"markdown\":\"Contracts, Templates and ten ready presentations, shared by every organization that opts in.\"},\"locales\":{}},\"primaryAction\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Get started\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://ebitex.io\"}}},\"secondaryAction\":{\"mode\":\"inline\",\"contract\":\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\",\"contractVersion\":1,\"document\":{\"label\":{\"default\":\"Read the docs\",\"locales\":{}},\"href\":{\"kind\":\"external\",\"url\":\"https://developers.ebitex.io\"}}}}},\"sections\":[{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"f88c6d23-a839-4d72-aafa-391d8a47453e\",\"contextualValues\":{\"tone\":\"info\",\"width\":\"wide\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"b47b6617-de26-4684-ae3f-a470c91f73eb\",\"contextualValues\":{\"width\":\"narrow\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"c5ded008-8124-4443-8fa5-f0a8a7ee14e0\",\"contextualValues\":{\"columns\":3,\"width\":\"wide\",\"background\":\"muted\",\"anchor\":\"features\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"0cb57108-54f3-4904-b6f2-25b34ccbb15b\",\"contextualValues\":{\"columns\":3,\"width\":\"wide\",\"anchor\":\"cards\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"db6346e3-0dbe-4ff9-b6cc-5ad03ec85ab2\",\"contextualValues\":{\"width\":\"default\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"e23bf599-fff3-4794-9c79-cebf5a55cfd5\",\"contextualValues\":{\"width\":\"narrow\",\"anchor\":\"faq\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"f88c6d23-a839-4d72-aafa-391d8a47453e\",\"contextualValues\":{\"tone\":\"warning\",\"width\":\"narrow\"}},{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"b2dbe6da-964b-45c4-96f5-90321d925e9f\",\"contextualValues\":{\"width\":\"wide\"}}]}",
+        "categoryIds": [],
+        "isRoot": true
+      }
+    ],
+    "nodes": [
+      {
+        "id": "7fe11dd1-c918-4921-88a3-c42e322ca0ba",
+        "parentNodeId": null,
+        "name": "Starter site",
+        "slugJson": null,
+        "payloadKind": "presentation",
+        "presentationPayload": "{\"template\":\"3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0\",\"templateVersion\":1,\"component\":{\"mode\":\"reference\",\"provider\":\"core\",\"key\":\"fe484308-2a81-4664-8897-d876c46c34e5\"},\"settings\":{}}",
+        "redirectTargetNodeId": null,
+        "sortOrder": 0,
+        "categoryIds": [],
+        "isAncestorOnly": false,
+        "isRoot": true,
+        "excludeFromSitemap": false
+      }
+    ]
+  }
+}

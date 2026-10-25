@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+/*
+ * The starter kit renderer's whole design system: a handful of tokens as CSS variables, a light
+ * set and a dark set. Components use only the token utilities below (bg-surface, text-ink, ...),
+ * never a literal colour, so changing the look of every presentation is a change to this block.
+ *
+ * Dark follows the reader's operating system until they choose: the toggle writes data-theme on
+ * <html>, and an explicit choice beats the media query in both directions.
+ */
+
+:root {
+  --kit-surface: #ffffff;
+  --kit-raised: #ffffff;
+  --kit-muted: #f4f4f8;
+  --kit-ink: #14141f;
+  --kit-ink-muted: #5b5b70;
+  --kit-line: #e2e2ec;
+  --kit-accent: #4f46e5;
+  --kit-accent-ink: #ffffff;
+  --kit-accent-soft: #eceafd;
+  --kit-info: #1d4ed8;
+  --kit-info-soft: #e3ecff;
+  --kit-success: #15803d;
+  --kit-success-soft: #dcf5e4;
+  --kit-warning: #a15c07;
+  --kit-warning-soft: #fdf0d2;
+  --kit-danger: #b42318;
+  --kit-danger-soft: #fde4e1;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --kit-surface: #0f0f17;
+    --kit-raised: #181824;
+    --kit-muted: #1c1c2a;
+    --kit-ink: #f2f2f8;
+    --kit-ink-muted: #a3a3b8;
+    --kit-line: #2e2e42;
+    --kit-accent: #8b85ff;
+    --kit-accent-ink: #0f0f17;
+    --kit-accent-soft: #26244a;
+    --kit-info: #8fb0ff;
+    --kit-info-soft: #1b2748;
+    --kit-success: #6fd493;
+    --kit-success-soft: #14301f;
+    --kit-warning: #f0bb62;
+    --kit-warning-soft: #3a2a0c;
+    --kit-danger: #ff8e82;
+    --kit-danger-soft: #401a16;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --kit-surface: #0f0f17;
+  --kit-raised: #181824;
+  --kit-muted: #1c1c2a;
+  --kit-ink: #f2f2f8;
+  --kit-ink-muted: #a3a3b8;
+  --kit-line: #2e2e42;
+  --kit-accent: #8b85ff;
+  --kit-accent-ink: #0f0f17;
+  --kit-accent-soft: #26244a;
+  --kit-info: #8fb0ff;
+  --kit-info-soft: #1b2748;
+  --kit-success: #6fd493;
+  --kit-success-soft: #14301f;
+  --kit-warning: #f0bb62;
+  --kit-warning-soft: #3a2a0c;
+  --kit-danger: #ff8e82;
+  --kit-danger-soft: #401a16;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-surface: var(--kit-surface);
+  --color-raised: var(--kit-raised);
+  --color-muted: var(--kit-muted);
+  --color-ink: var(--kit-ink);
+  --color-ink-muted: var(--kit-ink-muted);
+  --color-line: var(--kit-line);
+  --color-accent: var(--kit-accent);
+  --color-accent-ink: var(--kit-accent-ink);
+  --color-accent-soft: var(--kit-accent-soft);
+  --color-info: var(--kit-info);
+  --color-info-soft: var(--kit-info-soft);
+  --color-success: var(--kit-success);
+  --color-success-soft: var(--kit-success-soft);
+  --color-warning: var(--kit-warning);
+  --color-warning-soft: var(--kit-warning-soft);
+  --color-danger: var(--kit-danger);
+  --color-danger-soft: var(--kit-danger-soft);
+}
+
+body {
+  background: var(--kit-surface);
+  color: var(--kit-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

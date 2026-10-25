@@ -1,0 +1,1033 @@
+{
+  "formatVersion": 1,
+  "exportedAtUtc": "2026-01-01T00:00:00.000Z",
+  "source": {
+    "organizationId": "00000000-0000-0000-0000-000000000000",
+    "environmentId": "00000000-0000-0000-0000-000000000000",
+    "appVersion": "content-sdk/model"
+  },
+  "portable": false,
+  "items": {
+    "contracts": [
+      {
+        "id": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
+        "externalId": "kit-seo",
+        "name": "SEO",
+        "parentContractId": null,
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "metaTitle",
+            "name": "Meta title",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "metaDescription",
+            "name": "Meta description",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "ogImage",
+            "name": "Social image",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "canonical",
+            "name": "Canonical address",
+            "fieldTypeKey": "link",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "noIndex",
+            "name": "Keep out of search engines",
+            "fieldTypeKey": "boolean",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+        "externalId": "kit-action",
+        "name": "Action",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "label",
+            "name": "Label",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "href",
+            "name": "Address",
+            "fieldTypeKey": "link",
+            "order": 1,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "style",
+            "name": "Style",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "externalId": "kit-presentation",
+        "name": "Presentation",
+        "parentContractId": null,
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "internalName",
+            "name": "Internal name",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "layout",
+            "name": "Layout",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "width",
+            "name": "Width",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "background",
+            "name": "Background",
+            "fieldTypeKey": "shortText",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "anchor",
+            "name": "Anchor",
+            "fieldTypeKey": "shortText",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "itemLabel",
+            "name": "Item label",
+            "fieldTypeKey": "shortText",
+            "order": 5,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "openByDefault",
+            "name": "Open by default",
+            "fieldTypeKey": "boolean",
+            "order": 6,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "span",
+            "name": "Span",
+            "fieldTypeKey": "number",
+            "order": 7,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "9adc13f6-7a96-4a52-998c-19662ba76b78",
+        "externalId": "kit-hero",
+        "name": "Hero",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "heading",
+            "name": "Heading",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "lead",
+            "name": "Lead",
+            "fieldTypeKey": "richText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "primaryAction",
+            "name": "Primary action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "secondaryAction",
+            "name": "Secondary action",
+            "fieldTypeKey": "component",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+        "externalId": "kit-rich-text",
+        "name": "Rich text",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "richText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "bca8c031-6ea2-4061-a8de-566c8372a31f",
+        "externalId": "kit-media",
+        "name": "Media",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "alt",
+            "name": "Alternative text",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "caption",
+            "name": "Caption",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "aspect",
+            "name": "Aspect ratio",
+            "fieldTypeKey": "shortText",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+        "externalId": "kit-card",
+        "name": "Card",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "title",
+            "name": "Title",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "summary",
+            "name": "Summary",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "media",
+            "name": "Media",
+            "fieldTypeKey": "blob",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "action",
+            "name": "Action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "emphasis",
+            "name": "Emphasis",
+            "fieldTypeKey": "shortText",
+            "order": 4,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
+        "externalId": "kit-feature",
+        "name": "Feature",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "icon",
+            "name": "Icon",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "title",
+            "name": "Title",
+            "fieldTypeKey": "shortText",
+            "order": 1,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "text",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
+        "externalId": "kit-banner",
+        "name": "Banner",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "message",
+            "name": "Message",
+            "fieldTypeKey": "richText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "action",
+            "name": "Action",
+            "fieldTypeKey": "component",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "tone",
+            "name": "Tone",
+            "fieldTypeKey": "shortText",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
+        "externalId": "kit-cta",
+        "name": "Call to action",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "heading",
+            "name": "Heading",
+            "fieldTypeKey": "shortText",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "body",
+            "name": "Body",
+            "fieldTypeKey": "text",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": true,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "primaryAction",
+            "name": "Primary action",
+            "fieldTypeKey": "component",
+            "order": 2,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "secondaryAction",
+            "name": "Secondary action",
+            "fieldTypeKey": "component",
+            "order": 3,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"37ea6f35-8401-4324-81ba-5f8aa6a9dd3c\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "7240f5f7-c114-4222-b214-85c01d5a4a72",
+        "externalId": "kit-tabs",
+        "name": "Tabs",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
+        "externalId": "kit-accordion",
+        "name": "Accordion",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+        "externalId": "kit-grid",
+        "name": "Grid",
+        "parentContractId": "1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e",
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "items",
+            "name": "Items",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": true,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "columns",
+            "name": "Columns",
+            "fieldTypeKey": "number",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": true,
+            "isPersonalizable": false,
+            "settings": "{}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "4455e5fe-545d-4a10-91a9-d6da5e4a2fde",
+        "externalId": "kit-experience",
+        "name": "Experience",
+        "parentContractId": "e9337b5d-a23d-43a5-967d-fdf4e8805306",
+        "isAbstract": true,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": [
+          {
+            "externalId": "hero",
+            "name": "Hero",
+            "fieldTypeKey": "component",
+            "order": 0,
+            "isMandatory": false,
+            "isEnumerable": false,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"9adc13f6-7a96-4a52-998c-19662ba76b78\"],\"allowedModes\":[\"inline\"]}",
+            "defaultValue": null
+          },
+          {
+            "externalId": "sections",
+            "name": "Sections",
+            "fieldTypeKey": "component",
+            "order": 1,
+            "isMandatory": false,
+            "isEnumerable": true,
+            "isLocalizable": false,
+            "isContextual": false,
+            "isPersonalizable": false,
+            "settings": "{\"allowedContractIds\":[\"1f3e45d6-c2c7-4412-82ae-8cc01a17ce2e\"],\"allowedModes\":[\"reference\"]}",
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "id": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
+        "externalId": "kit-page-settings",
+        "name": "Page settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
+        "externalId": "kit-hero-template-settings",
+        "name": "Hero presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "73d88957-5912-4dee-a582-37bcf9df38b5",
+        "externalId": "kit-rich-text-template-settings",
+        "name": "Rich text presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
+        "externalId": "kit-media-template-settings",
+        "name": "Media presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "ffe06452-f533-4608-9465-335ac7f5e69e",
+        "externalId": "kit-card-template-settings",
+        "name": "Card presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
+        "externalId": "kit-feature-template-settings",
+        "name": "Feature presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "897821c3-88f4-41b1-a736-7f4262441d68",
+        "externalId": "kit-banner-template-settings",
+        "name": "Banner presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
+        "externalId": "kit-cta-template-settings",
+        "name": "Call to action presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "e987dc3d-a040-4589-8cb9-2eddf068681e",
+        "externalId": "kit-tabs-template-settings",
+        "name": "Tabs presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "00cba676-f56a-41a8-a0ab-0831d843ab55",
+        "externalId": "kit-accordion-template-settings",
+        "name": "Accordion presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      },
+      {
+        "id": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
+        "externalId": "kit-grid-template-settings",
+        "name": "Grid presentation settings",
+        "parentContractId": null,
+        "isAbstract": false,
+        "isCategoryGroupMetadata": false,
+        "titleFieldPath": null,
+        "isRoot": true,
+        "fields": []
+      }
+    ],
+    "templates": [
+      {
+        "id": "3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0",
+        "externalId": "kit-page",
+        "name": "Page",
+        "settingsContractId": "df3b7df3-f843-4697-9d1a-c42b3156ba99",
+        "supportedContractIds": [
+          "4455e5fe-545d-4a10-91a9-d6da5e4a2fde"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "3497a390-d295-4300-afb5-6609bab3afeb",
+        "externalId": "kit-hero-template",
+        "name": "Hero presentation",
+        "settingsContractId": "bb27076a-30e9-4afe-a3e4-8f217b774bbb",
+        "supportedContractIds": [
+          "9adc13f6-7a96-4a52-998c-19662ba76b78"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "cb1f1f65-cf30-4dca-9059-1cc99a9f9857",
+        "externalId": "kit-rich-text-template",
+        "name": "Rich text presentation",
+        "settingsContractId": "73d88957-5912-4dee-a582-37bcf9df38b5",
+        "supportedContractIds": [
+          "c1d4d1b7-20c9-4af5-b2b5-8168540216ac"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "62ecb608-09be-49d1-982a-d29bbde93d3d",
+        "externalId": "kit-media-template",
+        "name": "Media presentation",
+        "settingsContractId": "aa254fcd-95c0-43a8-af2c-ae155bc1c2e8",
+        "supportedContractIds": [
+          "bca8c031-6ea2-4061-a8de-566c8372a31f"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "c655a76d-ac6a-4d01-9c2c-fa70c4e118b3",
+        "externalId": "kit-card-template",
+        "name": "Card presentation",
+        "settingsContractId": "ffe06452-f533-4608-9465-335ac7f5e69e",
+        "supportedContractIds": [
+          "a2595de9-6cfa-408f-baa7-df6541a4a588"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "a8b8d716-61f1-4cb1-90b5-9e105bce9133",
+        "externalId": "kit-feature-template",
+        "name": "Feature presentation",
+        "settingsContractId": "98cb0c15-e560-4fd9-a2f0-c2da4cdb6772",
+        "supportedContractIds": [
+          "3e7d729e-49ad-420a-9952-89ff695146d7"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "cb5863dc-d20c-4b10-82b5-82b111559cf1",
+        "externalId": "kit-banner-template",
+        "name": "Banner presentation",
+        "settingsContractId": "897821c3-88f4-41b1-a736-7f4262441d68",
+        "supportedContractIds": [
+          "bdff1b39-be08-4ca2-85cf-bfd001b57a1e"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "cf720497-e1a3-4e3a-bc9e-726a724c068b",
+        "externalId": "kit-cta-template",
+        "name": "Call to action presentation",
+        "settingsContractId": "d7df8eca-66c2-44c9-9c90-e05bc7ca901e",
+        "supportedContractIds": [
+          "249d9651-5b4b-4d4d-a118-c49bbb50f899"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "828cd823-64c2-4456-a8c3-e2a9bab44092",
+        "externalId": "kit-tabs-template",
+        "name": "Tabs presentation",
+        "settingsContractId": "e987dc3d-a040-4589-8cb9-2eddf068681e",
+        "supportedContractIds": [
+          "7240f5f7-c114-4222-b214-85c01d5a4a72"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "41850f16-56bf-4459-969a-f42ea0afe2cf",
+        "externalId": "kit-accordion-template",
+        "name": "Accordion presentation",
+        "settingsContractId": "00cba676-f56a-41a8-a0ab-0831d843ab55",
+        "supportedContractIds": [
+          "ff20be2d-af79-409d-831d-a8a8e27dbeba"
+        ],
+        "isRoot": true
+      },
+      {
+        "id": "06979654-b690-4a16-9d1a-369fecbd2802",
+        "externalId": "kit-grid-template",
+        "name": "Grid presentation",
+        "settingsContractId": "c3eb333f-de1a-436b-9b2b-1550ff8a0af9",
+        "supportedContractIds": [
+          "ac0bef84-1fdc-4b85-ae61-742c4427a99e"
+        ],
+        "isRoot": true
+      }
+    ],
+    "adapters": [],
+    "streams": [],
+    "categoryGroups": [],
+    "categories": [],
+    "folders": [],
+    "components": [],
+    "nodes": []
+  }
+}
