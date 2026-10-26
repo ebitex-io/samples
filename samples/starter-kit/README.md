@@ -1,67 +1,73 @@
 # Starter kit renderer
 
-A reference renderer for the **ebitex starter kit**: the generic, best-practice Contracts and
-Templates every organization can opt in to (Content → Settings → Realms), drawn as a real site with
-React, Tailwind CSS 4 and a light and a dark theme.
+A reference renderer for the **ebitex starter kit**: the generic, best-practice Contracts, Templates and categories you
+install once into an organization (Content → Starter kits) and then edit as your own. This sample draws the experience the
+kit installs as a real site with React, Tailwind CSS 4, themes, appearances and Assets media.
 
-The kit stores *what* a page says. This sample decides *how it looks*. Nothing here is special to ebitex's
-own apps: it reads the Content Delivery API through `@ebitex/content-sdk`, so you can replace any file with
-your own design and keep the content.
+The kit stores *what* an experience says. This sample decides *how it looks*. Nothing here is special to ebitex's own apps:
+it reads the Content Delivery API through `@ebitex/content-sdk`, so you can replace any file with your own design and keep
+the content. It is meant to get you running quickly and then be taken over: change a token, replace a component, delete what
+you do not use.
 
 ## What it draws
 
 | Kit Contract | Renderer | Reads |
 |---|---|---|
-| `ebitex-experience` (a page) | `src/presentations/ebitex-page.tsx` | SEO fields, an inline hero, a list of sections |
-| `ebitex-hero` | `Hero` in `src/kit/blocks.tsx` | heading, lead, media, two actions; `layout` = `split` puts the image beside the text |
+| `ebitex-experience` (and `ebitex-landing`) | `src/presentations/ebitex-experience-template.tsx` | the theme, SEO fields, an inline hero, a list of sections |
+| `ebitex-hero` | `Hero` in `src/kit/blocks.tsx` | heading, lead, media, two actions; `layout` is `stacked`, `centered`, `split` or `split-reverse` |
 | `ebitex-rich-text` | `RichTextBlock` | body |
-| `ebitex-media` | `MediaBlock` | media, alt, caption; `aspect` |
-| `ebitex-card` | `Card` | title, summary, media, action; `emphasis` = `high` |
+| `ebitex-media` | `MediaBlock` | media (an Assets image, video or document), alt, caption; `aspect` |
+| `ebitex-card` | `Card` | title, summary, media, action; `emphasis` is `default`, `featured` or `quiet` |
 | `ebitex-feature` | `Feature` | icon, title, body |
-| `ebitex-banner` | `Banner` | message, action; `tone` = `info`, `success`, `warning`, `danger` |
+| `ebitex-banner` | `Banner` | message, action; `tone` is `info`, `success`, `warning` or `critical` |
 | `ebitex-cta` | `Cta` | heading, body, two actions |
 | `ebitex-tabs`, `ebitex-accordion`, `ebitex-grid` | `src/kit/containers.tsx` | `items`; tab and accordion labels, `openByDefault`, grid `columns` and per-item `span` |
 
-A page's sections are Component **references**, not Template envelopes, so `src/kit/Section.tsx` dispatches on each
-section's Contract. A section the renderer does not know (a Contract of your own that inherits `ebitex-presentation`)
-draws nothing and leaves `data-kit-unknown` in the DOM, so a page never breaks on content a newer kit or you added.
+An experience's sections are Component **references**, not Template envelopes, so `src/kit/Section.tsx` dispatches on each
+section's Contract. A section the renderer does not know (a Contract of your own that inherits `ebitex-presentation`) draws
+nothing and leaves `data-kit-unknown` in the DOM, so a page never breaks on content a newer kit or you added.
 
-### How a section is placed
+## Categories, themes and appearances
 
-Layout, width, background, anchor, tone, emphasis, columns, tab labels and the like are **contextual fields**: their
-values come from whatever references the Component, so one Component can be reused in many places with different
-settings. The demo page places one banner twice, as information and as a warning. The kit declares those fields as
-free text, so the words in `src/lib/vocab.ts` are this renderer's convention. A word it does not know falls back to
-the default instead of breaking the page.
+Every closed choice in the kit is a **category** from one of the kit's groups (`ebitex-theme`, `-appearance`, `-layout`, `-width`,
+`-background`, `-aspect-ratio`, `-emphasis`, `-tone`, `-action-style`), so you can rename or add to them in Content. The Delivery
+API hands a renderer a category as a descriptor (`{ kind: "category", path: "ebitex-width/wide", value: "Wide", ... }`) and
+nothing else, so **the renderer owns the mapping**: `src/lib/vocab.ts` reads the key after the slash and maps it to this site's
+classes and tokens. A key it does not know falls back to the default, so a category you add draws as the default until you teach
+the renderer about it.
+
+- **Theme** is chosen once for the whole experience (required, defaults to `default`). It is written as `data-kit-theme` on the
+  wrapper and `src/index.css` turns it into a token set: `default` keeps the reader's surfaces, `dark` is a dark experience
+  whatever the mode, `brand` changes the accent family.
+- **Appearance** is an optional override for one section (`muted`, `inverted`, `brand`, `highlight`). Empty means "use the theme".
+  It is written as `data-kit-appearance` on that section's frame and overrides tokens for that subtree only.
+- **Mode** (light, dark, or follow the system) belongs to the reader, not the author. The corner switch writes `data-mode` on
+  `<html>`; it applies on top of whichever theme the experience has.
+
+Every colour is a token in `src/index.css`, and components use only the token utilities (`bg-surface`, `text-ink`, `border-line`,
+`bg-accent`), so a new look is a change to that one file.
+
+## Media
+
+A media field points at an asset in your **Assets** library, which Content reads as `ebitex-image`, `ebitex-video` or
+`ebitex-document`. `src/kit/Media.tsx` draws each (an image with its real dimensions, a video with controls and captions, a
+document as a download link). A field with nothing chosen draws a labelled placeholder of the same shape, so the layout holds and
+a person can see where media goes.
 
 ## Run it
 
-1. In an organization that has opted in to the starter kit, create a delivery key (Content → Configure → Delivery).
-2. `cp .env.example .env` and set `VITE_CONTENT_DELIVERY_KEY`. For a deployed site use a browser-safe key restricted to
-   your origin: the key ships inside the bundle.
-3. Put the demo page in your organization: import `seed/starter-kit-demo.bundle.json` (Content → Configure →
-   Export and import), then publish the site root.
-4. `npm install && npm run dev`, then open <http://localhost:5190>. The corner switch changes the theme.
+1. Install the kit in your organization: Content → **Starter kits**. Leave "Include the demo experience" on, and connect Assets
+   when the page asks. Then publish the demo (the site root `ebitex demo`).
+2. Create a delivery key (Content → Configure → Delivery). For a deployed site use a browser-safe key restricted to your origin: the
+   key ships inside the bundle.
+3. `cp .env.example .env` and set `VITE_CONTENT_DELIVERY_KEY`.
+4. `npm install && npm run dev`, then open <http://localhost:5190>. The corner switch changes the colour mode.
 
-The bundle names the kit's Contracts and Templates so the page's references resolve, and marks each with the
-kit's realm key. On import, an item carrying that key is mapped onto your organization's own kit row and is never
-written, so importing the demo does not copy the kit into your realm. It has no images (a blob belongs to one
-organization); add your own to the hero, a card or a media section.
-
-## Change the look
-
-Every colour is a token in `src/index.css` (a light set and a dark set). Components use only the token utilities
-(`bg-surface`, `text-ink`, `border-line`, `bg-accent`), never a literal colour, so a new look is a change to that
-one block. Dark follows the reader's system until they choose with the switch.
+To see another theme, open **Demo: home** in Content and change its Theme; to see an appearance, set one on a section's placement.
 
 ## Tests
 
-`npm test` renders the page from `src/test/fixtures/home-delivery.json`, a real Delivery API answer for the demo
-page (with an uploaded image) captured with `resolveLocation` and edited only to replace the host name. A renderer
-proved on a hand-written fixture can pass while drawing nothing against the real server, so refresh that file from a
-real response if the kit's shape changes.
-
-## Regenerate the seed
-
-`content/demo.mjs` is the demo content and `content/kit.bundle.json` is the kit as ebitex ships it. After changing
-either: `node content/build-demo.mjs`.
+`npm test` renders the experience from `src/test/fixtures/home-delivery.json`, a real Delivery API answer for the demo experience
+(captured from a production organization with `resolveLocation`, with one uploaded asset chosen for the media section). A renderer
+proved on a hand-written fixture can pass while drawing nothing against the real server, so refresh that file from a real response if
+the kit's shape changes. `src/lib/vocab.test.ts` pins how a category descriptor is read.

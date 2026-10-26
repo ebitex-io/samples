@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router'
 
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { ModeToggle } from '@/components/ModeToggle'
 import { ContentPage } from '@/pages/ContentPage'
 
-/** One route matching everything, and a corner theme switch so both themes can be checked on a real page. */
+/** One route matching everything, and a corner colour-mode switch so both modes can be checked on a real page. */
 export default function App() {
   return (
     <>
       <div className="fixed right-4 bottom-4 z-10">
-        <ThemeToggle />
+        <ModeToggle />
       </div>
       <Routes>
         <Route path="*" element={<ContentPage />} />

@@ -4,10 +4,12 @@ import { useEffect } from 'react'
 
 import type { HeroContent } from '@/kit/blocks'
 import { Frame, Section } from '@/kit/Section'
-import { text } from '@/lib/vocab'
+import { pick, text, THEMES } from '@/lib/vocab'
 
-/** What the `ebitex-experience` Contract delivers for a page: the `ebitex-seo` fields, an inline hero and the sections. */
-interface PageContent {
+/** What the `ebitex-experience` Contract delivers: the `ebitex-seo` fields, the theme, an inline hero and the sections. */
+interface ExperienceContent {
+  /** A theme category descriptor (the Delivery API sends the key in `path`). */
+  theme?: unknown
   metaTitle?: string
   metaDescription?: string
   noIndex?: boolean
@@ -16,18 +18,21 @@ interface PageContent {
 }
 
 /**
- * The `ebitex-page` Template, over any Contract that inherits `ebitex-experience`.
+ * The `ebitex-experience-template` Template, over any Contract that inherits `ebitex-experience`.
  *
- * The hero is an *inline* value, so it is part of this page and arrives ready; the sections are
+ * The experience's **theme** is a category the author chose; it is written as `data-kit-theme` on the wrapper, and index.css turns it into
+ * tokens for everything inside. A theme this renderer does not know falls back to `default`.
+ *
+ * The hero is an *inline* value, so it is part of this experience and arrives ready; the sections are
  * references, each dispatched by its Contract in `<Section>`. Adding a section kind to the kit is a
  * case in that switch and nothing here.
  */
-const KitPage: PresentationRenderer<PageContent> = ({ component }) => {
-  const { metaTitle, metaDescription, noIndex, hero, sections } = component.content
+const KitExperience: PresentationRenderer<ExperienceContent> = ({ component }) => {
+  const { theme, metaTitle, metaDescription, noIndex, hero, sections } = component.content
   useDocumentMeta(text(metaTitle), text(metaDescription), noIndex === true)
 
   return (
-    <main>
+    <main data-kit-theme={pick(theme, THEMES)} className="bg-surface text-ink">
       {hero ? (
         <Frame content={hero.content as unknown as Record<string, unknown>}>
           <Section value={hero as unknown as ComponentValue} nested />
@@ -65,4 +70,4 @@ function useDocumentMeta(title: string | undefined, description: string | undefi
   }, [description, noIndex])
 }
 
-export default KitPage
+export default KitExperience
