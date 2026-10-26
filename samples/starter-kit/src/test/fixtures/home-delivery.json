@@ -1,0 +1,597 @@
+{
+  "kind": "presentation",
+  "nodeId": "7fe11dd1-c918-4921-88a3-c42e322ca0ba",
+  "path": "/",
+  "title": "Starter site",
+  "titleSource": "name",
+  "presentation": {
+    "settings": {},
+    "template": {
+      "id": "3ea318f4-0cb0-4b47-888d-eb4dfc83d1c0",
+      "externalId": "ebitex-page",
+      "version": 1
+    },
+    "component": {
+      "key": "fe484308-2a81-4664-8897-d876c46c34e5",
+      "contract": {
+        "id": "3d60c96c-d9c7-4f16-996b-5b628b32ce43",
+        "externalId": "starter-demo-page",
+        "version": 1
+      },
+      "provider": "core",
+      "content": {
+        "hero": {
+          "contract": {
+            "id": "9adc13f6-7a96-4a52-998c-19662ba76b78",
+            "externalId": "ebitex-hero",
+            "version": 1
+          },
+          "content": {
+            "lead": [
+              {
+                "kind": "markdown",
+                "markdown": "Contracts, Templates and ten ready presentations, shared by every organization that opts in."
+              }
+            ],
+            "media": {
+              "url": "https://example.test/local-media/9c9e8828-dd57-4902-b29a-a09f9c7cb052/cdee2bd5-468c-4105-8a3c-be490caa53a4",
+              "blobId": "cdee2bd5-468c-4105-8a3c-be490caa53a4",
+              "sizeBytes": 674,
+              "contentType": "image/svg+xml"
+            },
+            "heading": "Build a site from a kit that already works",
+            "primaryAction": {
+              "contract": {
+                "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://ebitex.io",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Get started"
+              }
+            },
+            "secondaryAction": {
+              "contract": {
+                "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://developers.ebitex.io",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Read the docs"
+              }
+            }
+          }
+        },
+        "sections": [
+          {
+            "key": "f88c6d23-a839-4d72-aafa-391d8a47453e",
+            "contract": {
+              "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
+              "externalId": "ebitex-banner",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "tone": "info",
+              "width": "wide"
+            },
+            "content": {
+              "action": {
+                "contract": {
+                  "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                  "externalId": "ebitex-action",
+                  "version": 1
+                },
+                "content": {
+                  "href": {
+                    "url": "https://ebitex.io",
+                    "kind": "external",
+                    "resolved": true
+                  },
+                  "label": "See how",
+                  "style": "link"
+                }
+              },
+              "message": [
+                {
+                  "kind": "markdown",
+                  "markdown": "**The starter kit is here.** Build a page from the same pieces every ebitex site starts with."
+                }
+              ],
+              "tone": "info",
+              "width": "wide"
+            }
+          },
+          {
+            "key": "b47b6617-de26-4684-ae3f-a470c91f73eb",
+            "contract": {
+              "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+              "externalId": "ebitex-rich-text",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "narrow"
+            },
+            "content": {
+              "body": [
+                {
+                  "kind": "markdown",
+                  "markdown": "## Built from reusable parts\n\nThe words live in Components. **How** a section looks is chosen where it is placed, so one Component can appear in many places in different ways.\n\n- Change a heading once and every page that uses it follows.\n- Choose the width, the background and the layout per placement.\n- Keep your own content in your own realm; the kit stays read-only."
+                }
+              ],
+              "width": "narrow"
+            }
+          },
+          {
+            "key": "3131cb54-3f51-4f0e-bb00-f7b2a69c58ad",
+            "contract": {
+              "id": "bca8c031-6ea2-4061-a8de-566c8372a31f",
+              "externalId": "ebitex-media",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "default",
+              "aspect": "16:9"
+            },
+            "content": {
+              "alt": "An abstract illustration of a page built from cards",
+              "media": {
+                "url": "https://example.test/local-media/9c9e8828-dd57-4902-b29a-a09f9c7cb052/cdee2bd5-468c-4105-8a3c-be490caa53a4",
+                "blobId": "cdee2bd5-468c-4105-8a3c-be490caa53a4",
+                "sizeBytes": 674,
+                "contentType": "image/svg+xml"
+              },
+              "caption": "A page is a list of sections.",
+              "width": "default",
+              "aspect": "16:9"
+            }
+          },
+          {
+            "key": "c5ded008-8124-4443-8fa5-f0a8a7ee14e0",
+            "contract": {
+              "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+              "externalId": "ebitex-grid",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "wide",
+              "anchor": "features",
+              "columns": 3,
+              "background": "muted"
+            },
+            "content": {
+              "items": [
+                {
+                  "key": "38ed965e-fc00-4af2-9eb7-37efc68177e1",
+                  "contract": {
+                    "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
+                    "externalId": "ebitex-feature",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "content": {
+                    "body": "Every organization that opts in gets the same Contracts and Templates, ready to use.",
+                    "icon": "⚡",
+                    "title": "Fast to start"
+                  }
+                },
+                {
+                  "key": "7d5098a0-35fe-4f78-9844-32356db87872",
+                  "contract": {
+                    "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
+                    "externalId": "ebitex-feature",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "content": {
+                    "body": "Inherit a kit Contract or duplicate it into your own realm and change what you need.",
+                    "icon": "🧩",
+                    "title": "Flexible to extend"
+                  }
+                },
+                {
+                  "key": "4526e6de-739a-427b-84ea-863a97edde94",
+                  "contract": {
+                    "id": "3e7d729e-49ad-420a-9952-89ff695146d7",
+                    "externalId": "ebitex-feature",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "content": {
+                    "body": "A kit update that would break something you built is refused, with the reasons.",
+                    "icon": "🛡️",
+                    "title": "Safe to update"
+                  }
+                }
+              ],
+              "width": "wide",
+              "anchor": "features",
+              "columns": 3,
+              "background": "muted"
+            }
+          },
+          {
+            "key": "0cb57108-54f3-4904-b6f2-25b34ccbb15b",
+            "contract": {
+              "id": "ac0bef84-1fdc-4b85-ae61-742c4427a99e",
+              "externalId": "ebitex-grid",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "wide",
+              "anchor": "cards",
+              "columns": 3
+            },
+            "content": {
+              "items": [
+                {
+                  "key": "b4820cfa-1d3f-4c87-b63e-b2547707a7fd",
+                  "contract": {
+                    "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+                    "externalId": "ebitex-card",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "emphasis": "default"
+                  },
+                  "content": {
+                    "media": {
+                      "url": "https://example.test/local-media/9c9e8828-dd57-4902-b29a-a09f9c7cb052/cdee2bd5-468c-4105-8a3c-be490caa53a4",
+                      "blobId": "cdee2bd5-468c-4105-8a3c-be490caa53a4",
+                      "sizeBytes": 674,
+                      "contentType": "image/svg+xml"
+                    },
+                    "title": "Pages",
+                    "action": {
+                      "contract": {
+                        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                        "externalId": "ebitex-action",
+                        "version": 1
+                      },
+                      "content": {
+                        "href": {
+                          "url": "https://ebitex.io",
+                          "kind": "external",
+                          "resolved": true
+                        },
+                        "label": "Read more",
+                        "style": "link"
+                      }
+                    },
+                    "summary": "A page is a hero and a list of sections, each one a presentation from the kit.",
+                    "emphasis": "default"
+                  }
+                },
+                {
+                  "key": "9ffbdb73-7a9f-4ac5-948b-9754aa7d7e22",
+                  "contract": {
+                    "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+                    "externalId": "ebitex-card",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "emphasis": "high"
+                  },
+                  "content": {
+                    "title": "Sections",
+                    "action": {
+                      "contract": {
+                        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                        "externalId": "ebitex-action",
+                        "version": 1
+                      },
+                      "content": {
+                        "href": {
+                          "url": "https://ebitex.io",
+                          "kind": "external",
+                          "resolved": true
+                        },
+                        "label": "Read more",
+                        "style": "link"
+                      }
+                    },
+                    "summary": "Hero, rich text, media, card, feature, banner, call to action, tabs, accordion and grid.",
+                    "emphasis": "high"
+                  }
+                },
+                {
+                  "key": "5eb2e0da-8697-446b-8a98-068055c18fef",
+                  "contract": {
+                    "id": "a2595de9-6cfa-408f-baa7-df6541a4a588",
+                    "externalId": "ebitex-card",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "emphasis": "default"
+                  },
+                  "content": {
+                    "title": "Themes",
+                    "action": {
+                      "contract": {
+                        "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                        "externalId": "ebitex-action",
+                        "version": 1
+                      },
+                      "content": {
+                        "href": {
+                          "url": "https://ebitex.io",
+                          "kind": "external",
+                          "resolved": true
+                        },
+                        "label": "Read more",
+                        "style": "link"
+                      }
+                    },
+                    "summary": "Colour tokens as CSS variables, with a light and a dark set that follow the reader.",
+                    "emphasis": "default"
+                  }
+                }
+              ],
+              "width": "wide",
+              "anchor": "cards",
+              "columns": 3
+            }
+          },
+          {
+            "key": "db6346e3-0dbe-4ff9-b6cc-5ad03ec85ab2",
+            "contract": {
+              "id": "7240f5f7-c114-4222-b214-85c01d5a4a72",
+              "externalId": "ebitex-tabs",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "default"
+            },
+            "content": {
+              "items": [
+                {
+                  "key": "fb471b96-94dd-4a7a-918e-50569b85fe6e",
+                  "contract": {
+                    "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+                    "externalId": "ebitex-rich-text",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "itemLabel": "Overview"
+                  },
+                  "content": {
+                    "body": [
+                      {
+                        "kind": "markdown",
+                        "markdown": "The kit gives every site the same starting vocabulary. Pages, sections and actions are ordinary Contracts, so nothing here is special to the renderer."
+                      }
+                    ],
+                    "itemLabel": "Overview"
+                  }
+                },
+                {
+                  "key": "21035f87-99f0-4611-8102-67766fa94add",
+                  "contract": {
+                    "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+                    "externalId": "ebitex-rich-text",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "itemLabel": "Details"
+                  },
+                  "content": {
+                    "body": [
+                      {
+                        "kind": "markdown",
+                        "markdown": "A renderer reads the Contract of each section and draws it. This sample draws all ten presentations in a light and a dark theme.\n\n| Presentation | Draws |\n|---|---|\n| Hero | a heading, a lead and up to two actions |\n| Grid | its items in a chosen number of columns |"
+                      }
+                    ],
+                    "itemLabel": "Details"
+                  }
+                }
+              ],
+              "width": "default"
+            }
+          },
+          {
+            "key": "e23bf599-fff3-4794-9c79-cebf5a55cfd5",
+            "contract": {
+              "id": "ff20be2d-af79-409d-831d-a8a8e27dbeba",
+              "externalId": "ebitex-accordion",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "narrow",
+              "anchor": "faq"
+            },
+            "content": {
+              "items": [
+                {
+                  "key": "fc03b834-b4bf-4470-86b0-cda7ca093fc6",
+                  "contract": {
+                    "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+                    "externalId": "ebitex-rich-text",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "itemLabel": "Can I reuse one section in many places?",
+                    "openByDefault": true
+                  },
+                  "content": {
+                    "body": [
+                      {
+                        "kind": "markdown",
+                        "markdown": "Yes. The same Component can be placed several times; each placement chooses its own width, background, tone or layout."
+                      }
+                    ],
+                    "itemLabel": "Can I reuse one section in many places?",
+                    "openByDefault": true
+                  }
+                },
+                {
+                  "key": "5e1bb17d-889e-4ff6-b23b-ad251343ecc3",
+                  "contract": {
+                    "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+                    "externalId": "ebitex-rich-text",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "itemLabel": "How do I change something the kit provides?"
+                  },
+                  "content": {
+                    "body": [
+                      {
+                        "kind": "markdown",
+                        "markdown": "Duplicate the item into your own realm. The copy is yours; the kit keeps changing without touching it."
+                      }
+                    ],
+                    "itemLabel": "How do I change something the kit provides?"
+                  }
+                },
+                {
+                  "key": "1958458e-9af4-4a89-99ea-37921f608cf1",
+                  "contract": {
+                    "id": "c1d4d1b7-20c9-4af5-b2b5-8168540216ac",
+                    "externalId": "ebitex-rich-text",
+                    "version": 1
+                  },
+                  "provider": "core",
+                  "contextualValues": {
+                    "itemLabel": "What happens when the kit is updated?"
+                  },
+                  "content": {
+                    "body": [
+                      {
+                        "kind": "markdown",
+                        "markdown": "Kit updates arrive for everyone who opted in. One that would break something you built is refused for you, with what it would have broken."
+                      }
+                    ],
+                    "itemLabel": "What happens when the kit is updated?"
+                  }
+                }
+              ],
+              "width": "narrow",
+              "anchor": "faq"
+            }
+          },
+          {
+            "key": "f88c6d23-a839-4d72-aafa-391d8a47453e",
+            "contract": {
+              "id": "bdff1b39-be08-4ca2-85cf-bfd001b57a1e",
+              "externalId": "ebitex-banner",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "tone": "warning",
+              "width": "narrow"
+            },
+            "content": {
+              "action": {
+                "contract": {
+                  "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                  "externalId": "ebitex-action",
+                  "version": 1
+                },
+                "content": {
+                  "href": {
+                    "url": "https://ebitex.io",
+                    "kind": "external",
+                    "resolved": true
+                  },
+                  "label": "See how",
+                  "style": "link"
+                }
+              },
+              "message": [
+                {
+                  "kind": "markdown",
+                  "markdown": "**The starter kit is here.** Build a page from the same pieces every ebitex site starts with."
+                }
+              ],
+              "tone": "warning",
+              "width": "narrow"
+            }
+          },
+          {
+            "key": "b2dbe6da-964b-45c4-96f5-90321d925e9f",
+            "contract": {
+              "id": "249d9651-5b4b-4d4d-a118-c49bbb50f899",
+              "externalId": "ebitex-cta",
+              "version": 1
+            },
+            "provider": "core",
+            "contextualValues": {
+              "width": "wide"
+            },
+            "content": {
+              "body": "Opt in to the starter kit and build your first page from it in minutes.",
+              "heading": "Start from a good place",
+              "primaryAction": {
+                "contract": {
+                  "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                  "externalId": "ebitex-action",
+                  "version": 1
+                },
+                "content": {
+                  "href": {
+                    "url": "https://ebitex.io",
+                    "kind": "external",
+                    "resolved": true
+                  },
+                  "label": "Get started"
+                }
+              },
+              "secondaryAction": {
+                "contract": {
+                  "id": "37ea6f35-8401-4324-81ba-5f8aa6a9dd3c",
+                  "externalId": "ebitex-action",
+                  "version": 1
+                },
+                "content": {
+                  "href": {
+                    "url": "https://ebitex.io",
+                    "kind": "external",
+                    "resolved": true
+                  },
+                  "label": "Talk to us"
+                }
+              },
+              "width": "wide"
+            }
+          }
+        ],
+        "metaTitle": "ebitex starter kit",
+        "metaDescription": "A reference site built only from the ebitex starter kit."
+      }
+    }
+  },
+  "site": {
+    "rootNodeId": "7fe11dd1-c918-4921-88a3-c42e322ca0ba",
+    "name": "Starter site",
+    "hosts": [],
+    "deliveryEnvironmentId": "fd36b288-b543-42aa-86a7-dbcf7db846eb"
+  },
+  "strategy": {
+    "strategy": "full",
+    "depth": 10
+  }
+}
