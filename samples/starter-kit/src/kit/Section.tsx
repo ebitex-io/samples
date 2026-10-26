@@ -3,17 +3,17 @@ import { useResolvedComponent } from '@ebitex/content-sdk/react'
 
 import { Accordion, Grid, Tabs, type ContainerContent } from '@/kit/containers'
 import { Banner, Card, Cta, Feature, Hero, MediaBlock, RichTextBlock } from '@/kit/blocks'
-import { BACKGROUNDS, pick, text, WIDTH_CLASS, WIDTHS } from '@/lib/vocab'
+import { APPEARANCES, BACKGROUNDS, pick, pickOptional, text, WIDTH_CLASS, WIDTHS } from '@/lib/vocab'
 
 /**
- * One section of a page, or one item inside a Tabs, Accordion or Grid.
+ * One section of an experience, or one item inside a Tabs, Accordion or Grid.
  *
- * A page's sections are Component *references*, so the value says which Contract it is (`contract.externalId`)
+ * An experience's sections are Component *references*, so the value says which Contract it is (`contract.externalId`)
  * and the Template is not part of it: this switch is the dispatch. A section the kit does not know
  * (an author's own Contract inheriting `ebitex-presentation`) renders nothing and says so in the DOM, so
- * a page never breaks on content a newer kit or a tenant added.
+ * an experience never breaks on content a newer kit or a tenant added.
  *
- * `useResolvedComponent` is the SDK's gate for a value that may still be a bare reference: a page
+ * `useResolvedComponent` is the SDK's gate for a value that may still be a bare reference: an experience
  * resolved deeply enough arrives expanded, and one that was not is fetched here, so a section is
  * never silently hollow.
  *
@@ -62,15 +62,26 @@ function renderBody(contract: string, content: Record<string, unknown>) {
   }
 }
 
-/** The page-level frame every top-level section gets: anchor, background, and a width. */
+const SURFACE: Record<(typeof BACKGROUNDS)[number], string> = {
+  none: '',
+  muted: 'bg-muted',
+  contrast: 'bg-ink text-surface [--kit-ink:var(--kit-surface)] [--kit-ink-muted:var(--kit-line)]',
+  brand: 'bg-accent text-accent-ink [--kit-ink:var(--kit-accent-ink)] [--kit-ink-muted:var(--kit-accent-ink)]',
+}
+
+/**
+ * The frame every top-level section gets: an anchor, a background, a width and, when the author chose one, an **appearance**. The appearance
+ * is written as `data-kit-appearance`, which index.css turns into a set of token overrides for this section's subtree only. An appearance
+ * the author left empty (or one this renderer does not know) writes nothing, so the section follows the experience's theme.
+ */
 export function Frame({ content, children }: { content: Record<string, unknown>; children: React.ReactNode }) {
   const width = pick(content.width, WIDTHS)
   const background = pick(content.background, BACKGROUNDS)
+  const appearance = pickOptional(content.appearance, APPEARANCES)
   const anchor = text(content.anchor)
-  const surface = background === 'muted' ? 'bg-muted' : background === 'accent' ? 'bg-accent-soft' : ''
 
   return (
-    <section id={anchor} className={`${surface} scroll-mt-20 px-6 py-12 sm:py-16`}>
+    <section id={anchor} data-kit-appearance={appearance} className={`${SURFACE[background]} scroll-mt-20 px-6 py-12 sm:py-16`}>
       <div className={`mx-auto ${WIDTH_CLASS[width]}`}>{children}</div>
     </section>
   )

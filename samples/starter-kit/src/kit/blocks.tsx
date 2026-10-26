@@ -1,27 +1,31 @@
 import type { ReactNode } from 'react'
-import type { BlobValue, RichTextValue } from '@ebitex/content-sdk'
+import type { ComponentValue, RichTextValue } from '@ebitex/content-sdk'
 import { RichText } from '@ebitex/content-sdk/react'
 
 import { Action, hrefOf, type ActionContent } from '@/kit/Action'
 import { Media } from '@/kit/Media'
-import { EMPHASES, pick, text, TONES, type Tone } from '@/lib/vocab'
+import { EMPHASES, LAYOUTS, pick, text, TONES, type Tone } from '@/lib/vocab'
 
 type Inline = { content: ActionContent } | undefined
 
 /** What each kit Contract delivers. Optional wherever the Contract does not make the field mandatory. */
-export interface HeroContent { heading: string; lead?: RichTextValue; media?: BlobValue; primaryAction?: Inline; secondaryAction?: Inline; layout?: string }
+type MediaField = ComponentValue | null | undefined
+
+export interface HeroContent { heading: string; lead?: RichTextValue; media?: MediaField; primaryAction?: Inline; secondaryAction?: Inline; layout?: unknown }
 export interface RichTextContent { body: RichTextValue }
-export interface MediaContent { media: BlobValue; alt?: string; caption?: string; aspect?: string }
-export interface CardContent { title: string; summary?: string; media?: BlobValue; action?: Inline; emphasis?: string }
+export interface MediaContent { media?: MediaField; alt?: string; caption?: string; aspect?: unknown }
+export interface CardContent { title: string; summary?: string; media?: MediaField; action?: Inline; emphasis?: unknown }
 export interface FeatureContent { icon?: string; title: string; body?: string }
-export interface BannerContent { message: RichTextValue; action?: Inline; tone?: string }
+export interface BannerContent { message: RichTextValue; action?: Inline; tone?: unknown }
 export interface CtaContent { heading: string; body?: string; primaryAction?: Inline; secondaryAction?: Inline }
 
 export function Hero({ content }: { content: HeroContent }) {
-  const split = content.layout === 'split' && content.media
+  const layout = pick(content.layout, LAYOUTS)
+  const split = layout === 'split' || layout === 'split-reverse'
+  const centered = layout === 'centered' || layout === 'stacked'
   return (
-    <div className={split ? 'grid items-center gap-10 md:grid-cols-2' : 'text-center'}>
-      <div>
+    <div className={split ? 'grid items-center gap-10 md:grid-cols-2' : centered ? 'text-center' : ''}>
+      <div className={layout === 'split-reverse' ? 'md:order-2' : ''}>
         <h1 className="text-4xl leading-tight font-semibold tracking-tight text-ink sm:text-5xl">{content.heading}</h1>
         {content.lead ? (
           <div className={`mt-5 text-lg text-ink-muted ${split ? '' : 'mx-auto max-w-2xl'}`}>
@@ -33,9 +37,10 @@ export function Hero({ content }: { content: HeroContent }) {
           <Action action={content.secondaryAction} fallbackStyle="secondary" />
         </Actions>
       </div>
-      {content.media ? (
+      {/* A split hero keeps its second column even with no media chosen yet, so the layout is what the author asked for. */}
+      {content.media || split ? (
         <div className={split ? '' : 'mx-auto mt-10 max-w-3xl'}>
-          <Media blob={content.media} aspect="16:9" />
+          <Media value={content.media} fallbackAspect="wide" aspect={split ? 'landscape' : 'wide'} />
         </div>
       ) : null}
     </div>
@@ -53,17 +58,18 @@ export function RichTextBlock({ content }: { content: RichTextContent }) {
 export function MediaBlock({ content }: { content: MediaContent }) {
   return (
     <figure>
-      <Media blob={content.media} alt={content.alt} aspect={content.aspect} />
+      <Media value={content.media} alt={content.alt} aspect={content.aspect} />
       {text(content.caption) ? <figcaption className="mt-3 text-center text-sm text-ink-muted">{content.caption}</figcaption> : null}
     </figure>
   )
 }
 
 export function Card({ content }: { content: CardContent }) {
-  const high = pick(content.emphasis, EMPHASES) === 'high'
+  const emphasis = pick(content.emphasis, EMPHASES)
+  const look = emphasis === 'featured' ? 'border-accent ring-2 ring-accent/30' : emphasis === 'quiet' ? 'border-transparent bg-muted' : 'border-line bg-raised'
   return (
-    <article className={`flex h-full flex-col overflow-hidden rounded-2xl border bg-raised ${high ? 'border-accent ring-2 ring-accent/30' : 'border-line'}`}>
-      {content.media ? <Media blob={content.media} aspect="16:9" className="rounded-none" /> : null}
+    <article data-emphasis={emphasis} className={`flex h-full flex-col overflow-hidden rounded-2xl border ${look}`}>
+      {content.media ? <Media value={content.media} aspect="wide" className="rounded-none" /> : null}
       <div className="flex flex-1 flex-col gap-3 p-6">
         <h3 className="text-xl font-semibold text-ink">{content.title}</h3>
         {text(content.summary) ? <p className="text-ink-muted">{content.summary}</p> : null}
@@ -97,14 +103,14 @@ const TONE_CLASS: Record<Tone, string> = {
   info: 'border-info/40 bg-info-soft text-info',
   success: 'border-success/40 bg-success-soft text-success',
   warning: 'border-warning/40 bg-warning-soft text-warning',
-  danger: 'border-danger/40 bg-danger-soft text-danger',
+  critical: 'border-danger/40 bg-danger-soft text-danger',
 }
 
 export function Banner({ content }: { content: BannerContent }) {
   const tone = pick(content.tone, TONES)
   return (
-    <div role={tone === 'danger' || tone === 'warning' ? 'alert' : 'status'} className={`flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4 ${TONE_CLASS[tone]}`}>
-      <div className="font-medium">
+    <div role={tone === 'critical' || tone === 'warning' ? 'alert' : 'status'} className={`flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4 ${TONE_CLASS[tone]}`}>
+      <div className="font-medium [&_strong]:text-current">
         <RichText fragments={content.message} />
       </div>
       <Action action={content.action} fallbackStyle="link" />
