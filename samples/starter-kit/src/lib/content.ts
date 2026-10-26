@@ -1,5 +1,5 @@
 import { createContentClient, type ContentClient } from '@ebitex/content-sdk'
-import { renderersFromGlob } from '@ebitex/content-sdk/react'
+import { kitRenderers } from '@ebitex/starter-kit-react/react'
 
 /**
  * The one place this app reads its configuration and builds a Content client. `null` when no key
@@ -19,8 +19,7 @@ export const content: ContentClient | null = deliveryKey
   : null
 
 /**
- * Only the experience is a registered Template renderer (`presentations/ebitex-experience-template.tsx` renders the Template
- * `ebitex-experience-template`). An experience's sections are Component references, not Presentation envelopes, so they are
- * dispatched by their Contract in `kit/Section.tsx` instead.
+ * The kit's one Template renderer. Add Templates of your own beside it (`{ ...kitRenderers(), 'my-template': MyTemplate }`), or replace the
+ * entry to draw every experience yourself.
  */
-export const renderers = renderersFromGlob(import.meta.glob(['../presentations/*.tsx', '!../presentations/*.test.tsx']))
+export const renderers = kitRenderers()
