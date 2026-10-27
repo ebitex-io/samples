@@ -1,5 +1,5 @@
 import { createContentClient, type ContentClient } from '@ebitex/content-sdk'
-import { kitRenderers } from '@ebitex/starter-kit-react/react'
+import { ebitexRenderers } from '@ebitex/starter-kit-react/react'
 
 /**
  * The one place this app reads its configuration and builds a Content client. `null` when no key
@@ -19,7 +19,7 @@ export const content: ContentClient | null = deliveryKey
   : null
 
 /**
- * The kit's one Template renderer. Add Templates of your own beside it (`{ ...kitRenderers(), 'my-template': MyTemplate }`), or replace the
+ * The kit's one Template renderer. Add Templates of your own beside it (`{ ...ebitexRenderers(), 'my-template': MyTemplate }`), or replace the
  * entry to draw every experience yourself.
  */
-export const renderers = kitRenderers()
+export const renderers = ebitexRenderers()

@@ -1,8 +1,8 @@
 import { Link } from 'react-router'
-import type { KitLink, KitOptions } from '@ebitex/starter-kit-react/react'
+import type { EbitexLink, EbitexOptions } from '@ebitex/starter-kit-react/react'
 
 /** Client-side navigation for an address on this site; anything else is a plain anchor. */
-export const RouterLink: KitLink = ({ href, children, ...rest }) =>
+export const RouterLink: EbitexLink = ({ href, children, ...rest }) =>
   href.startsWith('/') ? (
     <Link to={href} {...rest}>
       {children}
@@ -19,7 +19,7 @@ export const RouterLink: KitLink = ({ href, children, ...rest }) =>
  *
  *   sections: { 'ebitex-cta': MyCallToAction }
  *
- * To change a colour, redefine a `--kit-*` token in `index.css`. To own the whole renderer, run `npx starter-kit-eject src/kit` and import
+ * To change a colour, redefine a `--ebitex-*` token in `index.css`. To own the whole renderer, run `npx starter-kit-eject src/kit` and import
  * from the copy instead of the package.
  */
-export const kitOptions: KitOptions = { link: RouterLink }
+export const ebitexOptions: EbitexOptions = { link: RouterLink }

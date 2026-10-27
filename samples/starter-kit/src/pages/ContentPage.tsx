@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { ContentProvider, Experience } from '@ebitex/content-sdk/react'
 
-import { KitMarkdown, KitProvider } from '@ebitex/starter-kit-react/react'
+import { EbitexMarkdown, EbitexProvider } from '@ebitex/starter-kit-react/react'
 
-import { kitOptions } from '@/lib/kit'
+import { ebitexOptions } from '@/lib/ebitex'
 import { content, renderers } from '@/lib/content'
 import { NotConfigured } from '@/pages/NotConfigured'
 import { NotFound } from '@/pages/NotFound'
@@ -22,11 +22,11 @@ export function ContentPage() {
   if (!content) return <NotConfigured />
 
   return (
-    <KitProvider {...kitOptions}>
-      <ContentProvider client={content} renderers={renderers} markdown={KitMarkdown}>
+    <EbitexProvider {...ebitexOptions}>
+      <ContentProvider client={content} renderers={renderers} markdown={EbitexMarkdown}>
         <Experience path={pathname} onRedirect={onRedirect} notFound={<NotFound />} loading={<div aria-hidden className="min-h-svh" />} />
       </ContentProvider>
-    </KitProvider>
+    </EbitexProvider>
   )
 }
 

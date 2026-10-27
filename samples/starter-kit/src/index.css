@@ -5,12 +5,12 @@
 @source "../node_modules/@ebitex/starter-kit-react/dist";
 
 /*
- * This site's own look is a change to the kit's tokens: redefine any `--kit-*` variable here, after the import above. Themes and appearances
+ * This site's own look is a change to the kit's tokens: redefine any `--ebitex-*` variable here, after the import above. Themes and appearances
  * are blocks in the package's styles.css; copy one into this file and edit it to change it, or to add your own.
  */
 
 body {
-  background: var(--kit-surface);
-  color: var(--kit-ink);
+  background: var(--ebitex-surface);
+  color: var(--ebitex-ink);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
