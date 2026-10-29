@@ -8,13 +8,13 @@ The renderer lives in the package, so this sample holds only what a site decides
 
 | File | What it decides |
 |---|---|
-| `src/lib/content.ts` | The Content client, and `ebitexRenderers()` (the kit's one Template) |
-| `src/lib/ebitex.tsx` | What this site changes about the kit: here, that links navigate client-side. Add `sections` to redraw one Contract |
+| `src/lib/content.ts` | The Content client, and `ebitexRenderers()` (the kit's Templates, keyed by Template). Replace an entry to redraw one Template, or add your own |
+| `src/lib/ebitex.tsx` | What this site changes about the kit: here, that links navigate client-side. |
 | `src/index.css` | Tailwind, the kit's tokens, and any token you redefine |
 | `src/components/ModeToggle.tsx` | A corner switch for light, dark or system colour mode |
 
-It is meant to get you running and then be taken over. Redefine a `--ebitex-*` token to change a colour, pass `sections` to redraw a
-section or draw a Contract of your own, or run `npx starter-kit-eject src/kit` to copy the renderer into this project and drop the
+It is meant to get you running and then be taken over. Redefine a `--ebitex-*` token to change a colour, replace a Template's entry in `renderers`
+to redraw it or add a Template of your own, or run `npx starter-kit-eject src/kit` to copy the renderer into this project and drop the
 dependency. The full walk-through is [Start a client site from the starter kit](https://developers.ebitex.io/getting-started/starter-kit/).
 
 ## Run it
@@ -26,7 +26,7 @@ dependency. The full walk-through is [Start a client site from the starter kit](
 3. `cp .env.example .env` and set `VITE_CONTENT_DELIVERY_KEY`.
 4. `npm install && npm run dev`, then open <http://localhost:5190>.
 
-To see another theme, open **Demo: home** in Content and change its Theme; to see an appearance, set one on a section's placement.
+To see another theme, open **Demo: home** in Content and change its Theme; to see an appearance, set one in a section's Template settings.
 
 ## Tests
 

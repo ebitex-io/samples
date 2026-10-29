@@ -14,10 +14,10 @@ export const RouterLink: EbitexLink = ({ href, children, ...rest }) =>
   )
 
 /**
- * Everything this site changes about the kit, and nothing else. Today that is how links navigate. To redraw one section, add it to `sections`,
- * keyed by the Contract's external id:
+ * Everything this site changes about the kit, and nothing else. Today that is how links navigate. To redraw one Template, register your own
+ * component for it in `renderers` (`src/lib/content.ts`), keyed by the Template's external id:
  *
- *   sections: { 'ebitex-cta': MyCallToAction }
+ *   { ...ebitexRenderers(), 'ebitex-cta-template': MyCallToAction }
  *
  * To change a colour, redefine a `--ebitex-*` token in `index.css`. To own the whole renderer, run `npx starter-kit-eject src/kit` and import
  * from the copy instead of the package.
