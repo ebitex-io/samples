@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@ebitex/content-sdk": "^1.1.252",
-    "@ebitex/starter-kit-react": "^1.0.268",
+    "@ebitex/starter-kit-react": "^1.0.269",
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

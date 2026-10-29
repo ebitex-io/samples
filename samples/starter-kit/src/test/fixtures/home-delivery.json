@@ -168,8 +168,17 @@
           },
           {
             "settings": {
-              "width": {
+              "align": {
                 "key": "00000000-0000-4000-8000-000000000016",
+                "kind": "category",
+                "provider": "core",
+                "groupExternalId": "ebitex-align",
+                "path": "ebitex-align/start",
+                "value": "Start",
+                "resolved": true
+              },
+              "width": {
+                "key": "00000000-0000-4000-8000-000000000017",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-width",
@@ -179,70 +188,93 @@
               }
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000017",
-              "externalId": "ebitex-rich-text-template",
+              "id": "00000000-0000-4000-8000-000000000018",
+              "externalId": "ebitex-group-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000018",
+              "key": "00000000-0000-4000-8000-000000000019",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000019",
-                "externalId": "ebitex-rich-text",
+                "id": "00000000-0000-4000-8000-000000000020",
+                "externalId": "ebitex-group",
                 "version": 1
               },
               "provider": "core",
               "content": {
-                "body": [
+                "content": [
                   {
-                    "kind": "markdown",
-                    "markdown": "## Built from reusable parts\n\nThe words live in Components. **How** a section looks is chosen where it is placed, so one Component can appear in many places in different ways."
+                    "settings": {},
+                    "template": {
+                      "id": "00000000-0000-4000-8000-000000000021",
+                      "externalId": "ebitex-rich-text-template",
+                      "version": 1
+                    },
+                    "component": {
+                      "key": "00000000-0000-4000-8000-000000000022",
+                      "contract": {
+                        "id": "00000000-0000-4000-8000-000000000023",
+                        "externalId": "ebitex-rich-text",
+                        "version": 1
+                      },
+                      "provider": "core",
+                      "content": {
+                        "body": [
+                          {
+                            "kind": "markdown",
+                            "markdown": "The words live in Components. **How** a section looks is chosen where it is placed, so one Component can appear in many places in different ways."
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "settings": {
+                      "aspect": {
+                        "key": "00000000-0000-4000-8000-000000000024",
+                        "kind": "category",
+                        "provider": "core",
+                        "groupExternalId": "ebitex-aspect-ratio",
+                        "path": "ebitex-aspect-ratio/wide",
+                        "value": "Wide",
+                        "resolved": true
+                      }
+                    },
+                    "template": {
+                      "id": "00000000-0000-4000-8000-000000000025",
+                      "externalId": "ebitex-media-template",
+                      "version": 1
+                    },
+                    "component": {
+                      "key": "00000000-0000-4000-8000-000000000026",
+                      "contract": {
+                        "id": "00000000-0000-4000-8000-000000000027",
+                        "externalId": "ebitex-media",
+                        "version": 1
+                      },
+                      "provider": "core",
+                      "content": {
+                        "alt": "A placeholder where a picture goes",
+                        "caption": "Choose an image from Assets to replace the placeholder."
+                      }
+                    }
                   }
-                ]
+                ],
+                "eyebrow": "How it works",
+                "heading": "Built from reusable parts"
               }
             }
           },
           {
             "settings": {
-              "width": {
-                "key": "00000000-0000-4000-8000-000000000011",
+              "align": {
+                "key": "00000000-0000-4000-8000-000000000028",
                 "kind": "category",
                 "provider": "core",
-                "groupExternalId": "ebitex-width",
-                "path": "ebitex-width/wide",
-                "value": "Wide",
+                "groupExternalId": "ebitex-align",
+                "path": "ebitex-align/center",
+                "value": "Centered",
                 "resolved": true
               },
-              "aspect": {
-                "key": "00000000-0000-4000-8000-000000000020",
-                "kind": "category",
-                "provider": "core",
-                "groupExternalId": "ebitex-aspect-ratio",
-                "path": "ebitex-aspect-ratio/wide",
-                "value": "Wide",
-                "resolved": true
-              }
-            },
-            "template": {
-              "id": "00000000-0000-4000-8000-000000000021",
-              "externalId": "ebitex-media-template",
-              "version": 1
-            },
-            "component": {
-              "key": "00000000-0000-4000-8000-000000000022",
-              "contract": {
-                "id": "00000000-0000-4000-8000-000000000023",
-                "externalId": "ebitex-media",
-                "version": 1
-              },
-              "provider": "core",
-              "content": {
-                "alt": "A placeholder where a picture goes",
-                "caption": "Choose an image from Assets to replace the placeholder."
-              }
-            }
-          },
-          {
-            "settings": {
               "width": {
                 "key": "00000000-0000-4000-8000-000000000011",
                 "kind": "category",
@@ -253,9 +285,8 @@
                 "resolved": true
               },
               "anchor": "features",
-              "columns": 3,
               "background": {
-                "key": "00000000-0000-4000-8000-000000000024",
+                "key": "00000000-0000-4000-8000-000000000029",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-background",
@@ -265,92 +296,126 @@
               }
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000025",
-              "externalId": "ebitex-grid-template",
+              "id": "00000000-0000-4000-8000-000000000018",
+              "externalId": "ebitex-group-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000026",
+              "key": "00000000-0000-4000-8000-000000000030",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000027",
-                "externalId": "ebitex-grid",
+                "id": "00000000-0000-4000-8000-000000000020",
+                "externalId": "ebitex-group",
                 "version": 1
               },
               "provider": "core",
               "content": {
-                "items": [
+                "content": [
                   {
-                    "settings": {},
-                    "template": {
-                      "id": "00000000-0000-4000-8000-000000000028",
-                      "externalId": "ebitex-feature-template",
-                      "version": 1
+                    "settings": {
+                      "columns": 3
                     },
-                    "component": {
-                      "key": "00000000-0000-4000-8000-000000000029",
-                      "contract": {
-                        "id": "00000000-0000-4000-8000-000000000030",
-                        "externalId": "ebitex-feature",
-                        "version": 1
-                      },
-                      "provider": "core",
-                      "content": {
-                        "body": "Contracts, Templates and categories that already work together.",
-                        "icon": "\u26A1",
-                        "title": "Fast to start"
-                      }
-                    }
-                  },
-                  {
-                    "settings": {},
                     "template": {
-                      "id": "00000000-0000-4000-8000-000000000028",
-                      "externalId": "ebitex-feature-template",
-                      "version": 1
-                    },
-                    "component": {
-                      "key": "00000000-0000-4000-8000-000000000031",
-                      "contract": {
-                        "id": "00000000-0000-4000-8000-000000000030",
-                        "externalId": "ebitex-feature",
-                        "version": 1
-                      },
-                      "provider": "core",
-                      "content": {
-                        "body": "Edit anything. Nothing is linked back to the kit.",
-                        "icon": "\uD83E\uDDE9",
-                        "title": "Yours to change"
-                      }
-                    }
-                  },
-                  {
-                    "settings": {},
-                    "template": {
-                      "id": "00000000-0000-4000-8000-000000000028",
-                      "externalId": "ebitex-feature-template",
+                      "id": "00000000-0000-4000-8000-000000000031",
+                      "externalId": "ebitex-grid-template",
                       "version": 1
                     },
                     "component": {
                       "key": "00000000-0000-4000-8000-000000000032",
                       "contract": {
-                        "id": "00000000-0000-4000-8000-000000000030",
-                        "externalId": "ebitex-feature",
+                        "id": "00000000-0000-4000-8000-000000000033",
+                        "externalId": "ebitex-grid",
                         "version": 1
                       },
                       "provider": "core",
                       "content": {
-                        "body": "Pick a theme for the experience and an appearance for a section.",
-                        "icon": "\uD83C\uDFA8",
-                        "title": "Themes and appearances"
+                        "items": [
+                          {
+                            "settings": {},
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000034",
+                              "externalId": "ebitex-feature-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000035",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000036",
+                                "externalId": "ebitex-feature",
+                                "version": 1
+                              },
+                              "provider": "core",
+                              "content": {
+                                "body": "Contracts, Templates and categories that already work together.",
+                                "icon": "bolt",
+                                "title": "Fast to start"
+                              }
+                            }
+                          },
+                          {
+                            "settings": {},
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000034",
+                              "externalId": "ebitex-feature-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000037",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000036",
+                                "externalId": "ebitex-feature",
+                                "version": 1
+                              },
+                              "provider": "core",
+                              "content": {
+                                "body": "Edit anything. Nothing is linked back to the kit.",
+                                "icon": "puzzle",
+                                "title": "Yours to change"
+                              }
+                            }
+                          },
+                          {
+                            "settings": {},
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000034",
+                              "externalId": "ebitex-feature-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000038",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000036",
+                                "externalId": "ebitex-feature",
+                                "version": 1
+                              },
+                              "provider": "core",
+                              "content": {
+                                "body": "Pick a theme for the experience and an appearance for a section.",
+                                "icon": "palette",
+                                "title": "Themes and appearances"
+                              }
+                            }
+                          }
+                        ]
                       }
                     }
                   }
-                ]
+                ],
+                "eyebrow": "Features",
+                "heading": "Why start from a kit"
               }
             }
           },
           {
             "settings": {
+              "align": {
+                "key": "00000000-0000-4000-8000-000000000028",
+                "kind": "category",
+                "provider": "core",
+                "groupExternalId": "ebitex-align",
+                "path": "ebitex-align/center",
+                "value": "Centered",
+                "resolved": true
+              },
               "width": {
                 "key": "00000000-0000-4000-8000-000000000011",
                 "kind": "category",
@@ -360,197 +425,221 @@
                 "value": "Wide",
                 "resolved": true
               },
-              "anchor": "cards",
-              "columns": 3
+              "anchor": "cards"
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000025",
-              "externalId": "ebitex-grid-template",
+              "id": "00000000-0000-4000-8000-000000000018",
+              "externalId": "ebitex-group-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000033",
+              "key": "00000000-0000-4000-8000-000000000039",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000027",
-                "externalId": "ebitex-grid",
+                "id": "00000000-0000-4000-8000-000000000020",
+                "externalId": "ebitex-group",
                 "version": 1
               },
               "provider": "core",
               "content": {
-                "items": [
+                "content": [
                   {
                     "settings": {
-                      "emphasis": {
-                        "key": "00000000-0000-4000-8000-000000000034",
-                        "kind": "category",
-                        "provider": "core",
-                        "groupExternalId": "ebitex-emphasis",
-                        "path": "ebitex-emphasis/default",
-                        "value": "Default",
-                        "resolved": true
-                      }
+                      "columns": 3
                     },
                     "template": {
-                      "id": "00000000-0000-4000-8000-000000000035",
-                      "externalId": "ebitex-card-template",
+                      "id": "00000000-0000-4000-8000-000000000031",
+                      "externalId": "ebitex-grid-template",
                       "version": 1
                     },
                     "component": {
-                      "key": "00000000-0000-4000-8000-000000000036",
+                      "key": "00000000-0000-4000-8000-000000000040",
                       "contract": {
-                        "id": "00000000-0000-4000-8000-000000000037",
-                        "externalId": "ebitex-card",
+                        "id": "00000000-0000-4000-8000-000000000033",
+                        "externalId": "ebitex-grid",
                         "version": 1
                       },
                       "provider": "core",
                       "content": {
-                        "title": "Structure",
-                        "action": {
-                          "contract": {
-                            "id": "00000000-0000-4000-8000-000000000009",
-                            "externalId": "ebitex-action",
-                            "version": 1
-                          },
-                          "content": {
-                            "href": {
-                              "url": "https://ebitex.io",
-                              "kind": "external",
-                              "resolved": true
+                        "items": [
+                          {
+                            "settings": {
+                              "emphasis": {
+                                "key": "00000000-0000-4000-8000-000000000041",
+                                "kind": "category",
+                                "provider": "core",
+                                "groupExternalId": "ebitex-emphasis",
+                                "path": "ebitex-emphasis/default",
+                                "value": "Default",
+                                "resolved": true
+                              }
                             },
-                            "label": "Read more",
-                            "style": {
-                              "key": "00000000-0000-4000-8000-000000000015",
-                              "kind": "category",
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000042",
+                              "externalId": "ebitex-card-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000043",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000044",
+                                "externalId": "ebitex-card",
+                                "version": 1
+                              },
                               "provider": "core",
-                              "groupExternalId": "ebitex-action-style",
-                              "path": "ebitex-action-style/link",
-                              "value": "Link",
-                              "resolved": true
+                              "content": {
+                                "title": "Structure",
+                                "action": {
+                                  "contract": {
+                                    "id": "00000000-0000-4000-8000-000000000009",
+                                    "externalId": "ebitex-action",
+                                    "version": 1
+                                  },
+                                  "content": {
+                                    "href": {
+                                      "url": "https://ebitex.io",
+                                      "kind": "external",
+                                      "resolved": true
+                                    },
+                                    "label": "Read more",
+                                    "style": {
+                                      "key": "00000000-0000-4000-8000-000000000015",
+                                      "kind": "category",
+                                      "provider": "core",
+                                      "groupExternalId": "ebitex-action-style",
+                                      "path": "ebitex-action-style/link",
+                                      "value": "Link",
+                                      "resolved": true
+                                    }
+                                  }
+                                },
+                                "summary": "An experience is a hero and a list of sections."
+                              }
+                            }
+                          },
+                          {
+                            "settings": {
+                              "emphasis": {
+                                "key": "00000000-0000-4000-8000-000000000045",
+                                "kind": "category",
+                                "provider": "core",
+                                "groupExternalId": "ebitex-emphasis",
+                                "path": "ebitex-emphasis/featured",
+                                "value": "Featured",
+                                "resolved": true
+                              }
+                            },
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000042",
+                              "externalId": "ebitex-card-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000046",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000044",
+                                "externalId": "ebitex-card",
+                                "version": 1
+                              },
+                              "provider": "core",
+                              "content": {
+                                "title": "Vocabulary",
+                                "action": {
+                                  "contract": {
+                                    "id": "00000000-0000-4000-8000-000000000009",
+                                    "externalId": "ebitex-action",
+                                    "version": 1
+                                  },
+                                  "content": {
+                                    "href": {
+                                      "url": "https://ebitex.io",
+                                      "kind": "external",
+                                      "resolved": true
+                                    },
+                                    "label": "Read more",
+                                    "style": {
+                                      "key": "00000000-0000-4000-8000-000000000015",
+                                      "kind": "category",
+                                      "provider": "core",
+                                      "groupExternalId": "ebitex-action-style",
+                                      "path": "ebitex-action-style/link",
+                                      "value": "Link",
+                                      "resolved": true
+                                    }
+                                  }
+                                },
+                                "summary": "Layout, width, background and tone are categories you can edit."
+                              }
+                            }
+                          },
+                          {
+                            "settings": {
+                              "emphasis": {
+                                "key": "00000000-0000-4000-8000-000000000047",
+                                "kind": "category",
+                                "provider": "core",
+                                "groupExternalId": "ebitex-emphasis",
+                                "path": "ebitex-emphasis/quiet",
+                                "value": "Quiet",
+                                "resolved": true
+                              }
+                            },
+                            "template": {
+                              "id": "00000000-0000-4000-8000-000000000042",
+                              "externalId": "ebitex-card-template",
+                              "version": 1
+                            },
+                            "component": {
+                              "key": "00000000-0000-4000-8000-000000000048",
+                              "contract": {
+                                "id": "00000000-0000-4000-8000-000000000044",
+                                "externalId": "ebitex-card",
+                                "version": 1
+                              },
+                              "provider": "core",
+                              "content": {
+                                "title": "Media",
+                                "action": {
+                                  "contract": {
+                                    "id": "00000000-0000-4000-8000-000000000009",
+                                    "externalId": "ebitex-action",
+                                    "version": 1
+                                  },
+                                  "content": {
+                                    "href": {
+                                      "url": "https://ebitex.io",
+                                      "kind": "external",
+                                      "resolved": true
+                                    },
+                                    "label": "Read more",
+                                    "style": {
+                                      "key": "00000000-0000-4000-8000-000000000015",
+                                      "kind": "category",
+                                      "provider": "core",
+                                      "groupExternalId": "ebitex-action-style",
+                                      "path": "ebitex-action-style/link",
+                                      "value": "Link",
+                                      "resolved": true
+                                    }
+                                  }
+                                },
+                                "summary": "Pictures and video come from your Assets library."
+                              }
                             }
                           }
-                        },
-                        "summary": "An experience is a hero and a list of sections."
-                      }
-                    }
-                  },
-                  {
-                    "settings": {
-                      "emphasis": {
-                        "key": "00000000-0000-4000-8000-000000000038",
-                        "kind": "category",
-                        "provider": "core",
-                        "groupExternalId": "ebitex-emphasis",
-                        "path": "ebitex-emphasis/featured",
-                        "value": "Featured",
-                        "resolved": true
-                      }
-                    },
-                    "template": {
-                      "id": "00000000-0000-4000-8000-000000000035",
-                      "externalId": "ebitex-card-template",
-                      "version": 1
-                    },
-                    "component": {
-                      "key": "00000000-0000-4000-8000-000000000039",
-                      "contract": {
-                        "id": "00000000-0000-4000-8000-000000000037",
-                        "externalId": "ebitex-card",
-                        "version": 1
-                      },
-                      "provider": "core",
-                      "content": {
-                        "title": "Vocabulary",
-                        "action": {
-                          "contract": {
-                            "id": "00000000-0000-4000-8000-000000000009",
-                            "externalId": "ebitex-action",
-                            "version": 1
-                          },
-                          "content": {
-                            "href": {
-                              "url": "https://ebitex.io",
-                              "kind": "external",
-                              "resolved": true
-                            },
-                            "label": "Read more",
-                            "style": {
-                              "key": "00000000-0000-4000-8000-000000000015",
-                              "kind": "category",
-                              "provider": "core",
-                              "groupExternalId": "ebitex-action-style",
-                              "path": "ebitex-action-style/link",
-                              "value": "Link",
-                              "resolved": true
-                            }
-                          }
-                        },
-                        "summary": "Layout, width, background and tone are categories you can edit."
-                      }
-                    }
-                  },
-                  {
-                    "settings": {
-                      "emphasis": {
-                        "key": "00000000-0000-4000-8000-000000000040",
-                        "kind": "category",
-                        "provider": "core",
-                        "groupExternalId": "ebitex-emphasis",
-                        "path": "ebitex-emphasis/quiet",
-                        "value": "Quiet",
-                        "resolved": true
-                      }
-                    },
-                    "template": {
-                      "id": "00000000-0000-4000-8000-000000000035",
-                      "externalId": "ebitex-card-template",
-                      "version": 1
-                    },
-                    "component": {
-                      "key": "00000000-0000-4000-8000-000000000041",
-                      "contract": {
-                        "id": "00000000-0000-4000-8000-000000000037",
-                        "externalId": "ebitex-card",
-                        "version": 1
-                      },
-                      "provider": "core",
-                      "content": {
-                        "title": "Media",
-                        "action": {
-                          "contract": {
-                            "id": "00000000-0000-4000-8000-000000000009",
-                            "externalId": "ebitex-action",
-                            "version": 1
-                          },
-                          "content": {
-                            "href": {
-                              "url": "https://ebitex.io",
-                              "kind": "external",
-                              "resolved": true
-                            },
-                            "label": "Read more",
-                            "style": {
-                              "key": "00000000-0000-4000-8000-000000000015",
-                              "kind": "category",
-                              "provider": "core",
-                              "groupExternalId": "ebitex-action-style",
-                              "path": "ebitex-action-style/link",
-                              "value": "Link",
-                              "resolved": true
-                            }
-                          }
-                        },
-                        "summary": "Pictures and video come from your Assets library."
+                        ]
                       }
                     }
                   }
-                ]
+                ],
+                "eyebrow": "The parts",
+                "heading": "Structure, vocabulary and media"
               }
             }
           },
           {
             "settings": {
               "width": {
-                "key": "00000000-0000-4000-8000-000000000042",
+                "key": "00000000-0000-4000-8000-000000000049",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-width",
@@ -560,14 +649,14 @@
               }
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000043",
+              "id": "00000000-0000-4000-8000-000000000050",
               "externalId": "ebitex-tabs-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000044",
+              "key": "00000000-0000-4000-8000-000000000051",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000045",
+                "id": "00000000-0000-4000-8000-000000000052",
                 "externalId": "ebitex-tabs",
                 "version": 1
               },
@@ -576,7 +665,7 @@
                 "items": [
                   {
                     "contract": {
-                      "id": "00000000-0000-4000-8000-000000000046",
+                      "id": "00000000-0000-4000-8000-000000000053",
                       "externalId": "ebitex-tab",
                       "version": 1
                     },
@@ -586,14 +675,14 @@
                         {
                           "settings": {},
                           "template": {
-                            "id": "00000000-0000-4000-8000-000000000017",
+                            "id": "00000000-0000-4000-8000-000000000021",
                             "externalId": "ebitex-rich-text-template",
                             "version": 1
                           },
                           "component": {
-                            "key": "00000000-0000-4000-8000-000000000047",
+                            "key": "00000000-0000-4000-8000-000000000054",
                             "contract": {
-                              "id": "00000000-0000-4000-8000-000000000019",
+                              "id": "00000000-0000-4000-8000-000000000023",
                               "externalId": "ebitex-rich-text",
                               "version": 1
                             },
@@ -613,7 +702,7 @@
                   },
                   {
                     "contract": {
-                      "id": "00000000-0000-4000-8000-000000000046",
+                      "id": "00000000-0000-4000-8000-000000000053",
                       "externalId": "ebitex-tab",
                       "version": 1
                     },
@@ -623,14 +712,14 @@
                         {
                           "settings": {},
                           "template": {
-                            "id": "00000000-0000-4000-8000-000000000017",
+                            "id": "00000000-0000-4000-8000-000000000021",
                             "externalId": "ebitex-rich-text-template",
                             "version": 1
                           },
                           "component": {
-                            "key": "00000000-0000-4000-8000-000000000048",
+                            "key": "00000000-0000-4000-8000-000000000055",
                             "contract": {
-                              "id": "00000000-0000-4000-8000-000000000019",
+                              "id": "00000000-0000-4000-8000-000000000023",
                               "externalId": "ebitex-rich-text",
                               "version": 1
                             },
@@ -654,8 +743,17 @@
           },
           {
             "settings": {
-              "width": {
+              "align": {
                 "key": "00000000-0000-4000-8000-000000000016",
+                "kind": "category",
+                "provider": "core",
+                "groupExternalId": "ebitex-align",
+                "path": "ebitex-align/start",
+                "value": "Start",
+                "resolved": true
+              },
+              "width": {
+                "key": "00000000-0000-4000-8000-000000000017",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-width",
@@ -663,123 +761,147 @@
                 "value": "Narrow",
                 "resolved": true
               },
-              "anchor": "faq",
-              "behaviour": {
-                "key": "00000000-0000-4000-8000-000000000049",
-                "kind": "category",
-                "provider": "core",
-                "groupExternalId": "ebitex-accordion-behaviour",
-                "path": "ebitex-accordion-behaviour/exclusive",
-                "value": "One open at a time",
-                "resolved": true
-              },
-              "initially-open": {
-                "key": "00000000-0000-4000-8000-000000000050",
-                "kind": "category",
-                "provider": "core",
-                "groupExternalId": "ebitex-initially-open",
-                "path": "ebitex-initially-open/first",
-                "value": "The first",
-                "resolved": true
-              }
+              "anchor": "faq"
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000051",
-              "externalId": "ebitex-accordion-template",
+              "id": "00000000-0000-4000-8000-000000000018",
+              "externalId": "ebitex-group-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000052",
+              "key": "00000000-0000-4000-8000-000000000056",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000053",
-                "externalId": "ebitex-accordion",
+                "id": "00000000-0000-4000-8000-000000000020",
+                "externalId": "ebitex-group",
                 "version": 1
               },
               "provider": "core",
               "content": {
-                "items": [
+                "content": [
                   {
-                    "contract": {
-                      "id": "00000000-0000-4000-8000-000000000054",
-                      "externalId": "ebitex-accordion-item",
+                    "settings": {
+                      "behaviour": {
+                        "key": "00000000-0000-4000-8000-000000000057",
+                        "kind": "category",
+                        "provider": "core",
+                        "groupExternalId": "ebitex-accordion-behaviour",
+                        "path": "ebitex-accordion-behaviour/exclusive",
+                        "value": "One open at a time",
+                        "resolved": true
+                      },
+                      "initially-open": {
+                        "key": "00000000-0000-4000-8000-000000000058",
+                        "kind": "category",
+                        "provider": "core",
+                        "groupExternalId": "ebitex-initially-open",
+                        "path": "ebitex-initially-open/first",
+                        "value": "The first",
+                        "resolved": true
+                      }
+                    },
+                    "template": {
+                      "id": "00000000-0000-4000-8000-000000000059",
+                      "externalId": "ebitex-accordion-template",
                       "version": 1
                     },
-                    "content": {
-                      "label": "Can I reuse one section in many places?",
-                      "content": [
-                        {
-                          "settings": {},
-                          "template": {
-                            "id": "00000000-0000-4000-8000-000000000017",
-                            "externalId": "ebitex-rich-text-template",
-                            "version": 1
-                          },
-                          "component": {
-                            "key": "00000000-0000-4000-8000-000000000055",
+                    "component": {
+                      "key": "00000000-0000-4000-8000-000000000060",
+                      "contract": {
+                        "id": "00000000-0000-4000-8000-000000000061",
+                        "externalId": "ebitex-accordion",
+                        "version": 1
+                      },
+                      "provider": "core",
+                      "content": {
+                        "items": [
+                          {
                             "contract": {
-                              "id": "00000000-0000-4000-8000-000000000019",
-                              "externalId": "ebitex-rich-text",
+                              "id": "00000000-0000-4000-8000-000000000062",
+                              "externalId": "ebitex-accordion-item",
                               "version": 1
                             },
-                            "provider": "core",
                             "content": {
-                              "body": [
+                              "label": "Can I reuse one section in many places?",
+                              "content": [
                                 {
-                                  "kind": "markdown",
-                                  "markdown": "Yes. The same Component can be placed several times, each with its own width, background, appearance or layout."
+                                  "settings": {},
+                                  "template": {
+                                    "id": "00000000-0000-4000-8000-000000000021",
+                                    "externalId": "ebitex-rich-text-template",
+                                    "version": 1
+                                  },
+                                  "component": {
+                                    "key": "00000000-0000-4000-8000-000000000063",
+                                    "contract": {
+                                      "id": "00000000-0000-4000-8000-000000000023",
+                                      "externalId": "ebitex-rich-text",
+                                      "version": 1
+                                    },
+                                    "provider": "core",
+                                    "content": {
+                                      "body": [
+                                        {
+                                          "kind": "markdown",
+                                          "markdown": "Yes. The same Component can be placed several times, each with its own width, background, appearance or layout."
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "contract": {
+                              "id": "00000000-0000-4000-8000-000000000062",
+                              "externalId": "ebitex-accordion-item",
+                              "version": 1
+                            },
+                            "content": {
+                              "label": "How do I change something the kit gave me?",
+                              "content": [
+                                {
+                                  "settings": {},
+                                  "template": {
+                                    "id": "00000000-0000-4000-8000-000000000021",
+                                    "externalId": "ebitex-rich-text-template",
+                                    "version": 1
+                                  },
+                                  "component": {
+                                    "key": "00000000-0000-4000-8000-000000000064",
+                                    "contract": {
+                                      "id": "00000000-0000-4000-8000-000000000023",
+                                      "externalId": "ebitex-rich-text",
+                                      "version": 1
+                                    },
+                                    "provider": "core",
+                                    "content": {
+                                      "body": [
+                                        {
+                                          "kind": "markdown",
+                                          "markdown": "Open it in Contracts and edit it. It is your own copy from the moment it was installed."
+                                        }
+                                      ]
+                                    }
+                                  }
                                 }
                               ]
                             }
                           }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "contract": {
-                      "id": "00000000-0000-4000-8000-000000000054",
-                      "externalId": "ebitex-accordion-item",
-                      "version": 1
-                    },
-                    "content": {
-                      "label": "How do I change something the kit gave me?",
-                      "content": [
-                        {
-                          "settings": {},
-                          "template": {
-                            "id": "00000000-0000-4000-8000-000000000017",
-                            "externalId": "ebitex-rich-text-template",
-                            "version": 1
-                          },
-                          "component": {
-                            "key": "00000000-0000-4000-8000-000000000056",
-                            "contract": {
-                              "id": "00000000-0000-4000-8000-000000000019",
-                              "externalId": "ebitex-rich-text",
-                              "version": 1
-                            },
-                            "provider": "core",
-                            "content": {
-                              "body": [
-                                {
-                                  "kind": "markdown",
-                                  "markdown": "Open it in Contracts and edit it. It is your own copy from the moment it was installed."
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      ]
+                        ]
+                      }
                     }
                   }
-                ]
+                ],
+                "eyebrow": "Questions",
+                "heading": "Before you start"
               }
             }
           },
           {
             "settings": {
               "tone": {
-                "key": "00000000-0000-4000-8000-000000000057",
+                "key": "00000000-0000-4000-8000-000000000065",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-tone",
@@ -788,7 +910,7 @@
                 "resolved": true
               },
               "width": {
-                "key": "00000000-0000-4000-8000-000000000016",
+                "key": "00000000-0000-4000-8000-000000000017",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-width",
@@ -797,7 +919,7 @@
                 "resolved": true
               },
               "appearance": {
-                "key": "00000000-0000-4000-8000-000000000058",
+                "key": "00000000-0000-4000-8000-000000000066",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-appearance",
@@ -865,7 +987,7 @@
                 "resolved": true
               },
               "appearance": {
-                "key": "00000000-0000-4000-8000-000000000059",
+                "key": "00000000-0000-4000-8000-000000000067",
                 "kind": "category",
                 "provider": "core",
                 "groupExternalId": "ebitex-appearance",
@@ -875,14 +997,14 @@
               }
             },
             "template": {
-              "id": "00000000-0000-4000-8000-000000000060",
+              "id": "00000000-0000-4000-8000-000000000068",
               "externalId": "ebitex-cta-template",
               "version": 1
             },
             "component": {
-              "key": "00000000-0000-4000-8000-000000000061",
+              "key": "00000000-0000-4000-8000-000000000069",
               "contract": {
-                "id": "00000000-0000-4000-8000-000000000062",
+                "id": "00000000-0000-4000-8000-000000000070",
                 "externalId": "ebitex-cta",
                 "version": 1
               },

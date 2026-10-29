@@ -21,12 +21,16 @@ dependency. The full walk-through is [Start a client site from the starter kit](
 
 1. Install the kit in your organization: Content → **Starter kits**. Leave "Include the demo experience" on, and connect Assets when the
    page asks. Then publish the demo (the site root `ebitex demo`).
-2. Create a delivery key (Content → Configure → Delivery). For a deployed site use a browser-safe key restricted to your origin: the key
-   ships inside the bundle.
+2. Create a delivery key (Content → Settings → API Keys → New delivery key). For a deployed site use a browser-safe key restricted to your origin:
+   the key ships inside the bundle, so add your deployed address (a Vercel URL, say) as an allowed origin as well as `http://localhost:5190`.
 3. `cp .env.example .env` and set `VITE_CONTENT_DELIVERY_KEY`.
 4. `npm install && npm run dev`, then open <http://localhost:5190>.
 
 To see another theme, open **Demo: home** in Content and change its Theme; to see an appearance, set one in a section's Template settings.
+
+The site's **header and footer** are their own Component, **Site chrome** (Content → Authoring). It is not part of any page, so **publish it too**: publishing the demo does
+not. Until it is published the site draws no header or footer and nothing breaks. Pick your logo there from Assets (make the asset public first), and set the header's
+Template settings (sticky, logo size). A **Group** puts a heading over the presentations that belong together, and a Feature's **Icon** can name one of the kit's line icons.
 
 ## Tests
 

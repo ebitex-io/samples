@@ -22,7 +22,8 @@ export function ContentPage() {
   if (!content) return <NotConfigured />
 
   return (
-    <EbitexProvider {...ebitexOptions}>
+    // `client` is how the kit fetches the site header and footer (the Site chrome Component) and draws them around every page; with none published, nothing is drawn.
+    <EbitexProvider {...ebitexOptions} client={content}>
       <ContentProvider client={content} renderers={renderers} markdown={EbitexMarkdown}>
         <Experience path={pathname} onRedirect={onRedirect} notFound={<NotFound />} loading={<div aria-hidden className="min-h-svh" />} />
       </ContentProvider>
