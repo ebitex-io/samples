@@ -1,0 +1,214 @@
+{
+  "provider": "core",
+  "key": "00000000-0000-4000-8000-000000000001",
+  "contract": {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "externalId": "ebitex-site-chrome",
+    "version": 1
+  },
+  "content": {
+    "footer": {
+      "settings": {},
+      "template": {
+        "id": "00000000-0000-4000-8000-000000000003",
+        "externalId": "ebitex-site-footer-template",
+        "version": 1
+      },
+      "component": {
+        "contract": {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "externalId": "ebitex-site-footer",
+          "version": 1
+        },
+        "content": {
+          "text": [
+            {
+              "kind": "markdown",
+              "markdown": "A working site built from the ebitex starter kit. Edit this footer in **Site chrome**."
+            }
+          ],
+          "links": [
+            {
+              "contract": {
+                "id": "00000000-0000-4000-8000-000000000005",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://developers.ebitex.io",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Docs",
+                "style": {
+                  "key": "00000000-0000-4000-8000-000000000006",
+                  "kind": "category",
+                  "provider": "core",
+                  "groupExternalId": "ebitex-action-style",
+                  "path": "ebitex-action-style/link",
+                  "value": "Link",
+                  "resolved": true
+                }
+              }
+            },
+            {
+              "contract": {
+                "id": "00000000-0000-4000-8000-000000000005",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://ebitex.io",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "ebitex",
+                "style": {
+                  "key": "00000000-0000-4000-8000-000000000006",
+                  "kind": "category",
+                  "provider": "core",
+                  "groupExternalId": "ebitex-action-style",
+                  "path": "ebitex-action-style/link",
+                  "value": "Link",
+                  "resolved": true
+                }
+              }
+            }
+          ],
+          "copyright": "Your name here"
+        }
+      }
+    },
+    "header": {
+      "settings": {
+        "sticky": true,
+        "logo-size": {
+          "key": "00000000-0000-4000-8000-000000000007",
+          "kind": "category",
+          "provider": "core",
+          "groupExternalId": "ebitex-logo-size",
+          "path": "ebitex-logo-size/medium",
+          "value": "Medium",
+          "resolved": true
+        }
+      },
+      "template": {
+        "id": "00000000-0000-4000-8000-000000000008",
+        "externalId": "ebitex-site-header-template",
+        "version": 1
+      },
+      "component": {
+        "contract": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "externalId": "ebitex-site-header",
+          "version": 1
+        },
+        "content": {
+          "links": [
+            {
+              "contract": {
+                "id": "00000000-0000-4000-8000-000000000005",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://developers.ebitex.io",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Docs",
+                "style": {
+                  "key": "00000000-0000-4000-8000-000000000006",
+                  "kind": "category",
+                  "provider": "core",
+                  "groupExternalId": "ebitex-action-style",
+                  "path": "ebitex-action-style/link",
+                  "value": "Link",
+                  "resolved": true
+                }
+              }
+            },
+            {
+              "contract": {
+                "id": "00000000-0000-4000-8000-000000000005",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://ebitex.io/content",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Content",
+                "style": {
+                  "key": "00000000-0000-4000-8000-000000000006",
+                  "kind": "category",
+                  "provider": "core",
+                  "groupExternalId": "ebitex-action-style",
+                  "path": "ebitex-action-style/link",
+                  "value": "Link",
+                  "resolved": true
+                }
+              }
+            },
+            {
+              "contract": {
+                "id": "00000000-0000-4000-8000-000000000005",
+                "externalId": "ebitex-action",
+                "version": 1
+              },
+              "content": {
+                "href": {
+                  "url": "https://ebitex.io/forms",
+                  "kind": "external",
+                  "resolved": true
+                },
+                "label": "Forms",
+                "style": {
+                  "key": "00000000-0000-4000-8000-000000000006",
+                  "kind": "category",
+                  "provider": "core",
+                  "groupExternalId": "ebitex-action-style",
+                  "path": "ebitex-action-style/link",
+                  "value": "Link",
+                  "resolved": true
+                }
+              }
+            }
+          ],
+          "action": {
+            "contract": {
+              "id": "00000000-0000-4000-8000-000000000005",
+              "externalId": "ebitex-action",
+              "version": 1
+            },
+            "content": {
+              "href": {
+                "url": "https://ebitex.io",
+                "kind": "external",
+                "resolved": true
+              },
+              "label": "Get started",
+              "style": {
+                "key": "00000000-0000-4000-8000-000000000010",
+                "kind": "category",
+                "provider": "core",
+                "groupExternalId": "ebitex-action-style",
+                "path": "ebitex-action-style/primary",
+                "value": "Primary",
+                "resolved": true
+              }
+            }
+          },
+          "site-name": "ebitex starter kit"
+        }
+      }
+    }
+  },
+  "title": null,
+  "externalId": "ebitex-site-chrome"
+}

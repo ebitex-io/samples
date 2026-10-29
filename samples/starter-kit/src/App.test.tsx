@@ -1,13 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { ContentProvider, Experience } from '@ebitex/content-sdk/react'
-import type { ExperienceResult } from '@ebitex/content-sdk'
+import type { ContentClient, ExperienceResult } from '@ebitex/content-sdk'
 import { EbitexMarkdown, EbitexProvider } from '@ebitex/starter-kit-react/react'
 import { describe, expect, it } from 'vitest'
 
 import { ebitexOptions } from '@/lib/ebitex'
 import { renderers } from '@/lib/content'
 import delivery from '@/test/fixtures/home-delivery.json'
+import chrome from '@/test/fixtures/site-chrome-delivery.json'
 
 /**
  * `home-delivery.json` is a real answer from the Delivery API for the demo experience the starter kit installs (installed into a database, published through
@@ -53,5 +54,23 @@ describe('the starter kit site', () => {
 
     expect(screen.getAllByRole('link', { name: 'Get started' })[0]).toHaveAttribute('href', '/pricing')
     expect(screen.getAllByRole('link', { name: 'Read the docs' })[0]).toHaveAttribute('href', 'https://developers.ebitex.io')
+  })
+
+  it("draws the site header and footer around the page when the Site chrome Component is published, through this site's own links", async () => {
+    // `site-chrome-delivery.json` is the real answer for the kit's demo Site chrome, read by its external id the way the kit reads it.
+    const client = { resolveReference: async () => structuredClone(chrome), peekReference: () => undefined } as unknown as ContentClient
+    render(
+      <MemoryRouter>
+        <EbitexProvider {...ebitexOptions} client={client}>
+          <ContentProvider renderers={renderers} markdown={EbitexMarkdown}>
+            <Experience result={asExperience(delivery)} />
+          </ContentProvider>
+        </EbitexProvider>
+      </MemoryRouter>,
+    )
+
+    expect(await screen.findByRole('banner')).toHaveTextContent('ebitex starter kit')
+    expect(await screen.findByRole('contentinfo')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'ebitex starter kit' })).toHaveAttribute('href', '/')
   })
 })
